@@ -4,3 +4,7 @@ from django.shortcuts import render
 
 def index(request):
 	return render(request, "keepittidy/index.html")
+
+
+def login(request):
+	return render(request, "keepittidy/login.html")
