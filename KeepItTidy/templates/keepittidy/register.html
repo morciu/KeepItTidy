@@ -7,20 +7,27 @@
         <div class="card card-signin my-5">
           <div class="card-body">
             <h5 class="card-title text-center">Sign In</h5>
-            <form class="form-signin">
+            <form class="form-signin" action="{% url 'register' %}" method="post">
+              {% csrf_token %}
               <div class="form-label-group">
-                <input type="text" id="inputUser" class="form-control" placeholder="User Name" required autofocus>
+                <input type="text" id="inputUser" name="inputUser" class="form-control" placeholder="User Name" required autofocus>
               </div>
 
               <div class="form-label-group mt-1">
-                <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+                <input type="password" id="inputPassword" name="inputPassword" class="form-control" placeholder="Password" required>
               </div>
 
               <div class="form-label-group mt-1">
-                <input type="password" id="inputRePassword" class="form-control" placeholder="Confirm Password" required>
+                <input type="password" id="inputRePassword" name="inputRePassword" class="form-control" placeholder="Confirm Password" required>
               </div>
 
               <button class="btn btn-lg btn-primary btn-block text-uppercase mt-1" type="submit">Register</button>
+
+              {% if error_msg %}
+              <div class="form-label-group mt-1">
+                <p>{{error_msg}}</p>
+              </div>
+              {% endif %}
               <hr class="my-4">
             </form>
           </div>
