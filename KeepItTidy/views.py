@@ -10,7 +10,10 @@ from .models import User
 # Create your views here.
 
 def index(request):
-	return render(request, "keepittidy/index.html")
+	if request.user.is_authenticated:
+		return render(request, "keepittidy/index.html")
+	else:
+		return HttpResponseRedirect(reverse("login"))
 
 
 def login_view(request):
@@ -30,6 +33,11 @@ def login_view(request):
 				})
 	else:
 		return render(request, "keepittidy/login.html")
+
+
+def logout_view(request):
+	logout(request)
+	return HttpResponseRedirect(reverse("index"))
 
 
 def register(request):

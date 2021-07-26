@@ -7,7 +7,7 @@
         <div class="card card-signin my-5">
           <div class="card-body">
             <h5 class="card-title text-center">Sign In</h5>
-            <form class="form-signin" action="{% url 'login_view' %}" method='post'>
+            <form class="form-signin" action="{% url 'login' %}" method='post'>
               {% csrf_token %}
               <div class="form-label-group">
                 <input type="text" id="inputUser" name="inputUser" class="form-control" placeholder="User Name" required autofocus>
