@@ -62,3 +62,7 @@ def register(request):
 		return HttpResponseRedirect(reverse("index"))
 	else:
 		return render(request, "keepittidy/register.html")
+
+
+def create_collection(request):
+	return render(request, "keepittidy/create_collection.html")

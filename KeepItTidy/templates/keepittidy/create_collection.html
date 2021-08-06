@@ -1,0 +1,51 @@
+{% extends 'keepittidy/layout.html' %}
+
+{% block body %}
+<div class="container-fluid"  style="height:90vh">
+	<div class="row h-100">
+		<div class="d-flex col-sm h-100 align-items-center">
+			<div class="mx-auto h-75 w-75 card">
+				<div class="card-header text-center">Collection Options</div>
+				<div class="card-body">
+				    <h5 class="card-title text-center">Create Collection</h5>
+		            <form class="form-signin" action="{% url 'login' %}" method='post'>
+		              {% csrf_token %}
+		              <div class="form-label-group">
+		                <input type="text" id="collectionName" name="collectionName" class="form-control" placeholder="Collection Name" required autofocus>
+		              </div>
+
+		              {% if error_msg %}
+		              <div class="form-label-group mt-1">
+		                <p>{{error_msg}}</p>
+		              </div>
+		              {% endif %}
+
+		              <hr class="my-4">
+
+		              <h5 class="card-title text-center">Fields</h5>
+		              <div class="form-label-group">
+		                <form class="form-inline">
+		                	<div class="form-group">
+		                		<input type="text" class="form-control" placeholder="Field Name">
+		                		<select class="form-control">
+		                			<option selected="true" disabled="disabled">Information Type</option>
+		                			<option value="1">Text</option>
+		                			<option value="2">Description</option>
+		                			<option value="3">Date</option>
+		                			<option value="4">Number</option>
+		                			<option value="5">Decimal</option>
+		                		</select>
+		                	</div>
+		                </form>
+		              </div>
+
+		              <hr class="my-4">
+
+		              <a href="{% url 'register' %}" class="btn btn-lg btn-primary btn-block text-uppercase">Register</a>
+		            </form>
+			    </div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
