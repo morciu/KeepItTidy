@@ -65,4 +65,14 @@ def register(request):
 
 
 def create_collection(request):
-	return render(request, "keepittidy/create_collection.html")
+	if request.method == "POST":
+		collection_name = request.POST["collectionName"]
+		field_name = request.POST["fieldName"]
+		field_type = request.POST.get("fieldType")
+		print(collection_name)
+		print(field_name)
+		print(field_type)
+		
+		return render(request, "keepittidy/create_collection.html")
+	else:
+		return render(request, "keepittidy/create_collection.html")
