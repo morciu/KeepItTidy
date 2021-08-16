@@ -4,8 +4,7 @@ from django.urls import reverse
 from django.db import IntegrityError
 from django.contrib.auth import authenticate, login, logout
 
-from .models import User, Collection, TextField
-
+from .models import User, Collection, TextField, DescriptionField, DateField, NumberField, DecimalField
 
 # Create your views here.
 
@@ -68,19 +67,33 @@ def create_collection(request):
 	if request.method == "POST":
 		collection_name = request.POST["collectionName"]
 		description = request.POST["description"]
-		field_name = request.POST["fieldName"]
-		field_type = request.POST.get("fieldType")
+		fields_dict = {}
+
 		print(collection_name)
 		print(description)
-		print(field_name)
-		print(field_type)
 
-		new_collection = Collection(user=request.user, name=collection_name, description=description)
+		for i in range(1,5):
+			if request.POST.get(f"fieldName{i}", False):
+				field_dict = {}
+				field_dict[request.POST[f"fieldName{i}"]] = request.POST.get(f"fieldType{i}")
+				fields_dict[f'field{i}'] = field_dict
+			else:
+				break
+
+		print(fields_dict)
+		print(len(fields_dict))
+
+		"""new_collection = Collection(user=request.user, name=collection_name, description=description)
+
+		for field in fields_dict:
+			for key, value in field.items():
+				if 
+
 		if field_type == "text":
 			new_field = TextField(name=field_name, collection=new_collection, text="butts butts butts")
 
 		new_collection.save()
-		new_field.save()
+		new_field.save()"""
 
 		
 		return render(request, "keepittidy/create_collection.html")
