@@ -67,6 +67,9 @@ def create_collection(request):
 	if request.method == "POST":
 		collection_name = request.POST["collectionName"]
 		description = request.POST["description"]
+		new_collection = Collection(user=request.user, name=collection_name, description=description)
+
+		
 		fields_dict = {}
 
 		print(collection_name)
@@ -83,19 +86,29 @@ def create_collection(request):
 		print(fields_dict)
 		print(len(fields_dict))
 
-		"""new_collection = Collection(user=request.user, name=collection_name, description=description)
-
-		for field in fields_dict:
-			for key, value in field.items():
-				if 
-
-		if field_type == "text":
-			new_field = TextField(name=field_name, collection=new_collection, text="butts butts butts")
-
+		
 		new_collection.save()
-		new_field.save()"""
+		
+		for field in fields_dict:
+			for key, value in fields_dict[field].items():
+				field = create_field_obj(value, key, new_collection)
+				field.save()
 
+		
 		
 		return render(request, "keepittidy/create_collection.html")
 	else:
 		return render(request, "keepittidy/create_collection.html")
+
+# General purpose functions
+def create_field_obj(type, name, collection):
+	if type == "text":
+		return TextField(name=name, collection=collection)
+	elif type == "description":
+		return DescriptionField(name=name, collection=collection)
+	elif type == "date":
+		return DateField(name=name, collection=collection)
+	elif type == "number":
+		return NumberField(name=name, collection=collection)
+	elif type == "decimal":
+		return DecimalField(name=name, collection=collection)
