@@ -63,6 +63,10 @@ def register(request):
 		return render(request, "keepittidy/register.html")
 
 
+def view_collection(request):
+	return render(request, "keepittidy/view_collection.html")
+
+
 def create_collection(request):
 	if request.method == "POST":
 		collection_name = request.POST["collectionName"]
@@ -88,7 +92,7 @@ def create_collection(request):
 
 		
 		new_collection.save()
-		
+
 		for field in fields_dict:
 			for key, value in fields_dict[field].items():
 				field = create_field_obj(value, key, new_collection)
@@ -100,7 +104,9 @@ def create_collection(request):
 	else:
 		return render(request, "keepittidy/create_collection.html")
 
+
 # General purpose functions
+
 def create_field_obj(type, name, collection):
 	if type == "text":
 		return TextField(name=name, collection=collection)
