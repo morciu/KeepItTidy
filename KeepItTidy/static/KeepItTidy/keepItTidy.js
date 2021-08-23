@@ -5,7 +5,12 @@ document.addEventListener('DOMContentLoaded', function() {
 	listCollections();
 	
 	// Add Field Button
-	document.querySelector("#newField").addEventListener('click', addNewField);
+	if (document.querySelector("#newField") != null){
+		document.querySelector("#newField").addEventListener('click', addNewField);	
+	}
+	else {
+		console.log("function for a different page");
+	}
 });
 
 
