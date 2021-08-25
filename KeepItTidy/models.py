@@ -35,7 +35,7 @@ class DescriptionField(models.Model):
 class DateField(models.Model):
 	name = models.CharField(max_length=200)
 	collection = models.ForeignKey(Collection, on_delete=models.CASCADE, related_name="date_field", null=True)
-	date = models.DateField()
+	date = models.DateField(null=True)
 
 
 class NumberField(models.Model):
