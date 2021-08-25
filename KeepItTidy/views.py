@@ -1,9 +1,11 @@
+import json
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.db import IntegrityError
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 
 from .models import User, Collection, TextField, DescriptionField, DateField, NumberField, DecimalField
 
@@ -65,10 +67,11 @@ def register(request):
 		return render(request, "keepittidy/register.html")
 
 
+@login_required
 def view_collection(request):
 	return render(request, "keepittidy/view_collection.html")
 
-
+@login_required
 def create_collection(request):
 	if request.method == "POST":
 		collection_name = request.POST["collectionName"]
@@ -78,9 +81,6 @@ def create_collection(request):
 		
 		fields_dict = {}
 
-		print(collection_name)
-		print(description)
-
 		for i in range(1,5):
 			if request.POST.get(f"fieldName{i}", False):
 				field_dict = {}
@@ -88,10 +88,6 @@ def create_collection(request):
 				fields_dict[f'field{i}'] = field_dict
 			else:
 				break
-
-		print(fields_dict)
-		print(len(fields_dict))
-
 		
 		new_collection.save()
 
@@ -99,12 +95,20 @@ def create_collection(request):
 			for key, value in fields_dict[field].items():
 				field = create_field_obj(value, key, new_collection)
 				field.save()
-
-		
 		
 		return render(request, "keepittidy/create_collection.html")
 	else:
 		return render(request, "keepittidy/create_collection.html")
+
+
+@login_required
+def get_collections(request):
+	current_user = request.user
+	collections = Collection.objects.filter(user=current_user)
+	print(current_user)
+	print(collections)
+	
+	return JsonResponse([collection.serialize() for collection in collections], safe=False)
 
 
 # General purpose functions

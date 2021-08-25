@@ -11,6 +11,14 @@ class Collection(models.Model):
 	name = models.CharField(max_length=200)
 	description = models.CharField(max_length=200)
 
+	def serialize(self):
+		return {
+			"id": self.id,
+			"user": self.user.username,
+			"name": self.name,
+			"description": self.description
+		}
+
 
 class TextField(models.Model):
 	name = models.CharField(max_length=200)

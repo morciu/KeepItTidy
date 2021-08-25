@@ -17,6 +17,60 @@ document.addEventListener('DOMContentLoaded', function() {
 function listCollections() {
 	// Lists all collections created by user
 
+	// Get collections API
+	fetch('/get_collections')
+	.then(response => response.json())
+	.then(collections => {
+		// Create Container Div
+		let mainDivContainer = document.createElement("div");
+		mainDivContainer.className = "container-fluid";
+
+		// Create row div
+		let rowDiv = document.createElement("div");
+		rowDiv.className = "row";
+
+		// Create columns of cards in the row
+		collections.forEach(function(collection) {
+			let colDiv = document.createElement("div");
+			colDiv.className = "col-sm";
+
+			let cardDiv = document.createElement("div");
+			cardDiv.className = "card";
+
+			let cardBodyDiv = document.createElement("div");
+			cardBodyDiv.className = "card-body";
+
+			let cardTitle = document.createElement("h5");
+			cardTitle.className = "card-title";
+			cardTitle.innerHTML = collection['name'];
+			cardBodyDiv.appendChild(cardTitle);
+
+			let cardText = document.createElement("p");
+			cardText.className = "card-text";
+			cardText.innerHTML = collection['description'];
+			cardBodyDiv.appendChild(cardText);
+
+			let cardButton = document.createElement("a");
+			cardButton.className = "btn btn-primary";
+			cardButton.setAttribute("href", "#");
+			cardButton.innerHTML = "Go to this thing";
+			cardBodyDiv.appendChild(cardButton);
+
+			// Append everything to the upper nodes
+			cardDiv.appendChild(cardBodyDiv);
+			colDiv.appendChild(cardDiv);
+
+			rowDiv.appendChild(colDiv);
+
+			console.log("Created one card!");
+			})
+		mainDivContainer.appendChild(rowDiv);
+
+		let mainDiv = document.querySelector("#collections");
+		mainDiv.appendChild(mainDivContainer);
+	})
+
+	/*
 	// Create Container Div
 	let mainDivContainer = document.createElement("div");
 	mainDivContainer.className = "container-fluid";
@@ -65,6 +119,8 @@ function listCollections() {
 
 	let mainDiv = document.querySelector("#collections");
 	mainDiv.appendChild(mainDivContainer);
+
+	*/
 }
 
 
