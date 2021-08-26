@@ -111,6 +111,13 @@ def get_collections(request):
 	return JsonResponse([collection.serialize() for collection in collections], safe=False)
 
 
+@login_required
+def collection_page(request, collection_id):
+	current_user = request.user
+
+	return render(request, 'keepittidy/collection_page.html')
+
+
 # General purpose functions
 
 def create_field_obj(type, name, collection):
