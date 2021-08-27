@@ -2,8 +2,11 @@
 {% load static %}
 
 {% block body %}
-<div id="collection">
-	<h5>This is an individual page for the thing</h5>
+<div id="collection" class="jumbotron jumbotron-fluid">
+	<div class="container">
+		<h1 class="display-5">{{ collection.name }}</h1>
+		<p class="lead">{{ collection.description }}</p>
+	</div>
 </div>
 {% endblock %}
 

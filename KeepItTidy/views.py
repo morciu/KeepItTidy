@@ -105,8 +105,6 @@ def create_collection(request):
 def get_collections(request):
 	current_user = request.user
 	collections = Collection.objects.filter(user=current_user)
-	print(current_user)
-	print(collections)
 	
 	return JsonResponse([collection.serialize() for collection in collections], safe=False)
 
@@ -114,8 +112,13 @@ def get_collections(request):
 @login_required
 def collection_page(request, collection_id):
 	current_user = request.user
+	collection = Collection.objects.get(id=collection_id)
+	print(collection)
 
-	return render(request, 'keepittidy/collection_page.html')
+	return render(request, 'keepittidy/collection_page.html', {
+		"user": current_user,
+		"collection": collection
+		})
 
 
 # General purpose functions
