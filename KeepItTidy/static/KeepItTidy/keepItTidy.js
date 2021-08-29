@@ -8,14 +8,13 @@ document.addEventListener('DOMContentLoaded', function() {
 	if (document.querySelector("#newField") != null){
 		document.querySelector("#newField").addEventListener('click', addNewField);	
 	}
-	else {
-		console.log("function for a different page");
-	}
 });
 
 
 function listCollections() {
 	// Lists all collections created by user
+
+	let mainDiv = document.querySelector("#collections");
 
 	// Get collections API
 	fetch('/get_collections')
@@ -52,8 +51,58 @@ function listCollections() {
 
 			let cardButton = document.createElement("a");
 			cardButton.className = "btn btn-primary";
-			let collectionUrl = "collection_page/" + collection['id'];
-			cardButton.setAttribute("href", collectionUrl);
+			//let collectionUrl = "collection_page/" + collection['id'];
+			//cardButton.setAttribute("href", collectionUrl);
+			cardButton.addEventListener('click', () => {
+				// Hide all collection cards
+				mainDivContainer.style.display = "none";
+
+				// Display requested collection
+
+				// Create main div
+				let clickedCollection = document.createElement("div");
+				clickedCollection.id = "collection";
+				clickedCollection.className = "jumbotron jumbotron-fluid";
+
+				// Create Container div
+				let containerDiv = document.createElement("div");
+				containerDiv.className = "container";
+
+				// Header
+				let collectionName = document.createElement("h1");
+				collectionName.className = "display-5";
+				collectionName.innerHTML = collection['name'];
+
+				// Description
+				let collectionDescription = document.createElement("p");
+				collectionDescription.className = "lead";
+				collectionDescription.innerHTML = collection['description'];
+
+				// Paragraph for add button
+				let addButtonParagraph = document.createElement("p");
+				addButtonParagraph.className = "lead";
+
+				// Add item button
+				let addButton = document.createElement("a");
+				addButton.className = "btn btn-primary btn-lg";
+				addButton.setAttribute("href", "#");
+				addButton.setAttribute("role", "button");
+				addButton.innerHTML = "Add item";
+
+				// Set element hierarchy
+				addButtonParagraph.appendChild(addButton);
+
+				containerDiv.appendChild(collectionName);
+				containerDiv.appendChild(collectionDescription);
+				containerDiv.appendChild(addButtonParagraph);
+
+				clickedCollection.appendChild(containerDiv);
+
+				mainDiv.appendChild(clickedCollection);
+
+				console.log("Clicked " + collection['id']);
+				console.log(collection['fields']);
+			})
 			cardButton.innerHTML = "Go to this thing";
 			cardBodyDiv.appendChild(cardButton);
 
@@ -67,7 +116,7 @@ function listCollections() {
 			})
 		mainDivContainer.appendChild(rowDiv);
 
-		let mainDiv = document.querySelector("#collections");
+		
 		mainDiv.appendChild(mainDivContainer);
 	})
 }
