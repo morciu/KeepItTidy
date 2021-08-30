@@ -16,8 +16,20 @@ class Collection(models.Model):
 			"id": self.id,
 			"user": self.user.username,
 			"name": self.name,
-			"description": self.description
+			"description": self.description,
+			"fields": self.find_fields()
 		}
+
+	def find_fields(self):
+		field_dict = FieldDict.objects.get(collection=self)
+		fields = FieldNameTypePair.objects.filter(dictionary=field_dict)
+
+		dictionary = {}
+
+		for i in fields:
+			dictionary[i.field_name] = i.field_type
+
+		return dictionary
 
 
 class TextField(models.Model):
@@ -29,7 +41,7 @@ class TextField(models.Model):
 class DescriptionField(models.Model):
 	name = models.CharField(max_length=200)
 	collection = models.ForeignKey(Collection, on_delete=models.CASCADE, related_name="description_field", null=True)
-	text = models.TextField()
+	text = models.TextField(null=True)
 
 
 class DateField(models.Model):
@@ -41,10 +53,21 @@ class DateField(models.Model):
 class NumberField(models.Model):
 	name = models.CharField(max_length=200)
 	collection = models.ForeignKey(Collection, on_delete=models.CASCADE, related_name="number_field", null=True)
-	number = models.IntegerField()
+	number = models.IntegerField(null=True)
 
 
 class DecimalField(models.Model):
 	name = models.CharField(max_length=200)
 	collection = models.ForeignKey(Collection, on_delete=models.CASCADE, related_name="decimal_field", null=True)
 	decimal = models.DecimalField(max_digits=5, decimal_places=2)
+
+
+class FieldDict(models.Model):
+	collection = models.ForeignKey(Collection, on_delete=models.CASCADE, related_name="collection_fields", null=True)
+	name = models.CharField(max_length=200)
+
+
+class FieldNameTypePair(models.Model):
+	dictionary = models.ForeignKey(FieldDict, on_delete=models.CASCADE, related_name="name_type_pair")
+	field_name = models.CharField(max_length=200)
+	field_type = models.CharField(max_length=200)

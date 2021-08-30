@@ -7,7 +7,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 
-from .models import User, Collection, TextField, DescriptionField, DateField, NumberField, DecimalField
+from .models import User, Collection, TextField, DescriptionField, DateField, NumberField, DecimalField, FieldDict, FieldNameTypePair
 
 # Create your views here.
 
@@ -91,10 +91,13 @@ def create_collection(request):
 		
 		new_collection.save()
 
+		field_dict_model = FieldDict(name=f"{collection_name} fields", collection=new_collection)
+		field_dict_model.save()
+
 		for field in fields_dict:
 			for key, value in fields_dict[field].items():
-				field = create_field_obj(value, key, new_collection)
-				field.save()
+				name_type_pair = FieldNameTypePair(dictionary=field_dict_model, field_name=key, field_type=value)
+				name_type_pair.save()
 		
 		return render(request, "keepittidy/create_collection.html")
 	else:
@@ -105,6 +108,11 @@ def create_collection(request):
 def get_collections(request):
 	current_user = request.user
 	collections = Collection.objects.filter(user=current_user)
+
+	
+	json_col = [collection.serialize() for collection in collections]
+	for i in collections:
+		print(i.find_fields())
 	
 	return JsonResponse([collection.serialize() for collection in collections], safe=False)
 
