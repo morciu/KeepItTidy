@@ -85,7 +85,7 @@ function listCollections() {
 				// Add item button
 				let addButton = document.createElement("a");
 				addButton.className = "btn btn-primary btn-lg";
-				addButton.setAttribute("href", "#");
+				addButton.setAttribute("href", "add_item/" + collection['id']);
 				addButton.setAttribute("role", "button");
 				addButton.innerHTML = "Add item";
 

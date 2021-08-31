@@ -12,6 +12,8 @@ class Collection(models.Model):
 	description = models.CharField(max_length=200)
 
 	def serialize(self):
+		# Serialize model information in a JSON object
+
 		return {
 			"id": self.id,
 			"user": self.user.username,
@@ -21,6 +23,8 @@ class Collection(models.Model):
 		}
 
 	def find_fields(self):
+		# Return a dictionary for the fields related to this collection to be used in serialize()
+
 		field_dict = FieldDict.objects.get(collection=self)
 		fields = FieldNameTypePair.objects.filter(dictionary=field_dict)
 

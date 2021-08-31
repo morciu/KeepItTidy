@@ -1,0 +1,36 @@
+{% extends "keepittidy/layout.html" %}
+{% load static %}
+
+{% block body %}
+<div id="collection" class="jumbotron jumbotron-fluid">
+	<div class="container">
+		<h1 class="display-5">{{ collection.name }}</h1>
+		<p class="lead">{{ collection.description }}</p>
+	</div>
+	<div class="container">
+		<form>
+			{% for field in fields %}
+		    <div class="form-group">
+		        <label for="exampleInputEmail1">{{field.field_name}}</label>
+		        {% if field.field_type == "text" %}
+		        	<input type="text" class="form-control" placeholder={{field.field_type}}>
+		        {% elif field.field_type == "description" %}
+		        	<textarea class="form-control" placeholder={{field.field_type}}></textarea>
+		        {% elif field.field_type == "date" %}
+		        	<input type="date" class="form-control" placeholder={{field.field_type}}>
+		        {% elif field.field_type == "number" %}
+		        	<input type="number" step="any" class="form-control" placeholder={{field.field_type}}>
+		        {% elif field.field_type == "decimal" %}
+		        	<input type="number" step=".01" class="form-control" placeholder={{field.field_type}}>
+		        {% endif %}
+		    </div>
+		    {% endfor %}
+		    <button type="submit" class="btn btn-primary">Submit</button>
+		</form>
+	</div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="{% static 'keepItTidy/keepItTidy.js' %}"></script>
+{% endblock %}

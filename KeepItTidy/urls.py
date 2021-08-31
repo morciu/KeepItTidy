@@ -10,7 +10,7 @@ urlpatterns = [
 	path("register", views.register, name="register"),
 	path("create_collection", views.create_collection, name="create_collection"),
 	path("view_collection", views.view_collection, name="view_collection"),
-	path("collection_page/<int:collection_id>", views.collection_page, name="collection_page"),
+	path("add_item/<int:collection_id>", views.add_item, name="add_item"),
 
 	# API routes
 	path("get_collections", views.get_collections, name="get_collections"),
