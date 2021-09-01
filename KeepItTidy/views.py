@@ -117,18 +117,21 @@ def get_collections(request):
 
 @login_required
 def add_item(request, collection_id):
-	current_user = request.user
-	collection = Collection.objects.get(id=collection_id)
-	
-	# Get collection fields
-	field_dict = FieldDict.objects.get(collection=collection)
-	fields = FieldNameTypePair.objects.filter(dictionary=field_dict)
+	if request.method == "POST":
+		pass
+	else:
+		current_user = request.user
+		collection = Collection.objects.get(id=collection_id)
+		
+		# Get collection fields
+		field_dict = FieldDict.objects.get(collection=collection)
+		fields = FieldNameTypePair.objects.filter(dictionary=field_dict)
 
-	return render(request, 'keepittidy/add_item.html', {
-		"user": current_user,
-		"collection": collection,
-		"fields": fields
-		})
+		return render(request, 'keepittidy/add_item.html', {
+			"user": current_user,
+			"collection": collection,
+			"fields": fields
+			})
 
 
 # General purpose functions

@@ -11,7 +11,7 @@
 		<form>
 			{% for field in fields %}
 		    <div class="form-group">
-		        <label for="exampleInputEmail1">{{field.field_name}}</label>
+		        <label for={{field.field_name}}>{{field.field_name}}</label>
 		        {% if field.field_type == "text" %}
 		        	<input type="text" class="form-control" placeholder={{field.field_type}}>
 		        {% elif field.field_type == "description" %}
