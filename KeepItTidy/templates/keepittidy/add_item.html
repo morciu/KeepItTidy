@@ -8,20 +8,21 @@
 		<p class="lead">{{ collection.description }}</p>
 	</div>
 	<div class="container">
-		<form>
+		<form action="{% url 'add_item' collection.id %}" method="post">
+			{% csrf_token %}
 			{% for field in fields %}
 		    <div class="form-group">
-		        <label for={{field.field_name}}>{{field.field_name}}</label>
+		        <label for="{{field.field_name}}">{{field.field_name}}</label>
 		        {% if field.field_type == "text" %}
-		        	<input type="text" class="form-control" placeholder={{field.field_type}}>
+		        	<input type="text" class="form-control {{field.field_type}}" name="{{field.field_name}} / {{field.field_type}}" placeholder={{field.field_type}}>
 		        {% elif field.field_type == "description" %}
-		        	<textarea class="form-control" placeholder={{field.field_type}}></textarea>
+		        	<textarea class="form-control {{field.field_type}}" name="{{field.field_name}} / {{field.field_type}}" placeholder={{field.field_type}}></textarea>
 		        {% elif field.field_type == "date" %}
-		        	<input type="date" class="form-control" placeholder={{field.field_type}}>
+		        	<input type="date" class="form-control {{field.field_type}}" name="{{field.field_name}} / {{field.field_type}}" placeholder={{field.field_type}}>
 		        {% elif field.field_type == "number" %}
-		        	<input type="number" step="any" class="form-control" placeholder={{field.field_type}}>
+		        	<input type="number" step="any" class="form-control {{field.field_type}}" name="{{field.field_name}} / {{field.field_type}}" placeholder={{field.field_type}}>
 		        {% elif field.field_type == "decimal" %}
-		        	<input type="number" step=".01" class="form-control" placeholder={{field.field_type}}>
+		        	<input type="number" step=".01" class="form-control {{field.field_type}}" name="{{field.field_name}} / {{field.field_type}}" placeholder={{field.field_type}}>
 		        {% endif %}
 		    </div>
 		    {% endfor %}

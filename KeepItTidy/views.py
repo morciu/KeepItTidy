@@ -1,4 +1,6 @@
 import json
+from datetime import datetime
+
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
@@ -7,7 +9,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 
-from .models import User, Collection, TextField, DescriptionField, DateField, NumberField, DecimalField, FieldDict, FieldNameTypePair
+from .models import User, Collection, TextField, DescriptionField, DateField, NumberField, DecimalField, FieldDict, FieldNameTypePair, Item
 
 # Create your views here.
 
@@ -69,6 +71,10 @@ def register(request):
 
 @login_required
 def view_collection(request):
+	items = {}
+
+	
+
 	return render(request, "keepittidy/view_collection.html")
 
 @login_required
@@ -109,23 +115,62 @@ def get_collections(request):
 	current_user = request.user
 	collections = Collection.objects.filter(user=current_user)
 
-	for i in collections:
-		print(i.find_fields())
+	'''for i in collections:
+		print(i.find_fields())'''
 	
 	return JsonResponse([collection.serialize() for collection in collections], safe=False)
 
 
 @login_required
 def add_item(request, collection_id):
+	current_user = request.user
+	collection = Collection.objects.get(id=collection_id)
+	
+	# Get collection fields
+	field_dict = FieldDict.objects.get(collection=collection)
+	fields = FieldNameTypePair.objects.filter(dictionary=field_dict)
+
 	if request.method == "POST":
-		pass
-	else:
-		current_user = request.user
-		collection = Collection.objects.get(id=collection_id)
+
+		item = Item(user=current_user, collection=collection)
+		item.save()
+
+		posts = request.POST.items()
 		
-		# Get collection fields
-		field_dict = FieldDict.objects.get(collection=collection)
-		fields = FieldNameTypePair.objects.filter(dictionary=field_dict)
+		for key, value in posts:
+
+			# Get field name
+			field_name = key.split(" / ")[0]
+			
+			# Get field type
+			field_type = key.split(" / ")[-1]
+
+			# Check field time and create item accordingly
+			if field_type == "text":
+				field_obj = TextField(name=field_name, collection=collection, item=item, text=value)
+				field_obj.save()
+			elif field_type == "description":
+				field_obj = DescriptionField(name=field_name, collection=collection, item=item, text=value)
+				field_obj.save()
+			elif field_type == "date":
+				field_obj = DateField(name=field_name, collection=collection, item=item, date=datetime.strptime(value, "%Y-%m-%d"))
+				field_obj.save()
+			elif field_type == "number":
+				field_obj = NumberField(name=field_name, collection=collection, item=item, number=int(value))
+				field_obj.save()
+			elif field_type == "decimal":
+				field_obj = DecimalField(name=field_name, collection=collection, item=item, decimal=float(value))
+				field_obj.save()
+
+			
+
+		return render(request, 'keepittidy/add_item.html', {
+			"user": current_user,
+			"collection": collection,
+			"fields": fields
+			})
+	else:
+		
 
 		return render(request, 'keepittidy/add_item.html', {
 			"user": current_user,
