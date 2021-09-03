@@ -19,7 +19,8 @@ class Collection(models.Model):
 			"user": self.user.username,
 			"name": self.name,
 			"description": self.description,
-			"fields": self.find_fields()
+			"fields": self.find_fields(),
+			"items": self.find_items()
 		}
 
 	def find_fields(self):
@@ -34,6 +35,18 @@ class Collection(models.Model):
 			dictionary[i.field_name] = i.field_type
 
 		return dictionary
+
+	def find_items(self):
+		# Query for all items in collection
+
+		items = Item.objects.filter(collection=self)
+		item_fields = []
+
+		for item in items:
+			item_fields.append(item.get_fields())
+
+		return item_fields
+
 
 
 class Item(models.Model):

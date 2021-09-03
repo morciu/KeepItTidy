@@ -101,7 +101,8 @@ function listCollections() {
 				mainDiv.appendChild(clickedCollection);
 
 				console.log("Clicked " + collection['id']);
-				console.log(collection['fields']);
+				//console.log(collection['fields']);
+				console.log(collection['items']);
 			})
 			cardButton.innerHTML = "Go to this thing";
 			cardBodyDiv.appendChild(cardButton);
