@@ -100,9 +100,48 @@ function listCollections() {
 
 				mainDiv.appendChild(clickedCollection);
 
+				// Display Items
 				console.log("Clicked " + collection['id']);
 				//console.log(collection['fields']);
 				console.log(collection['items']);
+
+				// Items
+				let items = collection['items']
+
+				// Item Rows
+				let itemRow = document.createElement("div");
+				itemRow.className = "row";
+
+				// Item Collumns
+				items.forEach(function(item) {
+
+					// Set up divs
+					let itemCollumn = document.createElement("div");
+					itemCollumn.className = "col-sm"
+
+					let itemCardDiv = document.createElement("div");
+					itemCardDiv.className = "card";
+
+					let itemCardBody = document.createElement("div");
+					itemCardBody.className = "card-body";
+
+					let itemCardTitle = document.createElement("div");
+					itemCardTitle.className = "card-title";
+
+					// Insert content
+					itemCardTitle.innerHTML = item[0]['Name'];
+
+					// Set up element hierarchy 
+					itemCardBody.appendChild(itemCardTitle);
+					itemCardDiv.appendChild(itemCardBody);
+					itemCollumn.appendChild(itemCardDiv);
+					itemRow.appendChild(itemCollumn);
+
+					document.body.appendChild(itemRow);
+
+				});
+
+
 			})
 			cardButton.innerHTML = "Go to this thing";
 			cardBodyDiv.appendChild(cardButton);
