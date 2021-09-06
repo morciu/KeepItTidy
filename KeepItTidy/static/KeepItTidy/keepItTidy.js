@@ -102,7 +102,7 @@ function listCollections() {
 
 				// Display Items
 				console.log("Clicked " + collection['id']);
-				//console.log(collection['fields']);
+				console.log(collection['fields']);
 				console.log(collection['items']);
 
 				// Items
@@ -125,14 +125,25 @@ function listCollections() {
 					let itemCardBody = document.createElement("div");
 					itemCardBody.className = "card-body";
 
-					let itemCardTitle = document.createElement("div");
+					let itemCardTitle = document.createElement("h5");
 					itemCardTitle.className = "card-title";
+					itemCardBody.appendChild(itemCardTitle);
 
 					// Insert content
-					itemCardTitle.innerHTML = item[0]['Name'];
+					itemCardTitle.innerHTML = item['Name'];
+
+					for (var key in item) {
+						if (key != "Name") {
+							let content = document.createElement("p");
+						content.className = "card-text";
+						content.innerHTML = key + ": " + item[key];
+						console.log(key + ": " + item['key'])
+						itemCardBody.appendChild(content);
+					}
+					}
 
 					// Set up element hierarchy 
-					itemCardBody.appendChild(itemCardTitle);
+					
 					itemCardDiv.appendChild(itemCardBody);
 					itemCollumn.appendChild(itemCardDiv);
 					itemRow.appendChild(itemCollumn);
