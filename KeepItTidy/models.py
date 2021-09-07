@@ -49,21 +49,20 @@ class Collection(models.Model):
 
 
 class Item(models.Model):
+	name = models.CharField(max_length=200, default="item_name")
+	description = models.TextField(max_length=400, null=True)
+
+	# Foreign keys
 	user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="item")
 	collection = models.ForeignKey(Collection, on_delete=models.CASCADE, related_name="item")
 
 	def get_fields(self):
 		# Get all fields attached to this item
-		fields = {}
+		fields = {"name": self.name, "description": self.description}
 
 		text_fields = TextField.objects.filter(item=self)
 		if len(text_fields) > 0:
 			for i in text_fields:
-				fields[i.name] = i.text
-
-		description_fields = DescriptionField.objects.filter(item=self)
-		if len(description_fields) > 0:
-			for i in description_fields:
 				fields[i.name] = i.text
 
 		date_fields = DateField.objects.filter(item=self)
@@ -91,13 +90,6 @@ class TextField(models.Model):
 	text = models.CharField(max_length=500)
 
 
-class DescriptionField(models.Model):
-	name = models.CharField(max_length=200)
-	collection = models.ForeignKey(Collection, on_delete=models.CASCADE, related_name="description_field")
-	item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name="description_field")
-	text = models.TextField(null=True)
-
-
 class DateField(models.Model):
 	name = models.CharField(max_length=200)
 	collection = models.ForeignKey(Collection, on_delete=models.CASCADE, related_name="date_field")
@@ -118,6 +110,8 @@ class DecimalField(models.Model):
 	item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name="decimal_field")
 	decimal = models.DecimalField(max_digits=5, decimal_places=2)
 
+
+# Set up a dictionary through models for storing field_name and field_type pairs
 
 class FieldDict(models.Model):
 	collection = models.ForeignKey(Collection, on_delete=models.CASCADE, related_name="collection_fields")

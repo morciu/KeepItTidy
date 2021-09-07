@@ -9,7 +9,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 
-from .models import User, Collection, TextField, DescriptionField, DateField, NumberField, DecimalField, FieldDict, FieldNameTypePair, Item
+from .models import User, Collection, TextField, DateField, NumberField, DecimalField, FieldDict, FieldNameTypePair, Item
 
 # Create your views here.
 
@@ -84,10 +84,9 @@ def create_collection(request):
 		description = request.POST["description"]
 		new_collection = Collection(user=request.user, name=collection_name, description=description)
 
-		
 		fields_dict = {}
 
-		for i in range(1,5):
+		for i in range(1,20):
 			if request.POST.get(f"fieldName{i}", False):
 				field_dict = {}
 				field_dict[request.POST[f"fieldName{i}"]] = request.POST.get(f"fieldType{i}")
@@ -132,8 +131,16 @@ def add_item(request, collection_id):
 
 	if request.method == "POST":
 
-		item = Item(user=current_user, collection=collection)
+		# Get the Name and optional Description fields
+
+		item_name = request.POST["itemName"]
+		if request.POST["itemDescription"]:
+			item = Item(name=item_name, description=request.POST["itemDescription"], user=current_user, collection=collection)
+		else:
+			item = Item(name=item_name, user=current_user, collection=collection)
 		item.save()
+
+		# Get the additional custom fields
 
 		posts = request.POST.items()
 		
@@ -148,9 +155,6 @@ def add_item(request, collection_id):
 			# Check field time and create item accordingly
 			if field_type == "text":
 				field_obj = TextField(name=field_name, collection=collection, item=item, text=value)
-				field_obj.save()
-			elif field_type == "description":
-				field_obj = DescriptionField(name=field_name, collection=collection, item=item, text=value)
 				field_obj.save()
 			elif field_type == "date":
 				field_obj = DateField(name=field_name, collection=collection, item=item, date=datetime.strptime(value, "%Y-%m-%d"))

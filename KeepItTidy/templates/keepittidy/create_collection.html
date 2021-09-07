@@ -8,7 +8,7 @@
 			<div class="mx-auto h-75 w-75 card">
 				<div class="card-header text-center">Collection Options</div>
 				<div class="card-body">
-				    <h5 class="card-title text-center">Create Collection</h5>
+				    <h2 class="card-title text-center">Create Collection</h2>
 		            <form class="form-signin" action="{% url 'create_collection' %}" method='post'>
 		              {% csrf_token %}
 		              <div class="form-label-group">
@@ -28,7 +28,20 @@
 
 		              <hr class="my-4">
 
-		              <h5 class="card-title text-center">Fields</h5>
+		              <h3 class="card-title text-center">Set Up Item Fields</h3>
+
+		              <hr class="my-4">
+
+		              <h5 class="card-title text-center">Main Item Fields</h5>
+
+		              <p>Name Field Added</p>
+
+		              <p>Description Field Added</p>
+
+		              <hr class="my-4">
+
+		              <h5 class="card-title text-center">Additional Fields</h5>
+
 		              <div class="form-label-group" id="fieldForms">
 		                <div class="form-inline" id="fieldForm1">
 		                	<div class="form-group">

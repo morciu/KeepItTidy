@@ -66,7 +66,7 @@ function listCollections() {
 
 				// Create Container div
 				let containerDiv = document.createElement("div");
-				containerDiv.className = "container";
+				containerDiv.className = "container-fluid";
 
 				// Header
 				let collectionName = document.createElement("h1");
@@ -129,11 +129,18 @@ function listCollections() {
 					itemCardTitle.className = "card-title";
 					itemCardBody.appendChild(itemCardTitle);
 
+					let itemCardDescription = document.createElement("p");
+					itemCardDescription.className = "card-text";
+					itemCardBody.appendChild(itemCardDescription);
+
 					// Insert content
-					itemCardTitle.innerHTML = item['Name'];
+
+					// Name and Description
+					itemCardTitle.innerHTML = item['name'];
+					itemCardDescription.innerHTML = item['description']
 
 					for (var key in item) {
-						if (key != "Name") {
+						if (key != "name" && key != "description") {
 							let content = document.createElement("p");
 						content.className = "card-text";
 						content.innerHTML = key + ": " + item[key];
