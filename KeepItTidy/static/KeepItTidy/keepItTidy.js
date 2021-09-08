@@ -100,64 +100,7 @@ function listCollections() {
 
 				mainDiv.appendChild(clickedCollection);
 
-				// Display Items
-				console.log("Clicked " + collection['id']);
-				console.log(collection['fields']);
-				console.log(collection['items']);
-
-				// Items
-				let items = collection['items']
-
-				// Item Rows
-				let itemRow = document.createElement("div");
-				itemRow.className = "row";
-
-				// Item Collumns
-				items.forEach(function(item) {
-
-					// Set up divs
-					let itemCollumn = document.createElement("div");
-					itemCollumn.className = "col-sm"
-
-					let itemCardDiv = document.createElement("div");
-					itemCardDiv.className = "card";
-
-					let itemCardBody = document.createElement("div");
-					itemCardBody.className = "card-body";
-
-					let itemCardTitle = document.createElement("h5");
-					itemCardTitle.className = "card-title";
-					itemCardBody.appendChild(itemCardTitle);
-
-					let itemCardDescription = document.createElement("p");
-					itemCardDescription.className = "card-text";
-					itemCardBody.appendChild(itemCardDescription);
-
-					// Insert content
-
-					// Name and Description
-					itemCardTitle.innerHTML = item['name'];
-					itemCardDescription.innerHTML = item['description']
-
-					for (var key in item) {
-						if (key != "name" && key != "description") {
-							let content = document.createElement("p");
-						content.className = "card-text";
-						content.innerHTML = key + ": " + item[key];
-						console.log(key + ": " + item['key'])
-						itemCardBody.appendChild(content);
-					}
-					}
-
-					// Set up element hierarchy 
-					
-					itemCardDiv.appendChild(itemCardBody);
-					itemCollumn.appendChild(itemCardDiv);
-					itemRow.appendChild(itemCollumn);
-
-					document.body.appendChild(itemRow);
-
-				});
+				displayItems(collection['items']);
 
 
 			})
@@ -206,4 +149,70 @@ function addNewField() {
 
 	let fieldFormsDiv = document.querySelector("#fieldForms");
 	fieldFormsDiv.appendChild(extraForm);
+}
+
+
+function displayItems(itemSource) {
+	// Items
+	let items = itemSource;
+
+	createItemRow(items);
+}
+
+
+function createItemRow(items) {
+	let itemRow = document.createElement("div");
+	itemRow.className = "row";
+
+	// Item Collumns
+	items.forEach(function(item) {
+		createItemCard(item, itemRow);
+		});
+}
+
+
+function createItemCard(item, row) {
+
+	// Set up divs
+	let itemCollumn = document.createElement("div");
+	itemCollumn.className = "col-sm"
+
+	let itemCardDiv = document.createElement("div");
+	itemCardDiv.className = "card";
+
+	let itemCardBody = document.createElement("div");
+	itemCardBody.className = "card-body";
+
+	let itemCardTitle = document.createElement("h5");
+	itemCardTitle.className = "card-title";
+	itemCardBody.appendChild(itemCardTitle);
+
+	let itemCardDescription = document.createElement("p");
+	itemCardDescription.className = "card-text";
+	itemCardBody.appendChild(itemCardDescription);
+
+	// Insert content
+
+	// Name and Description
+	itemCardTitle.innerHTML = item['name'];
+	itemCardDescription.innerHTML = item['description']
+
+	for (var key in item) {
+		if (key != "name" && key != "description") {
+			let content = document.createElement("p");
+		content.className = "card-text";
+		content.innerHTML = key + ": " + item[key];
+		console.log(key + ": " + item['key'])
+		itemCardBody.appendChild(content);
+	}
+	}
+
+	// Set up element hierarchy 
+	
+	itemCardDiv.appendChild(itemCardBody);
+	itemCollumn.appendChild(itemCardDiv);
+	row.appendChild(itemCollumn);
+
+	document.body.appendChild(row);
+
 }
