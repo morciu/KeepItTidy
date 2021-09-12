@@ -155,12 +155,40 @@ function addNewField() {
 function displayItems(itemSource) {
 	// Items
 	let items = itemSource;
+	let nrOfRows;
 
-	createItemRow(items);
+	if (Math.floor(items.length / 4) <= 1) {
+		nrOfRows = 1;
+	}
+
+	else {
+		nrOfRows = Math.floor(items.length / 4);
+	}
+
+	console.log("Items:" + items.length);
+	console.log("Nr of Rows: " + nrOfRows);
+
+
+	let itemsContainer = document.createElement("div");
+	itemsContainer.className = "container-fluid";
+
+	for (let i = 0; i < nrOfRows; i++) {
+		let row = items.slice(0, 4);
+		createItemRow(row, itemsContainer);
+		items.splice(0, 4);
+	}
+
+	console.log("Items left:" + items.length);
+
+	if (items.length > 0) {
+		createItemRow(items, itemsContainer);
+	}
+
+	document.body.appendChild(itemsContainer);
 }
 
 
-function createItemRow(items) {
+function createItemRow(items, containerDiv) {
 	let itemRow = document.createElement("div");
 	itemRow.className = "row";
 
@@ -168,14 +196,16 @@ function createItemRow(items) {
 	items.forEach(function(item) {
 		createItemCard(item, itemRow);
 		});
+
+	containerDiv.appendChild(itemRow);
 }
 
 
-function createItemCard(item, row) {
+function createItemCard(item, row, containerDiv) {
 
 	// Set up divs
 	let itemCollumn = document.createElement("div");
-	itemCollumn.className = "col-sm"
+	itemCollumn.className = "col-sm col-md-3"
 
 	let itemCardDiv = document.createElement("div");
 	itemCardDiv.className = "card";
@@ -202,7 +232,7 @@ function createItemCard(item, row) {
 			let content = document.createElement("p");
 		content.className = "card-text";
 		content.innerHTML = key + ": " + item[key];
-		console.log(key + ": " + item['key'])
+		//console.log(key + ": " + item['key'])
 		itemCardBody.appendChild(content);
 	}
 	}
@@ -212,7 +242,5 @@ function createItemCard(item, row) {
 	itemCardDiv.appendChild(itemCardBody);
 	itemCollumn.appendChild(itemCardDiv);
 	row.appendChild(itemCollumn);
-
-	document.body.appendChild(row);
 
 }
