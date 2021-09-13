@@ -77,7 +77,7 @@ class Item(models.Model):
 
 		decimal_fields = DecimalField.objects.filter(item=self)
 		if len(decimal_fields) > 0:
-			for i in date_fields:
+			for i in decimal_fields:
 				fields[i.name] = i.decimal
 
 		return fields
