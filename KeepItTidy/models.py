@@ -65,6 +65,11 @@ class Item(models.Model):
 			for i in text_fields:
 				fields[i.name] = i.text
 
+		boolean_fields = BooleanField.objects.filter(item=self)
+		if len(boolean_fields) > 0:
+			for i in boolean_fields:
+				fields[i.name] = i.text
+
 		date_fields = DateField.objects.filter(item=self)
 		if len(date_fields) > 0:
 			for i in date_fields:
@@ -88,6 +93,13 @@ class TextField(models.Model):
 	collection = models.ForeignKey(Collection, on_delete=models.CASCADE, related_name="text_field")
 	item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name="text_field")
 	text = models.CharField(max_length=500)
+
+
+class BooleanField(models.Model):
+	name = models.CharField(max_length=200)
+	collection = models.ForeignKey(Collection, on_delete=models.CASCADE, related_name="boolean_field")
+	item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name="boolean_field")
+	boolean = models.BooleanField(default=False)
 
 
 class DateField(models.Model):

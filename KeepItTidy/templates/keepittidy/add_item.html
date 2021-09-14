@@ -23,6 +23,8 @@
 		        <label for="{{field.field_name}}">{{field.field_name}}</label>
 		        {% if field.field_type == "text" %}
 		        	<input type="text" class="form-control {{field.field_type}}" name="{{field.field_name}} / {{field.field_type}}" placeholder={{field.field_type}}>
+		        {% elif field.field_type == "boolean" %}
+		        	<input type="checkbox" class="form-control {{field.field_type}}" name="{{field.field_name}} / {{field.field_type}}">
 		        {% elif field.field_type == "date" %}
 		        	<input type="date" class="form-control {{field.field_type}}" name="{{field.field_name}} / {{field.field_type}}" placeholder={{field.field_type}}>
 		        {% elif field.field_type == "number" %}

@@ -9,7 +9,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 
-from .models import User, Collection, TextField, DateField, NumberField, DecimalField, FieldDict, FieldNameTypePair, Item
+from .models import User, Collection, TextField, BooleanField, DateField, NumberField, DecimalField, FieldDict, FieldNameTypePair, Item
 
 # Create your views here.
 
@@ -80,25 +80,39 @@ def view_collection(request):
 @login_required
 def create_collection(request):
 	if request.method == "POST":
+
+		# Get Collection Name and Description
 		collection_name = request.POST["collectionName"]
 		description = request.POST["description"]
+
+		# Create instance of new collection object
 		new_collection = Collection(user=request.user, name=collection_name, description=description)
 
+		# Prepare dictionary for custom fields
 		fields_dict = {}
 
+		# Loop through custom fields created by user (current limit is 20)
+		# Each fieldName and fieldType added will be numbered
 		for i in range(1,20):
 			if request.POST.get(f"fieldName{i}", False):
+				# Create single pair dictionary for fieldName and fieldType
 				field_dict = {}
 				field_dict[request.POST[f"fieldName{i}"]] = request.POST.get(f"fieldType{i}")
+
+				# Add the single pair dict to the main fields dictionary
 				fields_dict[f'field{i}'] = field_dict
 			else:
+				# End loop when no more fields are detected
 				break
 		
+		# Save new collection object
 		new_collection.save()
 
+		# Create an object for the dictionary model (used to store fieldName and fieldType pairs)
 		field_dict_model = FieldDict(name=f"{collection_name} fields", collection=new_collection)
 		field_dict_model.save()
 
+		# Loop through fields_dict and create objects for key/value pair models to be connected to the dictionary model used above
 		for field in fields_dict:
 			for key, value in fields_dict[field].items():
 				name_type_pair = FieldNameTypePair(dictionary=field_dict_model, field_name=key, field_type=value)

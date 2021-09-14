@@ -195,6 +195,7 @@ function createItemRow(items, containerDiv) {
 	// Item Collumns
 	items.forEach(function(item) {
 		createItemCard(item, itemRow);
+		console.log(item);
 		});
 
 	containerDiv.appendChild(itemRow);

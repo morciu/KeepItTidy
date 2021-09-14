@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Collection, TextField, DateField, NumberField, DecimalField, FieldDict, FieldNameTypePair, Item
+from .models import User, Collection, TextField, BooleanField, DateField, NumberField, DecimalField, FieldDict, FieldNameTypePair, Item
 
 # Register your models here.
 admin.site.register(User)
