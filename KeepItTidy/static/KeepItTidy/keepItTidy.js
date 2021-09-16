@@ -232,8 +232,17 @@ function createItemCard(item, row, containerDiv) {
 		if (key != "name" && key != "description") {
 			let content = document.createElement("p");
 		content.className = "card-text";
-		content.innerHTML = key + ": " + item[key];
-		//console.log(key + ": " + item['key'])
+		// Check for boolean values
+		if (item[key] == true) {
+			content.innerHTML = key + ": " + 'Yes';
+		}
+		else if (item[key] == false) {
+			content.innerHTML = key + ": " + 'No';
+		}
+		else {
+			content.innerHTML = key + ": " + item[key];
+		}
+
 		itemCardBody.appendChild(content);
 	}
 	}

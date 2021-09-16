@@ -166,9 +166,16 @@ def add_item(request, collection_id):
 			# Get field type
 			field_type = key.split(" / ")[-1]
 
-			# Check field time and create item accordingly
+			# Check field type and create item accordingly
 			if field_type == "text":
 				field_obj = TextField(name=field_name, collection=collection, item=item, text=value)
+				field_obj.save()
+			elif field_type == "boolean":
+				print(value)
+				if value == "true":
+					field_obj = BooleanField(name=field_name, collection=collection, item=item, boolean=True)
+				elif value == "false":
+					field_obj = BooleanField(name=field_name, collection=collection, item=item, boolean=False)
 				field_obj.save()
 			elif field_type == "date":
 				field_obj = DateField(name=field_name, collection=collection, item=item, date=datetime.strptime(value, "%Y-%m-%d"))

@@ -5,6 +5,7 @@ from .models import User, Collection, TextField, BooleanField, DateField, Number
 admin.site.register(User)
 admin.site.register(Collection)
 admin.site.register(TextField)
+admin.site.register(BooleanField)
 admin.site.register(DateField)
 admin.site.register(NumberField)
 admin.site.register(DecimalField)

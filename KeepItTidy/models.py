@@ -68,7 +68,7 @@ class Item(models.Model):
 		boolean_fields = BooleanField.objects.filter(item=self)
 		if len(boolean_fields) > 0:
 			for i in boolean_fields:
-				fields[i.name] = i.text
+				fields[i.name] = i.boolean
 
 		date_fields = DateField.objects.filter(item=self)
 		if len(date_fields) > 0:
