@@ -191,6 +191,7 @@ function displayItems(itemSource) {
 function createItemRow(items, containerDiv) {
 	let itemRow = document.createElement("div");
 	itemRow.className = "row";
+	//itemRow.style.padding = "1em";
 
 	// Item Collumns
 	items.forEach(function(item) {
@@ -206,10 +207,11 @@ function createItemCard(item, row, containerDiv) {
 
 	// Set up divs
 	let itemCollumn = document.createElement("div");
-	itemCollumn.className = "col-sm col-md-3"
+	itemCollumn.className = "col-sm col-md-3";
+	itemCollumn.style.padding = "1em";
 
 	let itemCardDiv = document.createElement("div");
-	itemCardDiv.className = "card";
+	itemCardDiv.className = "card h-100"; // h-100 creates a fixed card height for the entire 100% height of the column
 
 	let itemCardBody = document.createElement("div");
 	itemCardBody.className = "card-body";
