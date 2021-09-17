@@ -1,14 +1,48 @@
 let numberOfFields = 1;
 
 document.addEventListener('DOMContentLoaded', function() {
-	// BY DEFAULT - List all collections
-	listCollections();
+	// BY DEFAULT - List all collections if we are in the right section
+	if (document.querySelector("#collections")) {
+		listCollections();
+	}
+
+	//Browse Collections from the Nav Bar
+	document.querySelector("#dropdown01").addEventListener('click', navbarCollectionList);
 	
 	// Add Field Button
-	if (document.querySelector("#newField") != null){
+	if (document.querySelector("#newField")) {
 		document.querySelector("#newField").addEventListener('click', addNewField);	
 	}
 });
+
+
+function navbarCollectionList() {
+	// Get collection titles to be listed in the navbar
+
+	// Dropdown button variable
+	let dropdownBrowse = document.querySelector("#dropdown01");
+
+	// Variable for dropt down list div
+	let dropList = document.createElement("div");
+	dropList.id = 'dropdown01ShowList';
+	dropList.className = "dropdown-menu";
+	dropList.setAttribute("adria-labelledby", "dropdown01");
+	dropdownBrowse.appendChild(dropList);
+
+	// Fetch the API
+	fetch('/get_collections')
+	.then(response => response.json())
+	.then(collections => {
+		collections.forEach(function(collection) {
+			let dropdownLink = document.createElement("a");
+			dropdownLink.className = "dropdown-item";
+			dropdownLink.setAttribute("href", "#");
+			dropdownLink.setAttribute("aria-disabled", "true");
+			dropdownLink.innerHTML = collection['name'];
+			dropList.appendChild(dropdownLink);
+		})
+	})
+}
 
 
 function listCollections() {
@@ -196,7 +230,6 @@ function createItemRow(items, containerDiv) {
 	// Item Collumns
 	items.forEach(function(item) {
 		createItemCard(item, itemRow);
-		console.log(item);
 		});
 
 	containerDiv.appendChild(itemRow);
