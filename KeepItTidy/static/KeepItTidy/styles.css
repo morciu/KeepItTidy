@@ -1,6 +1,8 @@
-
-
 body {
 	background-color: #243340;
 	padding-top: 70px;
+}
+
+.btn{
+	margin: 1em;
 }
