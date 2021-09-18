@@ -70,11 +70,8 @@ def register(request):
 
 
 @login_required
-def view_collection(request):
-	items = {}
-
+def view_collection(request, collection_id=None):
 	
-
 	return render(request, "keepittidy/view_collection.html")
 
 @login_required

@@ -3,7 +3,17 @@ let numberOfFields = 1;
 document.addEventListener('DOMContentLoaded', function() {
 	// BY DEFAULT - List all collections if we are in the right section
 	if (document.querySelector("#collections")) {
-		listCollections();
+		// Check if this was accessed through quick access bar
+		let url = window.location.href;
+		let urlArray = url.split('/');
+		let lastUrlElement = urlArray[urlArray.length - 1];
+
+		if (lastUrlElement == 'view_collection') {
+			listCollections();
+		}
+		else {
+			quickAccessCollection(parseInt(lastUrlElement));
+		}
 	}
 
 	//Browse Collections from the Nav Bar
@@ -16,8 +26,29 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
+function quickAccessCollection(collection_id) {
+	// Fetch API
+	fetch('/get_collections')
+	.then(response => response.json())
+	.then(collections => {
+		collections.forEach(function(collection) {
+			if (collection['id'] == collection_id) {
+				var source = collection;
+				displayCollection(collection, document.querySelector("#collections"));
+				return
+			}
+	})
+	})
+}
+
+
 function navbarCollectionList() {
 	// Get collection titles to be listed in the navbar
+
+	//get parammeter for url link
+	let url = window.location.href;
+	let urlArray = url.split('/');
+	let parammeter = urlArray[urlArray.length - 1];
 
 	// Dropdown button variable
 	let dropdownBrowse = document.querySelector("#dropdown01");
@@ -36,7 +67,8 @@ function navbarCollectionList() {
 		collections.forEach(function(collection) {
 			let dropdownLink = document.createElement("a");
 			dropdownLink.className = "dropdown-item";
-			dropdownLink.setAttribute("href", "#");
+			let urlLink = "view_collection/" + collection['id'];
+			dropdownLink.setAttribute("href", urlLink);
 			dropdownLink.setAttribute("aria-disabled", "true");
 			dropdownLink.innerHTML = collection['name'];
 			dropList.appendChild(dropdownLink);
@@ -92,50 +124,7 @@ function listCollections() {
 				mainDivContainer.style.display = "none";
 
 				// Display requested collection
-
-				// Create main div
-				let clickedCollection = document.createElement("div");
-				clickedCollection.id = "collection";
-				clickedCollection.className = "jumbotron jumbotron-fluid";
-
-				// Create Container div
-				let containerDiv = document.createElement("div");
-				containerDiv.className = "container-fluid";
-
-				// Header
-				let collectionName = document.createElement("h1");
-				collectionName.className = "display-5";
-				collectionName.innerHTML = collection['name'];
-
-				// Description
-				let collectionDescription = document.createElement("p");
-				collectionDescription.className = "lead";
-				collectionDescription.innerHTML = collection['description'];
-
-				// Paragraph for add button
-				let addButtonParagraph = document.createElement("p");
-				addButtonParagraph.className = "lead";
-
-				// Add item button
-				let addButton = document.createElement("a");
-				addButton.className = "btn btn-primary btn-lg";
-				addButton.setAttribute("href", "add_item/" + collection['id']);
-				addButton.setAttribute("role", "button");
-				addButton.innerHTML = "Add item";
-
-				// Set element hierarchy
-				addButtonParagraph.appendChild(addButton);
-
-				containerDiv.appendChild(collectionName);
-				containerDiv.appendChild(collectionDescription);
-				containerDiv.appendChild(addButtonParagraph);
-
-				clickedCollection.appendChild(containerDiv);
-
-				mainDiv.appendChild(clickedCollection);
-
-				displayItems(collection['items']);
-
+				displayCollection(collection, mainDiv);
 
 			})
 			cardButton.innerHTML = "Go to this thing";
@@ -146,8 +135,6 @@ function listCollections() {
 			colDiv.appendChild(cardDiv);
 
 			rowDiv.appendChild(colDiv);
-
-			console.log("Created one card!");
 			})
 		mainDivContainer.appendChild(rowDiv);
 
@@ -183,6 +170,52 @@ function addNewField() {
 
 	let fieldFormsDiv = document.querySelector("#fieldForms");
 	fieldFormsDiv.appendChild(extraForm);
+}
+
+
+function displayCollection(collection, parrent) {
+	// Create main div
+	let clickedCollection = document.createElement("div");
+	clickedCollection.id = "collection";
+	clickedCollection.className = "jumbotron jumbotron-fluid";
+
+	// Create Container div
+	let containerDiv = document.createElement("div");
+	containerDiv.className = "container-fluid";
+
+	// Header
+	let collectionName = document.createElement("h1");
+	collectionName.className = "display-5";
+	collectionName.innerHTML = collection['name'];
+
+	// Description
+	let collectionDescription = document.createElement("p");
+	collectionDescription.className = "lead";
+	collectionDescription.innerHTML = collection['description'];
+
+	// Paragraph for add button
+	let addButtonParagraph = document.createElement("p");
+	addButtonParagraph.className = "lead";
+
+	// Add item button
+	let addButton = document.createElement("a");
+	addButton.className = "btn btn-primary btn-lg";
+	addButton.setAttribute("href", "add_item/" + collection['id']);
+	addButton.setAttribute("role", "button");
+	addButton.innerHTML = "Add item";
+
+	// Set element hierarchy
+	addButtonParagraph.appendChild(addButton);
+
+	containerDiv.appendChild(collectionName);
+	containerDiv.appendChild(collectionDescription);
+	containerDiv.appendChild(addButtonParagraph);
+
+	clickedCollection.appendChild(containerDiv);
+
+	parrent.appendChild(clickedCollection);
+
+	displayItems(collection['items']);
 }
 
 
