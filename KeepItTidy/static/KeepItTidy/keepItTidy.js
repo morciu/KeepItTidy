@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 
 	//Browse Collections from the Nav Bar
-	document.querySelector("#dropdown01").addEventListener('click', navbarCollectionList);
+	navbarCollectionList();
 	
 	// Add Field Button
 	if (document.querySelector("#newField")) {
@@ -57,7 +57,7 @@ function navbarCollectionList() {
 	let dropList = document.createElement("div");
 	dropList.id = 'dropdown01ShowList';
 	dropList.className = "dropdown-menu";
-	dropList.setAttribute("adria-labelledby", "dropdown01");
+	dropList.setAttribute("aria-labelledby", "dropdown01");
 	dropdownBrowse.appendChild(dropList);
 
 	// Fetch the API
@@ -67,9 +67,9 @@ function navbarCollectionList() {
 		collections.forEach(function(collection) {
 			let dropdownLink = document.createElement("a");
 			dropdownLink.className = "dropdown-item";
-			let urlLink = "view_collection/" + collection['id'];
+			let urlLink = "../view_collection/" + collection['id'];
 			dropdownLink.setAttribute("href", urlLink);
-			dropdownLink.setAttribute("aria-disabled", "true");
+			//dropdownLink.setAttribute("aria-disabled", "true");
 			dropdownLink.innerHTML = collection['name'];
 			dropList.appendChild(dropdownLink);
 		})
