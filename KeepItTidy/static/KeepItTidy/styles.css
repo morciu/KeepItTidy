@@ -6,3 +6,8 @@ body {
 .btn{
 	margin: 1em;
 }
+
+a.card {
+	text-decoration: none;
+	color: inherit;
+}

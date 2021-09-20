@@ -276,15 +276,12 @@ function createItemCard(item, row, containerDiv) {
 	itemCollumn.className = "col-sm col-md-3";
 	itemCollumn.style.padding = "1em";
 
-	// Wrap card div inside a button to trigger a modal pop-up
-	let modalButton = document.createElement("button");
-	modalButton.setAttribute("type", "button");
-	modalButton.setAttribute("data-toggle", "modal");
-	modalButton.setAttribute("data-target", "#itemModal" + item['id']);
-
-	// Create card elements
-	let itemCardDiv = document.createElement("div");
+	// Create card elements starting with an "a" tag to trigger a modal pop-up
+	let itemCardDiv = document.createElement("a");
 	itemCardDiv.className = "card h-100"; // h-100 creates a fixed card height for the entire 100% height of the column
+	itemCardDiv.setAttribute("type", "button");
+	itemCardDiv.setAttribute("data-toggle", "modal");
+	itemCardDiv.setAttribute("data-target", "#itemModal" + item['id']);
 
 	let itemCardBody = document.createElement("div");
 	itemCardBody.className = "card-body";
@@ -304,7 +301,7 @@ function createItemCard(item, row, containerDiv) {
 	itemCardDescription.innerHTML = item['description']
 
 	for (var key in item) {
-		if (key != "name" && key != "description") {
+		if (key != "name" && key != "description" && key != "id") {
 			let content = document.createElement("p");
 		content.className = "card-text";
 		// Check for boolean values
@@ -376,7 +373,6 @@ function createItemCard(item, row, containerDiv) {
 	// Set up element hierarchy 
 	
 	itemCardDiv.appendChild(itemCardBody);
-	modalButton.appendChild(itemCardDiv);
-	itemCollumn.appendChild(modalButton);
+	itemCollumn.appendChild(itemCardDiv);
 	row.appendChild(itemCollumn);
 }
