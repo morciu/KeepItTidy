@@ -276,6 +276,13 @@ function createItemCard(item, row, containerDiv) {
 	itemCollumn.className = "col-sm col-md-3";
 	itemCollumn.style.padding = "1em";
 
+	// Wrap card div inside a button to trigger a modal pop-up
+	let modalButton = document.createElement("button");
+	modalButton.setAttribute("type", "button");
+	modalButton.setAttribute("data-toggle", "modal");
+	modalButton.setAttribute("data-target", "#itemModal" + item['id']);
+
+	// Create card elements
 	let itemCardDiv = document.createElement("div");
 	itemCardDiv.className = "card h-100"; // h-100 creates a fixed card height for the entire 100% height of the column
 
@@ -315,10 +322,61 @@ function createItemCard(item, row, containerDiv) {
 	}
 	}
 
+	// Set up modal pop-up
+	let modalDiv = document.createElement("div");
+	modalDiv.className = "modal fade";
+	modalDiv.id = "itemModal" + item['id'];
+	modalDiv.setAttribute("tabindex", "-1");
+	modalDiv.setAttribute("role", "document");
+	modalDiv.setAttribute("aria-labelledby", "#itemModal" + item['id'] + "Title");
+	modalDiv.setAttribute("aria-hidden", "true");
+
+	let modalDialogDiv = document.createElement("div");
+	modalDialogDiv.className = "modal-dialog modal-dialog-centered";
+	modalDialogDiv.setAttribute("role", "document");
+
+	let modalContent = document.createElement("div");
+	modalContent.className = "modal-content";
+
+	let modalHeader = document.createElement("div");
+	modalHeader.className = "modal-header";
+
+	let modalTitle = document.createElement("h5");
+	modalTitle.className = "modal-title";
+	modalTitle.id = "itemModal" + item['id'] + "LongTitle";
+	modalTitle.innerHTML = item['name'];
+	modalHeader.appendChild(modalTitle);
+
+	let modalCloseButton = document.createElement("button");
+	modalCloseButton.setAttribute("type", "button");
+	modalCloseButton.className = "close";
+	modalCloseButton.setAttribute("data-dismiss", "modal");
+	modalCloseButton.setAttribute("aria-label", "Close");
+
+	let modalCloseButtonSpan = document.createElement("span");
+	modalCloseButtonSpan.setAttribute("aria-hidden", "true")
+	modalCloseButtonSpan.innerHTML = "&times;";
+	modalCloseButton.appendChild(modalCloseButtonSpan);
+
+	modalHeader.appendChild(modalCloseButton);
+
+	modalContent.appendChild(modalHeader);
+
+	let modalBody = document.createElement("div");
+	modalBody.className = "modal-body";
+
+	let modalItemDescription = document.createElement("p");
+	modalItemDescription.innerHTML = item['description'];
+	modalBody.appendChild(modalItemDescription);
+
+	modalContent.appendChild(modalBody);
+	modalDialogDiv.appendChild(modalContent);
+	modalDiv.appendChild(modalDialogDiv);
+	itemCollumn.appendChild(modalDiv);
 	// Set up element hierarchy 
 	
 	itemCardDiv.appendChild(itemCardBody);
-	itemCollumn.appendChild(itemCardDiv);
+	modalButton.appendChild(itemCardDiv);
+	itemCollumn.appendChild(modalButton);
 	row.appendChild(itemCollumn);
-
 }
