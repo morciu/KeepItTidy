@@ -303,20 +303,20 @@ function createItemCard(item, row, containerDiv) {
 	for (var key in item) {
 		if (key != "name" && key != "description" && key != "id") {
 			let content = document.createElement("p");
-		content.className = "card-text";
-		// Check for boolean values
-		if (item[key] == true) {
-			content.innerHTML = key + ": " + 'Yes';
-		}
-		else if (item[key] == false) {
-			content.innerHTML = key + ": " + 'No';
-		}
-		else {
-			content.innerHTML = key + ": " + item[key];
-		}
+			content.className = "card-text";
+			// Check for boolean values
+			if (item[key] == true) {
+				content.innerHTML = key + ": " + 'Yes';
+			}
+			else if (item[key] == false) {
+				content.innerHTML = key + ": " + 'No';
+			}
+			else {
+				content.innerHTML = key + ": " + item[key];
+			}
 
-		itemCardBody.appendChild(content);
-	}
+			itemCardBody.appendChild(content);
+		}
 	}
 
 	// Set up modal pop-up
@@ -365,6 +365,25 @@ function createItemCard(item, row, containerDiv) {
 	let modalItemDescription = document.createElement("p");
 	modalItemDescription.innerHTML = item['description'];
 	modalBody.appendChild(modalItemDescription);
+
+	// Loop through fields and list them in the modal window
+	for (var key in item) {
+		if (key != "name" && key != "description" && key != "id") {
+			let modalContent = document.createElement("p");
+
+			if (item[key] == true) {
+				modalContent.innerHTML = key + ": " + 'Yes';
+			}
+			else if (item[key] == false) {
+				modalContent.innerHTML = key + ": " + 'No';
+			}
+			else {
+				modalContent.innerHTML = key + ": " + item[key];
+			}
+
+			modalBody.appendChild(modalContent);
+		}
+	}
 
 	modalContent.appendChild(modalBody);
 	modalDialogDiv.appendChild(modalContent);
