@@ -20,7 +20,7 @@
 		  <div class="navbar-collapse collapse" id="navbarsExampleDefault" style="">
 		    <ul class="navbar-nav mr-auto">
 		      <li class="nav-item active">
-		        <a class="nav-link" href="{% url 'index' %}">Home<span class="sr-only">(current)</span></a>
+		        <a class="nav-link" href="{% url 'index' %}">{{user.username}}<span class="sr-only">(current)</span></a>
 		      </li>
 		      <li class="nav-item">
 		        <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
