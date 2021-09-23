@@ -23,6 +23,12 @@ document.addEventListener('DOMContentLoaded', function() {
 	if (document.querySelector("#newField")) {
 		document.querySelector("#newField").addEventListener('click', addNewField);	
 	}
+
+	/*
+	// Search Button
+	document.querySelector("#search").addEventListener('click', function() {
+		console.log("Pressed Search!!!");
+	})*/
 });
 
 
@@ -37,7 +43,7 @@ function quickAccessCollection(collection_id) {
 				displayCollection(collection, document.querySelector("#collections"));
 				return
 			}
-	})
+		})
 	})
 }
 
@@ -200,7 +206,7 @@ function displayCollection(collection, parrent) {
 	// Add item button
 	let addButton = document.createElement("a");
 	addButton.className = "btn btn-primary btn-lg";
-	addButton.setAttribute("href", "add_item/" + collection['id']);
+	addButton.setAttribute("href", "../add_item/" + collection['id']);
 	addButton.setAttribute("role", "button");
 	addButton.innerHTML = "Add item";
 

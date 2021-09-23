@@ -120,6 +120,13 @@ def create_collection(request):
 		return render(request, "keepittidy/create_collection.html")
 
 
+'''def search(request):
+	if request.method == "POST":
+		search = request.POST["search_text"]
+
+		return render(request, "keepittidy/search.html")'''
+
+
 @login_required
 def get_collections(request):
 	current_user = request.user
