@@ -8,7 +8,7 @@
 		<p class="lead">{{ collection.description }}</p>
 	</div>
 	<div class="container">
-		<form action="{% url 'add_item' collection.id %}" method="post">
+		<form action="{% url 'add_item' collection.id %}" method="post" enctype="multipart/form-data">
 			{% csrf_token %}
 			<!--Main mandatory fields-->
 			<label for=itemName>Item Name</label>
@@ -19,23 +19,23 @@
 
 			<!--Aditional fields set up by the user-->
 			{% for field in fields %}
-		    <div class="form-group">
-		        <label for="{{field.field_name}}">{{field.field_name}}</label>
-		        {% if field.field_type == "text" %}
-		        	<input type="text" class="form-control {{field.field_type}}" name="{{field.field_name}} / {{field.field_type}}" placeholder={{field.field_type}}>
-		        {% elif field.field_type == "boolean" %}
-		        	<input type="radio" class="form-control {{field.field_type}}" id="{{field.field_name}} yes" value="true" name="{{field.field_name}} / {{field.field_type}}">
-		        	<label for="{{field.field_name}} yes">Yes</label>
-		        	<input type="radio" class="form-control {{field.field_type}}" id="{{field.field_name}} no" value="false" name="{{field.field_name}} / {{field.field_type}}" checked>
-		        	<label for="{{field.field_name}} yes">No</label>
-		        {% elif field.field_type == "date" %}
-		        	<input type="date" class="form-control {{field.field_type}}" name="{{field.field_name}} / {{field.field_type}}" placeholder={{field.field_type}}>
-		        {% elif field.field_type == "number" %}
-		        	<input type="number" step="any" class="form-control {{field.field_type}}" name="{{field.field_name}} / {{field.field_type}}" placeholder={{field.field_type}}>
-		        {% elif field.field_type == "decimal" %}
-		        	<input type="number" step=".01" class="form-control {{field.field_type}}" name="{{field.field_name}} / {{field.field_type}}" placeholder={{field.field_type}}>
-		        {% endif %}
-		    </div>
+	        <label for="{{field.field_name}}">{{field.field_name}}</label>
+	        {% if field.field_type == "text" %}
+	        	<input type="text" class="form-control {{field.field_type}}" name="{{field.field_name}} / {{field.field_type}}" placeholder={{field.field_type}}>
+	        {% elif field.field_type == "boolean" %}
+	        	<input type="radio" class="form-control {{field.field_type}}" id="{{field.field_name}} yes" value="true" name="{{field.field_name}} / {{field.field_type}}">
+	        	<label for="{{field.field_name}} yes">Yes</label>
+	        	<input type="radio" class="form-control {{field.field_type}}" id="{{field.field_name}} no" value="false" name="{{field.field_name}} / {{field.field_type}}" checked>
+	        	<label for="{{field.field_name}} yes">No</label>
+	        {% elif field.field_type == "date" %}
+	        	<input type="date" class="form-control {{field.field_type}}" name="{{field.field_name}} / {{field.field_type}}" placeholder={{field.field_type}}>
+	        {% elif field.field_type == "number" %}
+	        	<input type="number" step="any" class="form-control {{field.field_type}}" name="{{field.field_name}} / {{field.field_type}}" placeholder={{field.field_type}}>
+	        {% elif field.field_type == "decimal" %}
+	        	<input type="number" step=".01" class="form-control {{field.field_type}}" name="{{field.field_name}} / {{field.field_type}}" placeholder={{field.field_type}}>
+	        {% elif field.field_type == "image" %}
+	        	<input type="file", class="form-control {{field.field_type}}" name="{{field.field_name}} / {{field.field_type}}">
+	        {% endif %}
 		    {% endfor %}
 		    <button type="submit" class="btn btn-primary">Submit</button>
 		</form>

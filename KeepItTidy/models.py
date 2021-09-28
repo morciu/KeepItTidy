@@ -85,6 +85,11 @@ class Item(models.Model):
 			for i in decimal_fields:
 				fields[i.name] = i.decimal
 
+		image_fields = ImageField.objects.filter(item=self)
+		if len(image_fields) > 0:
+			for i in image_fields:
+				fields[i.name] = i.image.url
+
 		return fields
 
 
@@ -121,6 +126,14 @@ class DecimalField(models.Model):
 	collection = models.ForeignKey(Collection, on_delete=models.CASCADE, related_name="decimal_field")
 	item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name="decimal_field")
 	decimal = models.DecimalField(max_digits=5, decimal_places=2)
+
+
+class ImageField(models.Model):
+	name = models.CharField(max_length=200)
+	collection = models.ForeignKey(Collection, on_delete=models.CASCADE, related_name="image_field")
+	item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name="image_field")
+	image = models.ImageField(upload_to='images/')
+
 
 
 # Set up a dictionary through models for storing field_name and field_type pairs

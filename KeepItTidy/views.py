@@ -8,8 +8,9 @@ from django.db import IntegrityError
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from django.core.files.storage import FileSystemStorage
 
-from .models import User, Collection, TextField, BooleanField, DateField, NumberField, DecimalField, FieldDict, FieldNameTypePair, Item
+from .models import User, Collection, TextField, BooleanField, DateField, NumberField, DecimalField, ImageField, FieldDict, FieldNameTypePair, Item
 
 # Create your views here.
 
@@ -170,12 +171,14 @@ def add_item(request, collection_id):
 			# Get field type
 			field_type = key.split(" / ")[-1]
 
+			#print(request.FILES)
+			#print(key)
+
 			# Check field type and create item accordingly
 			if field_type == "text":
 				field_obj = TextField(name=field_name, collection=collection, item=item, text=value)
 				field_obj.save()
 			elif field_type == "boolean":
-				print(value)
 				if value == "true":
 					field_obj = BooleanField(name=field_name, collection=collection, item=item, boolean=True)
 				elif value == "false":
@@ -190,6 +193,24 @@ def add_item(request, collection_id):
 			elif field_type == "decimal":
 				field_obj = DecimalField(name=field_name, collection=collection, item=item, decimal=float(value))
 				field_obj.save()
+			'''elif request.FILES[key]:
+				print("This is an image fool!")
+				print(request.FILES)
+				#field_obj = ImageField(name=field_name, collection=collection, item=item, image=request.FILES[field_name])
+				#field_obj.save()'''
+
+		if len(request.FILES) > 0:
+			for i in request.FILES:
+				file_name = i.split(" / ")[0]
+				file_type = i.split(" / ")[-1]
+
+				if file_type == "image":
+					image = request.FILES[i]
+					print("heck")
+
+					field_obj = ImageField(name=file_name, collection=collection, item=item, image=image)
+					field_obj.save()
+
 
 			
 

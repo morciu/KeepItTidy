@@ -268,6 +268,7 @@ function createItemRow(items, containerDiv) {
 
 	// Item Collumns
 	items.forEach(function(item) {
+		console.log(item);
 		createItemCard(item, itemRow);
 		});
 
@@ -316,6 +317,12 @@ function createItemCard(item, row, containerDiv) {
 			}
 			else if (item[key] == false) {
 				content.innerHTML = key + ": " + 'No';
+			}
+			else if (item[key][0] == "/") {
+				let image = document.createElement("img");
+				image.className = "img-fluid";
+				image.src = item[key];
+				itemCardBody.appendChild(image)
 			}
 			else {
 				content.innerHTML = key + ": " + item[key];
@@ -383,6 +390,11 @@ function createItemCard(item, row, containerDiv) {
 			else if (item[key] == false) {
 				modalContent.innerHTML = key + ": " + 'No';
 			}
+			else if (item[key][0] == "/") {
+				let image = document.createElement("img");
+				image.className = "img-fluid";
+				image.src = item[key];
+				modalBody.appendChild(image)}
 			else {
 				modalContent.innerHTML = key + ": " + item[key];
 			}
