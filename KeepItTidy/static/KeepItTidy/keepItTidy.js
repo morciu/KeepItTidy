@@ -276,63 +276,7 @@ function createItemRow(items, containerDiv) {
 }
 
 
-function createItemCard(item, row, containerDiv) {
-
-	// Set up divs
-	let itemCollumn = document.createElement("div");
-	itemCollumn.className = "col-sm col-md-3";
-	itemCollumn.style.padding = "1em";
-
-	// Create card elements starting with an "a" tag to trigger a modal pop-up
-	let itemCardDiv = document.createElement("a");
-	itemCardDiv.className = "card h-100"; // h-100 creates a fixed card height for the entire 100% height of the column
-	itemCardDiv.setAttribute("type", "button");
-	itemCardDiv.setAttribute("data-toggle", "modal");
-	itemCardDiv.setAttribute("data-target", "#itemModal" + item['id']);
-
-	let itemCardBody = document.createElement("div");
-	itemCardBody.className = "card-body";
-
-	let itemCardTitle = document.createElement("h5");
-	itemCardTitle.className = "card-title";
-	itemCardBody.appendChild(itemCardTitle);
-
-	let itemCardDescription = document.createElement("p");
-	itemCardDescription.className = "card-text";
-	itemCardBody.appendChild(itemCardDescription);
-
-	// Insert content
-
-	// Name and Description
-	itemCardTitle.innerHTML = item['name'];
-	itemCardDescription.innerHTML = item['description']
-
-	for (var key in item) {
-		if (key != "name" && key != "description" && key != "id") {
-			let content = document.createElement("p");
-			content.className = "card-text";
-			// Check for boolean values
-			if (item[key] == true) {
-				content.innerHTML = key + ": " + 'Yes';
-			}
-			else if (item[key] == false) {
-				content.innerHTML = key + ": " + 'No';
-			}
-			else if (item[key][0] == "/") {
-				let image = document.createElement("img");
-				image.className = "img-fluid";
-				image.src = item[key];
-				itemCardBody.appendChild(image)
-			}
-			else {
-				content.innerHTML = key + ": " + item[key];
-			}
-
-			itemCardBody.appendChild(content);
-		}
-	}
-
-	// Set up modal pop-up
+function createModalPopup(item, parent) {
 	let modalDiv = document.createElement("div");
 	modalDiv.className = "modal fade";
 	modalDiv.id = "itemModal" + item['id'];
@@ -406,7 +350,68 @@ function createItemCard(item, row, containerDiv) {
 	modalContent.appendChild(modalBody);
 	modalDialogDiv.appendChild(modalContent);
 	modalDiv.appendChild(modalDialogDiv);
-	itemCollumn.appendChild(modalDiv);
+	parent.appendChild(modalDiv);
+}
+
+
+function createItemCard(item, row, containerDiv) {
+
+	// Set up divs
+	let itemCollumn = document.createElement("div");
+	itemCollumn.className = "col-sm col-md-3";
+	itemCollumn.style.padding = "1em";
+
+	// Create card elements starting with an "a" tag to trigger a modal pop-up
+	let itemCardDiv = document.createElement("a");
+	itemCardDiv.className = "card h-100"; // h-100 creates a fixed card height for the entire 100% height of the column
+	itemCardDiv.setAttribute("type", "button");
+	itemCardDiv.setAttribute("data-toggle", "modal");
+	itemCardDiv.setAttribute("data-target", "#itemModal" + item['id']);
+
+	let itemCardBody = document.createElement("div");
+	itemCardBody.className = "card-body";
+
+	let itemCardTitle = document.createElement("h5");
+	itemCardTitle.className = "card-title";
+	itemCardBody.appendChild(itemCardTitle);
+
+	let itemCardDescription = document.createElement("p");
+	itemCardDescription.className = "card-text";
+	itemCardBody.appendChild(itemCardDescription);
+
+	// Insert content
+
+	// Name and Description
+	itemCardTitle.innerHTML = item['name'];
+	itemCardDescription.innerHTML = item['description']
+
+	for (var key in item) {
+		if (key != "name" && key != "description" && key != "id") {
+			let content = document.createElement("p");
+			content.className = "card-text";
+			// Check for boolean values
+			if (item[key] == true) {
+				content.innerHTML = key + ": " + 'Yes';
+			}
+			else if (item[key] == false) {
+				content.innerHTML = key + ": " + 'No';
+			}
+			else if (item[key][0] == "/") {
+				let image = document.createElement("img");
+				image.className = "img-fluid";
+				image.src = item[key];
+				itemCardBody.appendChild(image)
+			}
+			else {
+				content.innerHTML = key + ": " + item[key];
+			}
+
+			itemCardBody.appendChild(content);
+		}
+	}
+
+	// Set up modal pop-up
+	createModalPopup(item, itemCollumn)
 	// Set up element hierarchy 
 	
 	itemCardDiv.appendChild(itemCardBody);
