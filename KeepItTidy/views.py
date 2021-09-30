@@ -229,6 +229,23 @@ def add_item(request, collection_id):
 			})
 
 
+def delete_item(request):
+	if request.method == "PUT":
+		# Get JSON data from delete button
+		data = json.loads(request.body)
+		
+		# Assign object to be deleted to a variable
+		item_to_del = Item.objects.get(id=data['itemId'])
+
+		# Get parent collection to pass on as api and refresh the page
+		parent_collection = item_to_del.collection.id
+		print(parent_collection)
+
+		# Delete object from database
+		#item_to_del.delete()
+
+
+
 # General purpose functions
 
 def create_field_obj(type, name, collection):

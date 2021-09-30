@@ -1,5 +1,25 @@
 let numberOfFields = 1;
 
+// Get cookie value
+function getCookie(name) {
+	let cookieValue = null;
+
+	if (document.cookie && document.cookie !== '') {
+		const cookies = document.cookie.split(';');
+
+		for (let i = 0; i < cookies.length; i++) {
+			const cookie = cookies[i].trim();
+
+			// Check if cookie string begins with required name
+			if (cookie.substring(0, name.length +1) === (name + '=')) {
+				cookieValue = decodeURIComponent(cookie.substring(name.length +1));
+				break;
+			}
+		}
+	}
+	return cookieValue;
+}
+
 document.addEventListener('DOMContentLoaded', function() {
 	// BY DEFAULT - List all collections if we are in the right section
 	if (document.querySelector("#collections")) {
@@ -180,6 +200,9 @@ function addNewField() {
 
 
 function displayCollection(collection, parrent) {
+	// Clear screen
+	parrent.innerHTML = "";
+	console.log("Parent ID is " + parrent.id);
 	// Create main div
 	let clickedCollection = document.createElement("div");
 	clickedCollection.id = "collection";
@@ -226,6 +249,11 @@ function displayCollection(collection, parrent) {
 
 
 function displayItems(itemSource) {
+	// Clear screen of previous items
+	if (document.querySelector("#itemList")) {
+		document.body.removeChild(document.querySelector("#itemList"));
+	}
+
 	// Items
 	let items = itemSource;
 	let nrOfRows;
@@ -244,6 +272,7 @@ function displayItems(itemSource) {
 
 	let itemsContainer = document.createElement("div");
 	itemsContainer.className = "container-fluid";
+	itemsContainer.id = "itemList";
 
 	for (let i = 0; i < nrOfRows; i++) {
 		let row = items.slice(0, 4);
@@ -350,6 +379,9 @@ function createModalPopup(item, parent) {
 	modalContent.appendChild(modalBody);
 	modalDialogDiv.appendChild(modalContent);
 	modalDiv.appendChild(modalDialogDiv);
+
+	addDeleteButton(item, modalContent);
+
 	parent.appendChild(modalDiv);
 }
 
@@ -417,4 +449,35 @@ function createItemCard(item, row, containerDiv) {
 	itemCardDiv.appendChild(itemCardBody);
 	itemCollumn.appendChild(itemCardDiv);
 	row.appendChild(itemCollumn);
+}
+
+function addDeleteButton(source, parent) {
+	buttonDiv = document.createElement("button");
+	buttonDiv.setAttribute("type", "button");
+	buttonDiv.className = "btn btn-danger";
+	buttonDiv.innerHTML = "Delete";
+	buttonDiv.name = source["id"];
+	buttonDiv.setAttribute("data-dismiss", "modal");
+
+	buttonDiv.addEventListener("click", function() {
+		fetch("/delete_item", {
+			method: 'PUT',
+			mode: 'same-origin',
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json',
+				'X-CSRFToken': getCookie('csrftoken')
+			},
+			body: JSON.stringify({
+				"itemId": source['id']
+			})
+		})
+		.then(function() {
+			let parentCol = parent.parentElement.parentElement.parentElement;
+			let parentRow = parentCol.parentElement;
+			parentRow.removeChild(parentCol);
+		})
+	})
+
+	parent.appendChild(buttonDiv)
 }

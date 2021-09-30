@@ -58,7 +58,7 @@ class Item(models.Model):
 
 	def get_fields(self):
 		# Get all fields attached to this item
-		fields = {"id": self.id, "name": self.name, "description": self.description}
+		fields = {"id": self.id, "name": self.name, "description": self.description, "col_id": self.collection.id}
 
 		text_fields = TextField.objects.filter(item=self)
 		if len(text_fields) > 0:

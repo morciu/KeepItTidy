@@ -28,7 +28,7 @@
 	        	<input type="radio" class="form-control {{field.field_type}}" id="{{field.field_name}} no" value="false" name="{{field.field_name}} / {{field.field_type}}" checked>
 	        	<label for="{{field.field_name}} yes">No</label>
 	        {% elif field.field_type == "date" %}
-	        	<input type="date" class="form-control {{field.field_type}}" name="{{field.field_name}} / {{field.field_type}}" placeholder={{field.field_type}}>
+	        	<input type="date" class="form-control {{field.field_type}}" name="{{field.field_name}} / {{field.field_type}}" placeholder={{field.field_type}} required>
 	        {% elif field.field_type == "number" %}
 	        	<input type="number" step="any" class="form-control {{field.field_type}}" name="{{field.field_name}} / {{field.field_type}}" placeholder={{field.field_type}}>
 	        {% elif field.field_type == "decimal" %}
