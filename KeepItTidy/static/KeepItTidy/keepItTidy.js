@@ -380,7 +380,9 @@ function createModalPopup(item, parent) {
 	modalDialogDiv.appendChild(modalContent);
 	modalDiv.appendChild(modalDialogDiv);
 
-	addDeleteButton(item, modalContent);
+	if (!document.querySelector("#delete" + item['id'])) {
+		addDeleteButton(item, modalContent);
+	}
 
 	parent.appendChild(modalDiv);
 }
@@ -399,6 +401,18 @@ function createItemCard(item, row, containerDiv) {
 	itemCardDiv.setAttribute("type", "button");
 	itemCardDiv.setAttribute("data-toggle", "modal");
 	itemCardDiv.setAttribute("data-target", "#itemModal" + item['id']);
+
+	// If card is clicked reset the 'confirm delete' button
+	itemCardDiv.addEventListener("click", function() {
+		// Reset delete button
+		if (document.querySelector('#confirmDelete'+ item['id'])) {
+			// create delete button
+			document.querySelector('#delete' + item['id']).style.display = "block";
+			console.log(document.querySelector('#confirmDelete' + item['id']));
+			// remove confirm button
+			document.querySelector('#confirmDelete' + item['id']).remove();
+		}
+	})
 
 	let itemCardBody = document.createElement("div");
 	itemCardBody.className = "card-body";
@@ -452,14 +466,30 @@ function createItemCard(item, row, containerDiv) {
 }
 
 function addDeleteButton(source, parent) {
-	buttonDiv = document.createElement("button");
-	buttonDiv.setAttribute("type", "button");
-	buttonDiv.className = "btn btn-danger";
-	buttonDiv.innerHTML = "Delete";
-	buttonDiv.name = source["id"];
-	buttonDiv.setAttribute("data-dismiss", "modal");
+	let button = document.createElement("button");
+	button.style.display = "block";
+	button.setAttribute("type", "button");
+	button.className = "btn btn-warning";
+	button.innerHTML = "Delete";
+	button.id = "delete" + source["id"];
+	parent.appendChild(button);
 
-	buttonDiv.addEventListener("click", function() {
+	button.addEventListener("click", function() {
+		button.style.display = "none";
+		confirmDelete(source, parent);
+		})
+}
+
+
+function confirmDelete(source, parent) {
+	let confirm = document.createElement("button");
+	confirm.setAttribute("type", "button");
+	confirm.className = "btn btn-danger";
+	confirm.innerHTML = "Confirm Deletion";
+	confirm.id = "confirmDelete" + source['id']
+	confirm.setAttribute("data-dismiss", "modal");
+
+	confirm.addEventListener("click", function() {
 		fetch("/delete_item", {
 			method: 'PUT',
 			mode: 'same-origin',
@@ -469,15 +499,15 @@ function addDeleteButton(source, parent) {
 				'X-CSRFToken': getCookie('csrftoken')
 			},
 			body: JSON.stringify({
-				"itemId": source['id']
+				'itemId': source['id']
 			})
 		})
 		.then(function() {
 			let parentCol = parent.parentElement.parentElement.parentElement;
 			let parentRow = parentCol.parentElement;
-			parentRow.removeChild(parentCol);
+			parentRow.removeChild(parentCol);	
 		})
-	})
 
-	parent.appendChild(buttonDiv)
+	})
+	parent.appendChild(confirm);
 }
