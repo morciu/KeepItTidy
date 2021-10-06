@@ -354,7 +354,7 @@ function createModalPopup(item, parent) {
 
 	// Loop through fields and list them in the modal window
 	for (var key in item) {
-		if (key != "name" && key != "description" && key != "id") {
+		if (!["name", "description", "id", "col_id"].includes(key)) {
 			let modalContent = document.createElement("p");
 
 			if (item[key] == true) {
@@ -380,9 +380,21 @@ function createModalPopup(item, parent) {
 	modalDialogDiv.appendChild(modalContent);
 	modalDiv.appendChild(modalDialogDiv);
 
-	if (!document.querySelector("#delete" + item['id'])) {
-		addDeleteButton(item, modalContent);
-	}
+	
+
+	// Create div container for delete and edit buttons
+
+	let itemButtons = document.createElement("div");
+	itemButtons.className = "itemButtons btn-toolbar";
+
+	// Add edit button
+	addEditButton(item, itemButtons);
+
+	// Add delete button
+	addDeleteButton(item, itemButtons);
+
+	modalContent.appendChild(itemButtons);
+	
 
 	parent.appendChild(modalDiv);
 }
@@ -432,9 +444,13 @@ function createItemCard(item, row, containerDiv) {
 	itemCardDescription.innerHTML = item['description']
 
 	for (var key in item) {
-		if (key != "name" && key != "description" && key != "id") {
+		if (!["name", "description", "id", "col_id"].includes(key)) {
+			let contentDiv = document.createElement("div");
+			contentDiv.className = "content-container";
+
 			let content = document.createElement("p");
-			content.className = "card-text";
+			content.className = "card-text d-inline";
+
 			// Check for boolean values
 			if (item[key] == true) {
 				content.innerHTML = key + ": " + 'Yes';
@@ -442,17 +458,23 @@ function createItemCard(item, row, containerDiv) {
 			else if (item[key] == false) {
 				content.innerHTML = key + ": " + 'No';
 			}
+			// Fill in image
 			else if (item[key][0] == "/") {
 				let image = document.createElement("img");
 				image.className = "img-fluid";
 				image.src = item[key];
 				itemCardBody.appendChild(image)
 			}
+			// Fill in regula fields
 			else {
 				content.innerHTML = key + ": " + item[key];
 			}
 
-			itemCardBody.appendChild(content);
+			contentDiv.appendChild(content);
+
+			// Add edit button for this content type
+			addEditButton(item, contentDiv)
+			itemCardBody.appendChild(contentDiv);
 		}
 	}
 
@@ -510,4 +532,30 @@ function confirmDelete(source, parent) {
 
 	})
 	parent.appendChild(confirm);
+}
+
+
+function addEditButton(source, parent) {
+	let button = document.createElement("button");
+	button.setAttribute("type", "button");
+	button.className = "btn btn-link btn-sm d-inline";
+	button.innerHTML = "Edit";
+	button.id = "edit" + source['id'];
+
+	button.addEventListener("click", function() {
+		/*fetch("/edit_item" ,{
+			method: 'PUT',
+			mode: 'same-origin',
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json',
+				'X-CSRFToken': getCookie('csrftoken')
+			},
+			body: JSON.stringify({
+				itemId: source['id']
+			})
+		})*/
+	})
+
+	parent.appendChild(button);
 }
