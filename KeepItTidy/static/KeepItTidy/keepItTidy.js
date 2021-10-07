@@ -536,8 +536,8 @@ function confirmDelete(source, parent) {
 
 
 function addEditButton(source, parent) {
-	let button = document.createElement("button");
-	button.setAttribute("type", "button");
+	let button = document.createElement("a");
+	button.setAttribute("href", "../edit_item/" + source['id']);
 	button.className = "btn btn-link btn-sm d-inline";
 	button.innerHTML = "Edit";
 	button.id = "edit" + source['id'];

@@ -18,7 +18,7 @@
 			<textarea class="form-control itemDescription" name="itemDescription" placeholder="Item Name"></textarea>
 
 			<!--Aditional fields set up by the user-->
-			{% for field in fields %}
+			{% for field in item.get_fields %}
 	        <label for="{{field.field_name}}">{{field.field_name}}</label>
 	        {% if field.field_type == "text" %}
 	        	<input type="text" class="form-control {{field.field_type}}" name="{{field.field_name}} / {{field.field_type}}" placeholder={{field.field_type}}>

@@ -230,15 +230,24 @@ def add_item(request, collection_id):
 
 
 def edit_item(request, item_id):
+	current_user = request.user
+	item = Item.objects.get(id=item_id)
+
+	collection = Collection.objects.get(id=item.collection.id)
+	
+	# Get collection fields
+	field_dict = FieldDict.objects.get(collection=collection)
+	fields = FieldNameTypePair.objects.filter(dictionary=field_dict)
+
 	if request.method == "POST":
 		#TO DO
 		stuff = "Stuff"
 	else:
-		# Get item
-		item = Item.objects.get(id=item_id)
-
 		return render(request, 'keepittidy/edit_item.html', {
-			"item": item
+			"item": item,
+			"user": current_user,
+			"collection": collection,
+			"fields": fields
 			})
 
 
