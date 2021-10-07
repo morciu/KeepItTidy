@@ -473,7 +473,7 @@ function createItemCard(item, row, containerDiv) {
 			contentDiv.appendChild(content);
 
 			// Add edit button for this content type
-			addEditButton(item, contentDiv)
+			//addEditButton(item, contentDiv)
 			itemCardBody.appendChild(contentDiv);
 		}
 	}
@@ -491,7 +491,7 @@ function addDeleteButton(source, parent) {
 	let button = document.createElement("button");
 	button.style.display = "block";
 	button.setAttribute("type", "button");
-	button.className = "btn btn-warning";
+	button.className = "btn btn-warning btn-sm";
 	button.innerHTML = "Delete";
 	button.id = "delete" + source["id"];
 	parent.appendChild(button);
@@ -506,7 +506,7 @@ function addDeleteButton(source, parent) {
 function confirmDelete(source, parent) {
 	let confirm = document.createElement("button");
 	confirm.setAttribute("type", "button");
-	confirm.className = "btn btn-danger";
+	confirm.className = "btn btn-danger btn-sm";
 	confirm.innerHTML = "Confirm Deletion";
 	confirm.id = "confirmDelete" + source['id']
 	confirm.setAttribute("data-dismiss", "modal");

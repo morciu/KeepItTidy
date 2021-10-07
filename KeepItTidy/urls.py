@@ -18,6 +18,7 @@ urlpatterns = [
 	path("view_collection/<int:collection_id>", views.view_collection, name="view_collection"),
 	path("add_item/<int:collection_id>", views.add_item, name="add_item"),
 	path("delete_item", views.delete_item, name="delete_item"),
+	path("edit_item/<int:item_id", views.edit_item, name="delete_item"),
 
 	# API routes
 	path("get_collections", views.get_collections, name="get_collections"),

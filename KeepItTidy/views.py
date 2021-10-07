@@ -229,6 +229,19 @@ def add_item(request, collection_id):
 			})
 
 
+def edit_item(request, item_id):
+	if request.method == "POST":
+		#TO DO
+		stuff = "Stuff"
+	else:
+		# Get item
+		item = Item.objects.get(id=item_id)
+
+		return render(request, 'keepittidy/edit_item.html', {
+			"item": item
+			})
+
+
 def delete_item(request):
 	if request.method == "PUT":
 		# Get JSON data from delete button
