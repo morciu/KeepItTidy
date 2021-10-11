@@ -70,8 +70,6 @@
 		        	{% endif %}
 	        	{% endfor %}
 
-	        {% elif field.field_type == "image" %}
-	        	<input type="file", class="form-control {{field.field_type}}" name="{{field.field_name}} / {{field.field_type}}">
 	        {% endif %}
 		    {% endfor %}
 		    <button type="submit" class="btn btn-primary">Submit</button>
