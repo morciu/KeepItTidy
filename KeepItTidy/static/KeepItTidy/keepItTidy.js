@@ -525,8 +525,12 @@ function confirmDelete(source, parent) {
 			})
 		})
 		.then(function() {
-			let parentCol = parent.parentElement.parentElement.parentElement;
+			let parentCol = parent.parentElement.parentElement.parentElement.parentElement;
 			let parentRow = parentCol.parentElement;
+
+			console.log(parentCol);
+			console.log(parentRow);
+
 			parentRow.removeChild(parentCol);	
 		})
 

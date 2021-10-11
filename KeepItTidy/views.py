@@ -244,7 +244,66 @@ def edit_item(request, item_id):
 
 	if request.method == "POST":
 		#TO DO
-		stuff = "Stuff"
+
+		# Check for modifications anc update the item
+
+		# Check if name has been changed
+		if item.get_fields()['name'] == request.POST['itemName']:
+			print("\nName hasn't changed\n")
+		else:
+			print("\nName has changed\n")
+			item.name = request.POST['itemName']
+			item.save()
+
+		# Check if description has been changed
+		if item.get_fields()['description'] == request.POST['itemDescription']:
+			print("\nDescription hasn't changed\n")
+		else:
+			print("\nDescription hasn't changed\n")
+			item.description = request.POST['itemDescription']
+			item.save()
+
+		posts = request.POST.items()
+		
+		for key, value in posts:
+			if key != 'itemName' and key != 'itemDescription':
+				print(f"{key}: {value}")
+
+				# Get field name
+				field_name = key.split(" / ")[0]
+			
+				# Get field type
+				field_type = key.split(" / ")[-1]
+
+				if field_type == "text":
+					field_obj = TextField.objects.get(name=field_name, item=item)
+					field_obj.text = request.POST[key]
+					field_obj.save()
+				elif field_type == "boolean":
+					field_obj = BooleanField.objects.get(name=field_name, item=item)
+					if value == "true":
+						field_obj.boolean = True
+					elif value == "false":
+						field_obj.boolean = False
+					field_obj.save()
+				elif field_type == "date":
+					field_obj = DateField.objects.get(name=field_name, item=item)
+					field_obj.date = datetime.strptime(value, "%Y-%m-%d")
+					field_obj.save()
+				'''elif field_type == "number":
+					field_obj = NumberField(name=field_name, collection=collection, item=item, number=int(value))
+					field_obj.save()
+				elif field_type == "decimal":
+					field_obj = DecimalField(name=field_name, collection=collection, item=item, decimal=float(value))
+					field_obj.save()'''
+
+		return render(request, 'keepittidy/edit_item.html', {
+			"item": item.get_fields(),
+			"user": current_user,
+			"collection": collection,
+			"fields": fields
+			})
+
 	else:
 		return render(request, 'keepittidy/edit_item.html', {
 			"item": item.get_fields(),
@@ -267,7 +326,11 @@ def delete_item(request):
 		print(parent_collection)
 
 		# Delete object from database
-		#item_to_del.delete()
+		item_to_del.delete()
+
+		return JsonResponse({"parrentCollectionId": parent_collection})
+
+	return HttpResponseRedirect(reverse("index"))
 
 
 
