@@ -186,6 +186,7 @@ def add_item(request, collection_id):
 				field_obj.save()
 			elif field_type == "date":
 				field_obj = DateField(name=field_name, collection=collection, item=item, date=datetime.strptime(value, "%Y-%m-%d"))
+				print(value)
 				field_obj.save()
 			elif field_type == "number":
 				field_obj = NumberField(name=field_name, collection=collection, item=item, number=int(value))
@@ -233,6 +234,8 @@ def edit_item(request, item_id):
 	current_user = request.user
 	item = Item.objects.get(id=item_id)
 
+	print(item.get_fields())
+
 	collection = Collection.objects.get(id=item.collection.id)
 	
 	# Get collection fields
@@ -244,7 +247,7 @@ def edit_item(request, item_id):
 		stuff = "Stuff"
 	else:
 		return render(request, 'keepittidy/edit_item.html', {
-			"item": item,
+			"item": item.get_fields(),
 			"user": current_user,
 			"collection": collection,
 			"fields": fields

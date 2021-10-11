@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
+from datetime import datetime
+
 # Create your models here.
 class User(AbstractUser):
 	pass
@@ -73,7 +75,7 @@ class Item(models.Model):
 		date_fields = DateField.objects.filter(item=self)
 		if len(date_fields) > 0:
 			for i in date_fields:
-				fields[i.name] = i.date
+				fields[i.name] = i.date.strftime("%Y-%m-%d")
 
 		number_fields = NumberField.objects.filter(item=self)
 		if len(number_fields) > 0:
