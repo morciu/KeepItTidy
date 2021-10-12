@@ -129,6 +129,12 @@ def create_collection(request):
 
 
 @login_required
+def delete_collection(request):
+	stuff = "TO DO"
+	return stuff
+
+
+@login_required
 def get_collections(request):
 	current_user = request.user
 	collections = Collection.objects.filter(user=current_user)
@@ -290,12 +296,14 @@ def edit_item(request, item_id):
 					field_obj = DateField.objects.get(name=field_name, item=item)
 					field_obj.date = datetime.strptime(value, "%Y-%m-%d")
 					field_obj.save()
-				'''elif field_type == "number":
-					field_obj = NumberField(name=field_name, collection=collection, item=item, number=int(value))
+				elif field_type == "number":
+					field_obj = NumberField.objects.get(name=field_name, item=item)
+					field_obj.number = int(value)
 					field_obj.save()
 				elif field_type == "decimal":
-					field_obj = DecimalField(name=field_name, collection=collection, item=item, decimal=float(value))
-					field_obj.save()'''
+					field_obj = DecimalField.objects.get(name=field_name, item=item)
+					field_obj.decimal = float(value)
+					field_obj.save()
 
 		return render(request, 'keepittidy/edit_item.html', {
 			"item": item.get_fields(),

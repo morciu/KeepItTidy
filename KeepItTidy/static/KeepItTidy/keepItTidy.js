@@ -208,6 +208,9 @@ function displayCollection(collection, parrent) {
 	clickedCollection.id = "collection";
 	clickedCollection.className = "jumbotron jumbotron-fluid";
 
+	// Add "Delete" button to remove collection
+	deleteCollection(collection, clickedCollection);
+
 	// Create Container div
 	let containerDiv = document.createElement("div");
 	containerDiv.className = "container-fluid";
@@ -540,26 +543,27 @@ function confirmDelete(source, parent) {
 
 
 function addEditButton(source, parent) {
+	// Edit item - modify the details saved inside the database about the item
+
 	let button = document.createElement("a");
 	button.setAttribute("href", "../edit_item/" + source['id']);
 	button.className = "btn btn-link btn-sm d-inline";
 	button.innerHTML = "Edit";
 	button.id = "edit" + source['id'];
 
-	button.addEventListener("click", function() {
-		/*fetch("/edit_item" ,{
-			method: 'PUT',
-			mode: 'same-origin',
-			headers: {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json',
-				'X-CSRFToken': getCookie('csrftoken')
-			},
-			body: JSON.stringify({
-				itemId: source['id']
-			})
-		})*/
-	})
-
 	parent.appendChild(button);
+}
+
+
+function deleteCollection(source, parent) {
+	// Function to delete the collection from the database
+
+	let containerDiv = document.createElement("div");
+	containerDiv.className = "d-flex justify-content-end";
+
+	let button = document.createElement("button");
+	button.innerHTML = "Delete";
+
+	containerDiv.appendChild(button);
+	parent.appendChild(containerDiv)
 }
