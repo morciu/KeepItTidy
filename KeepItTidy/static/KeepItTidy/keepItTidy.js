@@ -209,7 +209,7 @@ function displayCollection(collection, parrent) {
 	clickedCollection.className = "jumbotron jumbotron-fluid";
 
 	// Add "Delete" button to remove collection
-	deleteCollection(collection, clickedCollection);
+	deleteCollection(collection, clickedCollection, "collection");
 
 	// Create Container div
 	let containerDiv = document.createElement("div");
@@ -501,44 +501,75 @@ function addDeleteButton(source, parent) {
 
 	button.addEventListener("click", function() {
 		button.style.display = "none";
-		confirmDelete(source, parent);
+		confirmDelete(source, parent, "item", button);
 		})
 }
 
 
-function confirmDelete(source, parent) {
+function confirmDelete(source, parent, element, delButton) {
+	// Create a confirm button to prevent accidentally deleting something
+
 	let confirm = document.createElement("button");
 	confirm.setAttribute("type", "button");
 	confirm.className = "btn btn-danger btn-sm";
 	confirm.innerHTML = "Confirm Deletion";
-	confirm.id = "confirmDelete" + source['id']
-	confirm.setAttribute("data-dismiss", "modal");
 
-	confirm.addEventListener("click", function() {
-		fetch("/delete_item", {
-			method: 'PUT',
-			mode: 'same-origin',
-			headers: {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json',
-				'X-CSRFToken': getCookie('csrftoken')
-			},
-			body: JSON.stringify({
-				'itemId': source['id']
+	// Check if the button is deleting a collection item or a full collection
+
+	if (element == "item") {
+		confirm.id = "confirmDelete" + source['id']
+		confirm.setAttribute("data-dismiss", "modal");
+
+		confirm.addEventListener("click", function() {
+			fetch("/delete_item", {
+				method: 'PUT',
+				mode: 'same-origin',
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json',
+					'X-CSRFToken': getCookie('csrftoken')
+				},
+				body: JSON.stringify({
+					'itemId': source['id']
+				})
+			})
+			.then(function() {
+				let parentCol = parent.parentElement.parentElement.parentElement.parentElement;
+				let parentRow = parentCol.parentElement;
+
+				console.log(parentCol);
+				console.log(parentRow);
+
+				parentRow.removeChild(parentCol);	
+			})
+
+		})
+		parent.appendChild(confirm);
+	}
+	else if (element == "collection") {
+		confirm.id = "confirmDeleteCollection" + source['id'];
+
+		confirm.addEventListener("click", function() {
+			fetch("/delete_collection", {
+				method: 'PUT',
+				mode: 'same-origin',
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json',
+					'X-CSRFToken': getCookie('csrftoken')
+				},
+				body: JSON.stringify({
+					'collectionId': source['id']
+				})
+			})
+			.then(function () {
+				console.log("API went through")
 			})
 		})
-		.then(function() {
-			let parentCol = parent.parentElement.parentElement.parentElement.parentElement;
-			let parentRow = parentCol.parentElement;
-
-			console.log(parentCol);
-			console.log(parentRow);
-
-			parentRow.removeChild(parentCol);	
-		})
-
-	})
-	parent.appendChild(confirm);
+		console.log(parent);
+		console.log(delButton);
+		delButton.parentElement.replaceChild(confirm, delButton);
+	}
 }
 
 
@@ -562,7 +593,12 @@ function deleteCollection(source, parent) {
 	containerDiv.className = "d-flex justify-content-end";
 
 	let button = document.createElement("button");
+	button.className = "btn btn-outline-danger btn-sm";
 	button.innerHTML = "Delete";
+
+	button.addEventListener("click", function () {
+		confirmDelete(source, parent, "collection", button);
+	})
 
 	containerDiv.appendChild(button);
 	parent.appendChild(containerDiv)

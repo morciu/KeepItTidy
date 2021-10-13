@@ -130,6 +130,14 @@ def create_collection(request):
 
 @login_required
 def delete_collection(request):
+	if request.method == "PUT":
+		# Get JSON data from delete button
+		data = json.loads(request.body)
+
+		# Instantiate collection that will be deleted
+		col_to_del = Collection.objects.get(id=data['collectionId'])
+		print("deleted collection from db")
+
 	stuff = "TO DO"
 	return stuff
 
@@ -326,7 +334,7 @@ def delete_item(request):
 		# Get JSON data from delete button
 		data = json.loads(request.body)
 		
-		# Assign object to be deleted to a variable
+		# Instantiate item that will be deleted
 		item_to_del = Item.objects.get(id=data['itemId'])
 
 		# Get parent collection to pass on as api and refresh the page
