@@ -564,6 +564,24 @@ function confirmDelete(source, parent, element, delButton) {
 			})
 			.then(function () {
 				console.log("API went through")
+
+				// Check if this was accessed through quick access bar / the main menu and redirect to collection list after deletion
+				let url = window.location.href;
+				let urlArray = url.split('/');
+				let lastUrlElement = urlArray[urlArray.length - 1];
+
+				if (lastUrlElement == 'view_collection') {
+					location.reload();
+				}
+				else {
+					urlArray.pop();
+					console.log(urlArray);
+					urlArray.join('/');
+					console.log(urlArray);
+					window.location.href = urlArray.join('/');
+					console.log(location);
+					//urlArray.reload();
+				}
 			})
 		})
 		console.log(parent);

@@ -137,9 +137,9 @@ def delete_collection(request):
 		# Instantiate collection that will be deleted
 		col_to_del = Collection.objects.get(id=data['collectionId'])
 		print("deleted collection from db")
+		col_to_del.delete()
 
-	stuff = "TO DO"
-	return stuff
+		return render(request, "keepittidy/view_collection.html")
 
 
 @login_required
