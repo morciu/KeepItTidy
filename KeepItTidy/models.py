@@ -3,6 +3,8 @@ from django.contrib.auth.models import AbstractUser
 
 from datetime import datetime
 
+import os
+
 # Create your models here.
 class User(AbstractUser):
 	pass
@@ -57,6 +59,15 @@ class Item(models.Model):
 	# Foreign keys
 	user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="item")
 	collection = models.ForeignKey(Collection, on_delete=models.CASCADE, related_name="item")
+
+	def delete(self, *args, **kwargs):
+		# Delete local files before deleteing model
+		if len(ImageField.objects.filter(item=self)) > 0:
+			for i in ImageField.objects.filter(item=self):
+				os.remove(i.image.path)
+
+		# Delete model
+		super().delete(*args, **kwargs) # Calling the regular delete function
 
 	def get_fields(self):
 		# Get all fields attached to this item
