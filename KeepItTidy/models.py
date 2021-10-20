@@ -15,6 +15,21 @@ class Collection(models.Model):
 	name = models.CharField(max_length=200)
 	description = models.CharField(max_length=200)
 
+
+	def delete(self, *args, **kwargs):
+		# Delete local files for every image model
+
+		items = Item.objects.filter(collection=self)
+
+		for item in items:
+			if len(ImageField.objects.filter(item=item)) > 0:
+				for image_field in ImageField.objects.filter(item=item):
+					os.remove(image_field.image.path)
+
+		# Delete model
+		super().delete(*args, **kwargs) # Calling the regular delete function
+
+
 	def serialize(self):
 		# Serialize model information in a JSON object
 
