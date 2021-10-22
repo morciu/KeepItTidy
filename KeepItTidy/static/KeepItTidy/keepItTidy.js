@@ -116,57 +116,66 @@ function listCollections() {
 		let mainDivContainer = document.createElement("div");
 		mainDivContainer.className = "container-fluid";
 
-		// Create row div
-		let rowDiv = document.createElement("div");
-		rowDiv.className = "row";
+		// Determine how many rows are needed for 4/row
+		let nrOfRows = determineNrOfRows(collections);
 
-		// Create columns of cards in the row
-		collections.forEach(function(collection) {
-			let colDiv = document.createElement("div");
-			colDiv.className = "col-sm";
+		for (let i = 0; i < nrOfRows; i++) {
+			// For each 4 items create a new row and modify the array for the next 4 items
+			let row = collections.slice(0, 4);
+			createRow(row, mainDivContainer, "collection");
+			collections.splice(0, 4);
+		}
 
-			let cardDiv = document.createElement("div");
-			cardDiv.className = "card";
+		// Create last row for the remaining collections that were left out
+		if (collections.length > 0) {
+			createRow(collections, mainDivContainer, "collection");
+		}
 
-			let cardBodyDiv = document.createElement("div");
-			cardBodyDiv.className = "card-body";
-
-			let cardTitle = document.createElement("h5");
-			cardTitle.className = "card-title";
-			cardTitle.innerHTML = collection['name'];
-			cardBodyDiv.appendChild(cardTitle);
-
-			let cardText = document.createElement("p");
-			cardText.className = "card-text";
-			cardText.innerHTML = collection['description'];
-			cardBodyDiv.appendChild(cardText);
-
-			let cardButton = document.createElement("a");
-			cardButton.className = "btn btn-primary";
-			//let collectionUrl = "collection_page/" + collection['id'];
-			//cardButton.setAttribute("href", collectionUrl);
-			cardButton.addEventListener('click', () => {
-				// Hide all collection cards
-				mainDivContainer.style.display = "none";
-
-				// Display requested collection
-				displayCollection(collection, mainDiv);
-
-			})
-			cardButton.innerHTML = "Go to this thing";
-			cardBodyDiv.appendChild(cardButton);
-
-			// Append everything to the upper nodes
-			cardDiv.appendChild(cardBodyDiv);
-			colDiv.appendChild(cardDiv);
-
-			rowDiv.appendChild(colDiv);
-			})
-		mainDivContainer.appendChild(rowDiv);
-
-		
 		mainDiv.appendChild(mainDivContainer);
 	})
+}
+
+
+function createCollectionCard(collection, row) {
+	let colDiv = document.createElement("div");
+	colDiv.className = "col-sm col-md-3";
+	colDiv.style.padding = "1em";
+
+	let cardDiv = document.createElement("div");
+	cardDiv.className = "card";
+	cardDiv.className = "card h-100"; // h-100 creates a fixed card height for the entire 100% height of the column
+
+	let cardBodyDiv = document.createElement("div");
+	cardBodyDiv.className = "card-body";
+
+	let cardTitle = document.createElement("h5");
+	cardTitle.className = "card-title";
+	cardTitle.innerHTML = collection['name'];
+	cardBodyDiv.appendChild(cardTitle);
+
+	let cardText = document.createElement("p");
+	cardText.className = "card-text";
+	cardText.innerHTML = collection['description'];
+	cardBodyDiv.appendChild(cardText);
+
+	let cardButton = document.createElement("a");
+	cardButton.className = "btn btn-primary";
+	cardButton.addEventListener('click', () => {
+		// Hide all collection cards
+		//document.querySelector("#collections").style.display = "none";
+
+		// Display requested collection
+		displayCollection(collection, document.querySelector("#collections"));
+
+	})
+	cardButton.innerHTML = "Go to this thing";
+	cardBodyDiv.appendChild(cardButton);
+
+	// Append everything to the upper nodes
+	cardDiv.appendChild(cardBodyDiv);
+	colDiv.appendChild(cardDiv);
+
+	row.appendChild(colDiv);
 }
 
 
@@ -207,6 +216,7 @@ function displayCollection(collection, parrent) {
 	let clickedCollection = document.createElement("div");
 	clickedCollection.id = "collection";
 	clickedCollection.className = "jumbotron jumbotron-fluid";
+	console.log(clickedCollection);
 
 	// Add "Delete" button to remove collection
 	deleteCollection(collection, clickedCollection, "collection");
@@ -259,52 +269,56 @@ function displayItems(itemSource) {
 
 	// Items
 	let items = itemSource;
-	let nrOfRows;
-
-	if (Math.floor(items.length / 4) <= 1) {
-		nrOfRows = 1;
-	}
-
-	else {
-		nrOfRows = Math.floor(items.length / 4);
-	}
-
-	console.log("Items:" + items.length);
-	console.log("Nr of Rows: " + nrOfRows);
-
+	let nrOfRows = determineNrOfRows(items);
 
 	let itemsContainer = document.createElement("div");
 	itemsContainer.className = "container-fluid";
 	itemsContainer.id = "itemList";
 
 	for (let i = 0; i < nrOfRows; i++) {
+		// For each 4 items create a new row and modify the array for the next 4 items
 		let row = items.slice(0, 4);
-		createItemRow(row, itemsContainer);
+		createRow(row, itemsContainer, "item");
 		items.splice(0, 4);
 	}
 
 	console.log("Items left:" + items.length);
 
+	// Create last row for the remaining items
 	if (items.length > 0) {
-		createItemRow(items, itemsContainer);
+		createRow(items, itemsContainer, "item");
 	}
 
 	document.body.appendChild(itemsContainer);
 }
 
 
-function createItemRow(items, containerDiv) {
-	let itemRow = document.createElement("div");
-	itemRow.className = "row";
-	//itemRow.style.padding = "1em";
+function createRow(items, containerDiv, type) {
+	// Check if dealing with items or collections and create row
 
-	// Item Collumns
-	items.forEach(function(item) {
-		console.log(item);
-		createItemCard(item, itemRow);
+	if (type == "item") {
+		let itemRow = document.createElement("div");
+		itemRow.className = "row";
+		//itemRow.style.padding = "1em";
+
+		// Item Collumns
+		items.forEach(function(item) {
+			createItemCard(item, itemRow);
+			containerDiv.appendChild(itemRow);
 		});
+	}
+	else if (type == "collection") {
+		// Create row div
+		let rowDiv = document.createElement("div");
+		rowDiv.className = "row";
 
-	containerDiv.appendChild(itemRow);
+		// Create columns of cards in the row
+		items.forEach(function(item) {
+			createCollectionCard(item, rowDiv);
+			containerDiv.appendChild(rowDiv);
+		})
+	}
+
 }
 
 
@@ -403,7 +417,7 @@ function createModalPopup(item, parent) {
 }
 
 
-function createItemCard(item, row, containerDiv) {
+function createItemCard(item, row) {
 
 	// Set up divs
 	let itemCollumn = document.createElement("div");
@@ -489,6 +503,19 @@ function createItemCard(item, row, containerDiv) {
 	itemCollumn.appendChild(itemCardDiv);
 	row.appendChild(itemCollumn);
 }
+
+function determineNrOfRows(source) {
+	// Determine how many rows are needed for 4/row
+
+	if (Math.floor(source.length / 4) <= 1) {
+		return 1;
+	}
+
+	else {
+		return Math.floor(items.length / 4);
+	}
+}
+
 
 function addDeleteButton(source, parent) {
 	let button = document.createElement("button");
