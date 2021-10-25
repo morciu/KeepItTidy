@@ -246,6 +246,8 @@ function displayCollection(collection, parrent) {
 	addButton.setAttribute("role", "button");
 	addButton.innerHTML = "Add item";
 
+
+
 	// Set element hierarchy
 	addButtonParagraph.appendChild(addButton);
 
@@ -256,6 +258,10 @@ function displayCollection(collection, parrent) {
 	clickedCollection.appendChild(containerDiv);
 
 	parrent.appendChild(clickedCollection);
+
+	// Filters
+	console.log(collection);
+	itemFilter(collection['fields'], clickedCollection);
 
 	displayItems(collection['items']);
 }
@@ -647,4 +653,42 @@ function deleteCollection(source, parent) {
 
 	containerDiv.appendChild(button);
 	parent.appendChild(containerDiv)
+}
+
+
+function itemFilter(collection, parent) {
+	// Create div container for filters
+	let filterContainer = document.createElement("div");
+	filterContainer.className = "container-fluid";
+	filterContainer.id = "filterContainer";
+
+	// Create row to store all filter dropdown boxes in a line
+	let rowDiv = document.createElement("div");
+	rowDiv.className = "row";
+
+	// Loop through all the fields and make a drop down selector for each one
+	for (var key in collection) {
+		// Container div for each selector
+		let selectorContainer = document.createElement("div");
+		selectorContainer.className = "col-sm col-md-3";
+		selectorContainer.setAttribute("style", "1em");
+
+		// Create Selector
+		let selector = document.createElement("select");
+		selector.className = "form-control";
+
+		// Create options -- TEST -- Need to loop through all the variations of each field
+		let option = document.createElement("option");
+		option.setAttribute("selected", "selected");
+		option.innerHTML = key + ": All";
+
+		// Set Hierarchy
+		selector.appendChild(option);
+		selectorContainer.appendChild(selector);
+		rowDiv.appendChild(selectorContainer);
+	}
+
+	// Set Hierarchy
+	filterContainer.appendChild(rowDiv);
+	parent.appendChild(filterContainer);
 }
