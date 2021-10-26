@@ -261,9 +261,11 @@ function displayCollection(collection, parrent) {
 
 	// Filters
 	console.log(collection);
-	itemFilter(collection['fields'], clickedCollection);
+	itemFilter(collection, clickedCollection);
 
-	displayItems(collection['items']);
+	// Display all items from the collection
+	let cloneItemArray = Array.from(collection['items']); // Clone the items array to preserve the original
+	displayItems(cloneItemArray);
 }
 
 
@@ -667,7 +669,7 @@ function itemFilter(collection, parent) {
 	rowDiv.className = "row";
 
 	// Loop through all the fields and make a drop down selector for each one
-	for (var key in collection) {
+	for (var key in collection['fields']) {
 		// Container div for each selector
 		let selectorContainer = document.createElement("div");
 		selectorContainer.className = "col-sm col-md-3";
