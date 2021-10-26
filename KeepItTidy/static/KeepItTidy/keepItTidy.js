@@ -659,6 +659,10 @@ function deleteCollection(source, parent) {
 
 
 function itemFilter(collection, parent) {
+	// Set up useful variables
+	let fields = collection['fields'];
+	let items = collection['items'];
+
 	// Create div container for filters
 	let filterContainer = document.createElement("div");
 	filterContainer.className = "container-fluid";
@@ -669,7 +673,7 @@ function itemFilter(collection, parent) {
 	rowDiv.className = "row";
 
 	// Loop through all the fields and make a drop down selector for each one
-	for (var key in collection['fields']) {
+	for (var key in fields) {
 		// Container div for each selector
 		let selectorContainer = document.createElement("div");
 		selectorContainer.className = "col-sm col-md-3";
@@ -683,9 +687,22 @@ function itemFilter(collection, parent) {
 		let option = document.createElement("option");
 		option.setAttribute("selected", "selected");
 		option.innerHTML = key + ": All";
+		selector.appendChild(option);
+
+		let mentionedValues = [];
+
+		// TEST to get all field entries for <option>
+		for (let i in items) {
+			if (! mentionedValues.includes(items[i][key])) {
+				// Create options element and add this value to mentionedValues after to avoid repetition
+				let option = document.createElement("option");
+				option.innerHTML = items[i][key];
+				selector.appendChild(option);
+				mentionedValues.push(items[i][key]);
+			}
+		}
 
 		// Set Hierarchy
-		selector.appendChild(option);
 		selectorContainer.appendChild(selector);
 		rowDiv.appendChild(selectorContainer);
 	}
