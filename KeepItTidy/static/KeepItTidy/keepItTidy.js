@@ -1,4 +1,5 @@
-let numberOfFields = 1;
+// GLOBAL VARIABLES
+var clickedFilters = {}; // Store all filter selections to be used by displayItems()
 
 // Get cookie value
 function getCookie(name) {
@@ -21,6 +22,8 @@ function getCookie(name) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+	
+
 	// BY DEFAULT - List all collections if we are in the right section
 	if (document.querySelector("#collections")) {
 		// Check if this was accessed through quick access bar
@@ -264,19 +267,29 @@ function displayCollection(collection, parrent) {
 	itemFilter(collection, clickedCollection);
 
 	// Display all items from the collection
-	let cloneItemArray = Array.from(collection['items']); // Clone the items array to preserve the original
-	displayItems(cloneItemArray);
+	displayItems(collection['items']);
 }
 
 
 function displayItems(itemSource) {
+	// Clone the items array to preserve the original
+	let itemSourceClone = Array.from(itemSource);
+
 	// Clear screen of previous items
 	if (document.querySelector("#itemList")) {
 		document.body.removeChild(document.querySelector("#itemList"));
 	}
 
 	// Items
-	let items = itemSource;
+	
+
+	// Manage filter options
+	let items = filterItemList(itemSourceClone);
+
+	console.log(items);
+	console.log(clickedFilters);
+	console.log(Object.keys(clickedFilters).length);
+	
 	let nrOfRows = determineNrOfRows(items);
 
 	let itemsContainer = document.createElement("div");
@@ -298,6 +311,28 @@ function displayItems(itemSource) {
 	}
 
 	document.body.appendChild(itemsContainer);
+}
+
+
+function filterItemList(array) {
+	let items = [];
+	if (Object.keys(clickedFilters).length > 0) {
+		for (let item in array) {
+			for (let field in clickedFilters) {
+				console.log(field + ": " + clickedFilters[field]);
+
+				if (clickedFilters[field] == array[item][field]) {
+					console.log("found item: " + array[item]);
+					items.push(array[item]);
+					break;
+				}
+			}
+		}
+		return items;
+	}
+	else {
+		return array;
+	}
 }
 
 
@@ -682,6 +717,7 @@ function itemFilter(collection, parent) {
 		// Create Selector
 		let selector = document.createElement("select");
 		selector.className = "form-control";
+		selector.id = key;
 
 		// Create options -- TEST -- Need to loop through all the variations of each field
 		let option = document.createElement("option");
@@ -691,7 +727,7 @@ function itemFilter(collection, parent) {
 
 		let mentionedValues = [];
 
-		// TEST to get all field entries for <option>
+		// Get All field entries as options
 		for (let i in items) {
 			if (! mentionedValues.includes(items[i][key])) {
 				// Create options element and add this value to mentionedValues after to avoid repetition
@@ -701,6 +737,16 @@ function itemFilter(collection, parent) {
 				mentionedValues.push(items[i][key]);
 			}
 		}
+
+		// TEST --> Add event and read filter selection
+		selector.addEventListener("change", function() {
+			console.log("Clicked: " + selector.id + ": " + selector.value);
+
+			clickedFilters[selector.id] = selector.value;
+			console.log(clickedFilters);
+			console.log(Object.keys(clickedFilters).length);
+			displayItems(collection['items']);
+		})
 
 		// Set Hierarchy
 		selectorContainer.appendChild(selector);
