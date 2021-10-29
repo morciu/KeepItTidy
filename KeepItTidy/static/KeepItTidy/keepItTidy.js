@@ -264,14 +264,14 @@ function displayCollection(collection, parrent) {
 
 	// Filters
 	console.log(collection);
-	itemFilter(collection, clickedCollection);
+	itemFilter(collection['items'], collection, clickedCollection);
 
 	// Display all items from the collection
-	displayItems(collection['items']);
+	displayItems(collection['items'], collection);
 }
 
 
-function displayItems(itemSource) {
+function displayItems(itemSource, collection) {
 	// Clone the items array to preserve the original
 	let itemSourceClone = Array.from(itemSource);
 
@@ -285,13 +285,11 @@ function displayItems(itemSource) {
 
 	// Manage filter options
 	let items = filterItemList(itemSourceClone);
-
-	console.log(items);
-	console.log(clickedFilters);
-	console.log(Object.keys(clickedFilters).length);
 	
+	// Determine how many rows are needed
 	let nrOfRows = determineNrOfRows(items);
 
+	// Create html elements needed to display items
 	let itemsContainer = document.createElement("div");
 	itemsContainer.className = "container-fluid";
 	itemsContainer.id = "itemList";
@@ -303,7 +301,6 @@ function displayItems(itemSource) {
 		items.splice(0, 4);
 	}
 
-	console.log("Items left:" + items.length);
 
 	// Create last row for the remaining items
 	if (items.length > 0) {
@@ -311,6 +308,18 @@ function displayItems(itemSource) {
 	}
 
 	document.body.appendChild(itemsContainer);
+
+	if (Object.keys(clickedFilters).length > 0) {
+		console.log("Items have been filtered!!! Need new filter options!!!");
+
+		// TO DO --> Update filter options to new item list
+		let filterParentElement = document.querySelector('#filterContainer').parentElement;
+		let filteredItems = filterItemList(itemSource);
+
+		// remove old filter section from DOM and enter a new one
+		filterParentElement.removeChild(document.querySelector('#filterContainer'));
+		itemFilter(filteredItems, collection, filterParentElement);
+	}
 }
 
 
@@ -693,10 +702,10 @@ function deleteCollection(source, parent) {
 }
 
 
-function itemFilter(collection, parent) {
+function itemFilter(sourceItems, sourceCollection, parent) {
 	// Set up useful variables
-	let fields = collection['fields'];
-	let items = collection['items'];
+	let fields = sourceCollection['fields'];
+	let items = sourceItems;
 
 	// Create div container for filters
 	let filterContainer = document.createElement("div");
@@ -745,7 +754,7 @@ function itemFilter(collection, parent) {
 			clickedFilters[selector.id] = selector.value;
 			console.log(clickedFilters);
 			console.log(Object.keys(clickedFilters).length);
-			displayItems(collection['items']);
+			displayItems(sourceItems, sourceCollection);
 		})
 
 		// Set Hierarchy
