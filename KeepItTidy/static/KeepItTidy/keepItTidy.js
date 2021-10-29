@@ -739,7 +739,14 @@ function itemFilter(sourceItems, sourceCollection, parent) {
 		// Create options -- TEST -- Need to loop through all the variations of each field
 		let option = document.createElement("option");
 		option.setAttribute("selected", "selected");
-		option.innerHTML = key + ": All";
+
+		if (clickedFilters[key] != undefined) {
+			option.innerHTML = key + ": " + clickedFilters[key];
+		}
+		else {
+			option.innerHTML = key + ": All";	
+		}
+		
 		selector.appendChild(option);
 
 		let mentionedValues = [];
