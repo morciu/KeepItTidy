@@ -325,21 +325,29 @@ function displayItems(itemSource, collection) {
 
 function filterItemList(array) {
 	let items = [];
+
+	// Check if there are any active filters, if there are the new filtered array will be stored in items
 	if (Object.keys(clickedFilters).length > 0) {
 		for (let item in array) {
-			for (let field in clickedFilters) {
-				console.log(field + ": " + clickedFilters[field]);
+			// count number of times the field values matched with the filter values, if an item matches all filters it is added to the new list
+			let count = 0;
 
+			for (let field in clickedFilters) {
+				// Check if the item matches current filter value in clickedFilters, if it does then count += 1
 				if (clickedFilters[field] == array[item][field]) {
-					console.log("found item: " + array[item]);
-					items.push(array[item]);
-					break;
+					count += 1;
+					// check if this is the last field in clickedFilters, if the match count maches the clicked filter length, the item is added to the new list
+					if (count == Object.keys(clickedFilters).length) {
+						items.push(array[item]);	
+					}
 				}
+				
 			}
 		}
 		return items;
 	}
 	else {
+		// No active filters, all items are in the returned array
 		return array;
 	}
 }
