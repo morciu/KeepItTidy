@@ -740,36 +740,63 @@ function itemFilter(sourceItems, sourceCollection, parent) {
 		let option = document.createElement("option");
 		option.setAttribute("selected", "selected");
 
+		// If 'key' is a selected filter show its selected option
 		if (clickedFilters[key] != undefined) {
 			option.innerHTML = key + ": " + clickedFilters[key];
+			option.setAttribute("disabled", "disabled");
+			selector.appendChild(option);
+
+			// Create one aditional option called 'All' to remove this field from clickedFilters and stop filtering option by it
+			let rmFilterOption = document.createElement("option");
+			rmFilterOption.innerHTML = key + ": All";
+			selector.appendChild(rmFilterOption);
 		}
 		else {
-			option.innerHTML = key + ": All";	
-		}
-		
-		selector.appendChild(option);
+			option.innerHTML = key + ": All";
+			option.setAttribute("disabled", "disabled");
+			selector.appendChild(option);
 
-		let mentionedValues = [];
+			// Get field entries as options
+			let mentionedValues = [];
 
-		// Get All field entries as options
-		for (let i in items) {
-			if (! mentionedValues.includes(items[i][key])) {
-				// Create options element and add this value to mentionedValues after to avoid repetition
-				let option = document.createElement("option");
-				option.innerHTML = items[i][key];
-				selector.appendChild(option);
-				mentionedValues.push(items[i][key]);
+			for (let i in items) {
+				if (! mentionedValues.includes(items[i][key])) {
+					// Create options element and add this value to mentionedValues after to avoid repetition
+					let option = document.createElement("option");
+					option.innerHTML = items[i][key];
+					selector.appendChild(option);
+					mentionedValues.push(items[i][key]);
+				}
 			}
 		}
 
+
 		// TEST --> Add event and read filter selection
 		selector.addEventListener("change", function() {
-			console.log("Clicked: " + selector.id + ": " + selector.value);
+			console.log(selector.value);
 
-			clickedFilters[selector.id] = selector.value;
-			console.log(clickedFilters);
-			console.log(Object.keys(clickedFilters).length);
-			displayItems(sourceItems, sourceCollection);
+			if (selector.value.slice(-3) == "All"){
+				// If user selected 'All' in a field filter, remove that field from clickedFilter, stop filtering by that field and reset dropdown options for it
+				delete clickedFilters[selector.id];
+				
+				// Remove old filter options 
+				let filterParentElement = document.querySelector('#filterContainer').parentElement;
+				filterParentElement.removeChild(document.querySelector('#filterContainer'));
+
+				// Replace with updated filtered options
+				itemFilter(sourceCollection['items'], sourceCollection, parent);
+
+				// Update displayed items
+				displayItems(sourceCollection['items'], sourceCollection);
+			}
+			else {
+				// Add selected filter to the global ckickedFilters array
+				clickedFilters[selector.id] = selector.value;
+				// Display item list matching the clicked filters
+				displayItems(sourceItems, sourceCollection);
+			}
+
+			
 		})
 
 		// Set Hierarchy
