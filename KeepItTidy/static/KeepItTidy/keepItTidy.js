@@ -1,4 +1,5 @@
 // GLOBAL VARIABLES
+var numberOfFields = 1;
 var clickedFilters = {}; // Store all filter selections to be used by displayItems()
 
 // Get cookie value
@@ -727,8 +728,9 @@ function itemFilter(sourceItems, sourceCollection, parent) {
 	// Loop through all the fields and make a drop down selector for each one
 	for (var key in fields) {
 		// Container div for each selector
-		let selectorContainer = document.createElement("div");
-		selectorContainer.className = "col-sm col-md-3";
+		if (fields[key] != "image") {
+			let selectorContainer = document.createElement("div");
+		selectorContainer.className = "col-sm col-md-2";
 		selectorContainer.setAttribute("style", "1em");
 
 		// Create Selector
@@ -802,6 +804,8 @@ function itemFilter(sourceItems, sourceCollection, parent) {
 		// Set Hierarchy
 		selectorContainer.appendChild(selector);
 		rowDiv.appendChild(selectorContainer);
+		}
+		
 	}
 
 	// Set Hierarchy
