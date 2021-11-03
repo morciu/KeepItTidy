@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+import os
 
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
@@ -311,6 +312,32 @@ def edit_item(request, item_id):
 				elif field_type == "decimal":
 					field_obj = DecimalField.objects.get(name=field_name, item=item)
 					field_obj.decimal = float(value)
+					field_obj.save()
+				elif field_type == "image":
+					field_obj = ImageField.objects.get(name=field_name, item=item)
+					field_obj.image = float(value)
+					field_obj.save()
+
+		# Check for uploaded files
+		if len(request.FILES) > 0:
+			for i in request.FILES:
+				print(i)
+				file_name = i.split(" / ")[0]
+				file_type = i.split(" / ")[-1]
+
+				if file_type == "image":
+					image = request.FILES[i]
+					print(image)
+
+					# Instantiate image field object
+					field_obj = ImageField.objects.get(item=item)
+
+					# Delete old image file
+					os.remove(field_obj.image.path)
+
+					# Add new uploaded image to the ImageField object
+					field_obj.image = image
+					
 					field_obj.save()
 
 		return render(request, 'keepittidy/edit_item.html', {

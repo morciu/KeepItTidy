@@ -76,6 +76,15 @@
 		        	{% endif %}
 	        	{% endfor %}
 
+	        {% elif field.field_type == "image" %}
+	        	{% for key, value in item.items%}
+		        	{% if key == field.field_name %}
+		        		<div>
+		        			<input type="file" class="form-control image" name="Fotografie / image">
+		        		</div>
+		        	{% endif %}
+	        	{% endfor %}
+
 	        {% endif %}
 		    {% endfor %}
 		    <button type="submit" class="btn btn-primary">Submit</button>
