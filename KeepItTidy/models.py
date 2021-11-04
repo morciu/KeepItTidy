@@ -115,8 +115,10 @@ class Item(models.Model):
 
 		image_fields = ImageField.objects.filter(item=self)
 		if len(image_fields) > 0:
+			image_urls = []
 			for i in image_fields:
-				fields[i.name] = i.image.url
+				image_urls.append(i.image.url)
+			fields[i.name] = image_urls
 
 		return fields
 

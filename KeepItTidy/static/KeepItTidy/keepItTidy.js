@@ -430,6 +430,62 @@ function createModalPopup(item, parent) {
 	modalItemDescription.innerHTML = item['description'];
 	modalBody.appendChild(modalItemDescription);
 
+
+	// Create a carousel slider for images
+	let carousel = document.createElement("div");
+	carousel.id = "carouselId" + item['id'];
+	carousel.className = "carousel slide";
+	carousel.setAttribute("data-ride", "carousel")
+	carousel.setAttribute("style", "overflow:hidden") // Prevents sliding images to spill outside of the div
+
+	let carouselInner = document.createElement("div");
+	carouselInner.className = "carousel-inner";
+
+	// Create carousel controlls
+
+	// Previous
+	let carouselPrev = document.createElement("a");
+	carouselPrev.className = "carousel-control-prev";
+	carouselPrev.setAttribute("href", "#" + carousel.id);
+	carouselPrev.setAttribute("role", "button");
+	carouselPrev.setAttribute("data-slide", "prev")
+
+	let spanPrevIcon = document.createElement("span");
+	spanPrevIcon.className = "carousel-control-prev-icon";
+	spanPrevIcon.setAttribute("aria-hidden", "true");
+
+	let spanPrev = document.createElement("span");
+	spanPrev.className = "sr-only";
+	spanPrev.innerHTML = "Previous";
+
+	carouselPrev.appendChild(spanPrevIcon);
+	carouselPrev.appendChild(spanPrev);
+
+	// Next
+	let carouselNext = document.createElement("a");
+	carouselNext.className = "carousel-control-next";
+	carouselNext.setAttribute("href", "#" + carousel.id);
+	carouselNext.setAttribute("role", "button");
+	carouselNext.setAttribute("data-slide", "next");
+
+	let spanNextIcon = document.createElement("span");
+	spanNextIcon.className = "carousel-control-next-icon";
+	spanNextIcon.setAttribute("aria-hidden", "true");
+
+	let spanNext = document.createElement("span");
+	spanNext.className = "sr-only";
+	spanNext.innerHTML = "Next";
+
+	carouselNext.appendChild(spanNextIcon);
+	carouselNext.appendChild(spanNext);
+
+	carousel.appendChild(carouselInner);
+	carousel.appendChild(carouselNext);
+	carousel.appendChild(carouselPrev);
+
+	let nrOfImagesLoaded = 0;
+
+
 	// Loop through fields and list them in the modal window
 	for (var key in item) {
 		if (!["name", "description", "id", "col_id"].includes(key)) {
@@ -438,14 +494,40 @@ function createModalPopup(item, parent) {
 			if (item[key] == true) {
 				modalContent.innerHTML = key + ": " + 'Yes';
 			}
+
 			else if (item[key] == false) {
 				modalContent.innerHTML = key + ": " + 'No';
 			}
-			else if (item[key][0] == "/") {
-				let image = document.createElement("img");
-				image.className = "img-fluid";
-				image.src = item[key];
-				modalBody.appendChild(image)}
+
+			// Check if we are dealing an array (All image urls are store in an array under the image field)
+			else if (Array.isArray(item[key])) {
+				console.log(item);
+				console.log(item[key].length);
+
+				item[key].forEach(imgUrl => {
+					console.log(imgUrl);
+					// Create carousel item
+					let carouselItem = document.createElement("div");
+
+					if (nrOfImagesLoaded == 0) {
+						carouselItem.className = "carousel-item active";
+					}
+					else {
+						carouselItem.className = "carousel-item";
+					}
+					
+					let image = document.createElement("img");
+					image.className = "img-fluid";
+					image.src = imgUrl;
+					carouselItem.appendChild(image);
+					carousel.appendChild(carouselItem);
+					nrOfImagesLoaded += 1;
+				})
+
+
+				
+			}
+				
 			else {
 				modalContent.innerHTML = key + ": " + item[key];
 			}
@@ -455,6 +537,7 @@ function createModalPopup(item, parent) {
 	}
 
 	modalContent.appendChild(modalBody);
+	modalContent.appendChild(carousel);
 	modalDialogDiv.appendChild(modalContent);
 	modalDiv.appendChild(modalDialogDiv);
 
@@ -537,10 +620,10 @@ function createItemCard(item, row) {
 				content.innerHTML = key + ": " + 'No';
 			}
 			// Fill in image
-			else if (item[key][0] == "/") {
+			else if (Array.isArray(item[key])) {
 				let image = document.createElement("img");
 				image.className = "img-fluid";
-				image.src = item[key];
+				image.src = item[key][0];
 				itemCardBody.appendChild(image)
 			}
 			// Fill in regula fields

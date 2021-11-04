@@ -215,17 +215,21 @@ def add_item(request, collection_id):
 				#field_obj = ImageField(name=field_name, collection=collection, item=item, image=request.FILES[field_name])
 				#field_obj.save()'''
 
+		# Check if any files were uploaded
 		if len(request.FILES) > 0:
+			print(request.FILES)
 			for i in request.FILES:
+				
 				file_name = i.split(" / ")[0]
 				file_type = i.split(" / ")[-1]
 
-				if file_type == "image":
-					image = request.FILES[i]
-					print("heck")
+				for file in request.FILES.getlist(i):
+					if file_type == "image":
+						image = file
+						print(file)
 
-					field_obj = ImageField(name=file_name, collection=collection, item=item, image=image)
-					field_obj.save()
+						field_obj = ImageField(name=file_name, collection=collection, item=item, image=image)
+						field_obj.save()
 
 
 			
@@ -337,7 +341,7 @@ def edit_item(request, item_id):
 
 					# Add new uploaded image to the ImageField object
 					field_obj.image = image
-					
+
 					field_obj.save()
 
 		return render(request, 'keepittidy/edit_item.html', {
