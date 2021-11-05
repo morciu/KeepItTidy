@@ -115,10 +115,14 @@ class Item(models.Model):
 
 		image_fields = ImageField.objects.filter(item=self)
 		if len(image_fields) > 0:
+
+			# Store all image urls in a list in case an item uses multiple images
 			image_urls = []
+
 			for i in image_fields:
 				image_urls.append(i.image.url)
-			fields[i.name] = image_urls
+
+			fields[i.name] = image_urls # This dictionary object will return an array of urls
 
 		return fields
 
@@ -163,6 +167,13 @@ class ImageField(models.Model):
 	collection = models.ForeignKey(Collection, on_delete=models.CASCADE, related_name="image_field")
 	item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name="image_field")
 	image = models.ImageField(upload_to='images/')
+
+	def delete(self, *args, **kwargs):
+		# Delete local files image model before deleting model
+		os.remove(self.image.path)
+
+		# Delete model
+		super().delete(*args, **kwargs) # Calling the regular delete function
 
 
 

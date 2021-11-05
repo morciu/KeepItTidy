@@ -217,9 +217,7 @@ def add_item(request, collection_id):
 
 		# Check if any files were uploaded
 		if len(request.FILES) > 0:
-			print(request.FILES)
 			for i in request.FILES:
-				
 				file_name = i.split(" / ")[0]
 				file_type = i.split(" / ")[-1]
 
@@ -323,26 +321,27 @@ def edit_item(request, item_id):
 					field_obj.save()
 
 		# Check for uploaded files
+		
 		if len(request.FILES) > 0:
 			for i in request.FILES:
-				print(i)
 				file_name = i.split(" / ")[0]
 				file_type = i.split(" / ")[-1]
 
-				if file_type == "image":
-					image = request.FILES[i]
-					print(image)
+				# Instantiate old image field objects
+				old_img_objs = ImageField.objects.filter(item=item)
 
-					# Instantiate image field object
-					field_obj = ImageField.objects.get(item=item)
+				# Remove each of the old img models associated with this item
+				for img_model in old_img_objs:
+					img_model.delete()
 
-					# Delete old image file
-					os.remove(field_obj.image.path)
+				# Loop through all newly uploaded files and create new ImageField objects associated with this item
+				for file in request.FILES.getlist(i):
+					if file_type == "image":
+						image = file
 
-					# Add new uploaded image to the ImageField object
-					field_obj.image = image
-
-					field_obj.save()
+						field_obj = ImageField(name=file_name, collection=collection, item=item, image=image)
+						field_obj.save()
+					
 
 		return render(request, 'keepittidy/edit_item.html', {
 			"item": item.get_fields(),
