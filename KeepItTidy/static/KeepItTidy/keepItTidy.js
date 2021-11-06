@@ -48,12 +48,55 @@ document.addEventListener('DOMContentLoaded', function() {
 		document.querySelector("#newField").addEventListener('click', addNewField);	
 	}
 
-	/*
+	
 	// Search Button
-	document.querySelector("#search").addEventListener('click', function() {
-		console.log("Pressed Search!!!");
-	})*/
+	document.querySelector("#search").addEventListener('input', function() {
+		searchFilter(document.querySelector("#search"));
+	})
 });
+
+
+function searchFilter(searchBar) {
+	let searchResult = [];
+	// Fetch API
+	fetch('/get_collections')
+	.then(response => response.json())
+	.then(collections => {
+		collections.forEach(function(collection) {
+			collection['items'].forEach(function(item) {
+				if (item['name'].toLowerCase().startsWith(searchBar.value)) {
+					searchResult.push(item);
+					
+				}
+			})
+		})
+		if (searchBar.value.length > 0) {
+			// Clear screen and display search results
+			if (document.querySelector('#collections')) {
+				document.body.removeChild(document.querySelector('#collections'));
+				searchHeader(document.body);
+			}
+			
+			displayItems(searchResult);
+		}
+		else {
+			location.reload();
+		}
+	})
+}
+
+
+function searchHeader(parent) {
+	let headerJumbotron = document.createElement("div");
+	headerJumbotron.className = "jumbotron";
+
+	let searchTitle = document.createElement("h1");
+	searchTitle.className = "display-5";
+	searchTitle.innerHTML = "Search Results";
+
+	headerJumbotron.appendChild(searchTitle);
+	parent.appendChild(headerJumbotron);
+}
 
 
 function quickAccessCollection(collection_id) {
