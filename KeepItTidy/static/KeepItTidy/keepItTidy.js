@@ -612,6 +612,7 @@ function createItemCard(item, row) {
 			let content = document.createElement("p");
 			content.className = "card-text d-inline";
 
+			/*
 			// Check for boolean values
 			if (item[key] == true) {
 				content.innerHTML = key + ": " + 'Yes';
@@ -619,17 +620,20 @@ function createItemCard(item, row) {
 			else if (item[key] == false) {
 				content.innerHTML = key + ": " + 'No';
 			}
+			*/
 			// Fill in image
-			else if (Array.isArray(item[key])) {
+			if (Array.isArray(item[key])) {
 				let image = document.createElement("img");
 				image.className = "img-fluid";
 				image.src = item[key][0];
 				itemCardBody.appendChild(image)
 			}
+			/*
 			// Fill in regula fields
 			else {
 				content.innerHTML = key + ": " + item[key];
 			}
+			*/
 
 			contentDiv.appendChild(content);
 
