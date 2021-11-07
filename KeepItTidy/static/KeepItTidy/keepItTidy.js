@@ -50,6 +50,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	
 	// Search Button
+	if (document.querySelector('#collections'))
+	{
+		document.querySelector('#search').style.display = "block";
+	}
+	else {
+		document.querySelector('#search').style.display = "none";
+	}
 	document.querySelector("#search").addEventListener('input', function() {
 		searchFilter(document.querySelector("#search"));
 	})
