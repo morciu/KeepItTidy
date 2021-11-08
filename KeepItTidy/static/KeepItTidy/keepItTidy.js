@@ -113,7 +113,6 @@ function quickAccessCollection(collection_id) {
 	.then(collections => {
 		collections.forEach(function(collection) {
 			if (collection['id'] == collection_id) {
-				var source = collection;
 				displayCollection(collection, document.querySelector("#collections"));
 				return
 			}
@@ -214,14 +213,9 @@ function createCollectionCard(collection, row) {
 
 	let cardButton = document.createElement("a");
 	cardButton.className = "btn btn-primary";
-	cardButton.addEventListener('click', () => {
-		// Hide all collection cards
-		//document.querySelector("#collections").style.display = "none";
-
-		// Display requested collection
-		displayCollection(collection, document.querySelector("#collections"));
-
-	})
+	let urlLink = "../view_collection/" + collection['id'];
+	cardButton.setAttribute("href", urlLink);
+	
 	cardButton.innerHTML = "Go to this thing";
 	cardBodyDiv.appendChild(cardButton);
 
