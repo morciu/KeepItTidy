@@ -130,6 +130,11 @@ def create_collection(request):
 
 
 @login_required
+def excel_import(request):
+	return render(request, "keepittidy/excel_import.html")
+
+
+@login_required
 def delete_collection(request):
 	if request.method == "PUT":
 		# Get JSON data from delete button
