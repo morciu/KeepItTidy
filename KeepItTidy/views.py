@@ -2,6 +2,8 @@ import json
 from datetime import datetime
 import os
 
+import xlrd
+
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
@@ -144,11 +146,30 @@ def excel_import(request):
 			print("There be files!")
 			for i in request.FILES:
 				for file in request.FILES.getlist(i):
-					if file.name.split(".")[1] != "xlsx":
+					if file.name.split(".")[1] != "xls":
 						return render(request, "keepittidy/excel_import.html", {
-							"error" : "Invalid file format, please upload an 'xlsx' file."
+							"error" : "Invalid file format, please upload an 'xls' file."
 							})
-					print(type(file))
+					print(file.name)
+
+					# Handling XLS file contents
+
+					# Open xls file
+					wb = xlrd.open_workbook(file_contents=file.read())
+					sheet = wb.sheet_by_index(0)
+
+					# Get table headers
+					headers = []
+
+					for h_index in range(sheet.ncols):
+						headers.append(sheet.cell_value(0, h_index))
+					print(headers)
+
+					for row in range(1, sheet.nrows):
+						for col in range(sheet.ncols):
+							print(f"{headers[col]}: {sheet.cell_value(row, col)}")
+						print("\n")
+
 
 		return render(request, "keepittidy/excel_import.html")
 	else:
