@@ -131,7 +131,28 @@ def create_collection(request):
 
 @login_required
 def excel_import(request):
-	return render(request, "keepittidy/excel_import.html")
+	if request.method == "POST":
+		collection_name = request.POST["collectionName"]
+		collection_description = request.POST["description"]
+
+		print(request.FILES)
+
+		if len(request.FILES) > 0:
+
+			print(request.FILES)
+
+			print("There be files!")
+			for i in request.FILES:
+				for file in request.FILES.getlist(i):
+					if file.name.split(".")[1] != "xlsx":
+						return render(request, "keepittidy/excel_import.html", {
+							"error" : "Invalid file format, please upload an 'xlsx' file."
+							})
+					print(type(file))
+
+		return render(request, "keepittidy/excel_import.html")
+	else:
+		return render(request, "keepittidy/excel_import.html")
 
 
 @login_required

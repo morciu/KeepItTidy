@@ -9,7 +9,7 @@
 				<div class="card-header text-center">Collection Options</div>
 				<div class="card-body">
 				    <h2 class="card-title text-center">Import Collection from Microsoft Excel File</h2>
-		            <form class="form-signin" action="{% url 'create_collection' %}" method='post'>
+		            <form class="form-signin" action="{% url 'excel_import' %}" method='post' enctype="multipart/form-data">
 		              {% csrf_token %}
 		              <div class="form-label-group">
 		                <input type="text" id="collectionName" name="collectionName" class="form-control" placeholder="Collection Name" required autofocus>
@@ -28,25 +28,14 @@
 
 		              <hr class="my-4">
 
-		              <h3 class="card-title text-center">Set Up Item Fields</h3>
+		              <h3 class="card-title text-center">Set up item fields from imported XLSX file</h3>
 
 		              <div class="form-group">
 		              	<input type="file" class="form-control-file" name="excelFileUpload">
+		              	{% if error %}
+		              	<p style="color: red;">{{error}}</p>
+		              	{% endif %}
 		              </div>
-
-		              <hr class="my-4">
-
-		              <h5 class="card-title text-center">Main Item Fields</h5>
-
-		              <p>Name Field Added</p>
-
-		              <p>Description Field Added</p>
-
-		              <hr class="my-4">
-
-		              <h5 class="card-title text-center">Additional Fields</h5>
-
-		              <button type="button" class="btn btn-link" id="newField" name="newField">+ new field</button>
 
 		              <hr class="my-4">
 
