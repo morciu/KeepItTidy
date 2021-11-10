@@ -1,0 +1,67 @@
+{% extends 'keepittidy/layout.html' %}
+{% load static %}
+
+{% block body %}
+<div class="container-fluid">
+	<div class="row h-100">
+		<div class="d-flex col-sm h-100 align-items-center">
+			<div class="mx-auto h-75 w-75 card">
+				{% if not table %}
+					<h3>ERROR</h3>
+			    {%else%}
+				    <div class="card-header text-center">Step 2</div>
+					<div class="card-body">
+					    <h2 class="card-title text-center">Collection Name</h2>
+			            <form class="form-signin" action="{% url 'excel_import_1' %}" method='post' enctype="multipart/form-data">
+			              {% csrf_token %}
+			              <div class="form-label-group">
+			                <h3 class="text-center">{{ collection_name }}</h3>
+			              </div>
+
+			              <hr class="my-4">
+
+			              <h5 class="card-title text-center">Description</h5>
+			              	<h3 class="text-center">{{ collection_description }}</h3>
+
+			              <hr class="my-4">
+
+			              <h3 class="card-title text-center">Please choose which fields represent the main "Name" and "Description" fields</h3>
+
+			              <div class="form-inline">
+			              	<p>Name</p>
+		                		<select class="form-control" name={{field}}>
+		                			<option selected="true" disabled="disabled">Information Type</option>
+		                			{% for field in headers %}
+			                			<option value="{{field}}">{{field}}</option>
+		                			{% endfor %}
+		                		</select>
+		                	</div>
+
+		                	<div class="form-inline">
+		                	<p>Description</p>
+		                		<select class="form-control" name={{field}}>
+		                			<option selected="true" disabled="disabled">Information Type</option>
+		                			<option value="text">Text</option>
+		                			<option value="boolean">Yes / No</option>
+		                			<option value="date">Date</option>
+		                			<option value="number">Number</option>
+		                			<option value="decimal">Decimal</option>
+		                			<option value="image">Image</option>
+		                		</select>
+		                	</div>
+			              
+			              <hr class="my-4">
+
+			              <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Submit</button>
+			            </form>
+				    </div>
+			    {% endif %}
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'keepItTidy/keepItTidy.js' %}"></script>
+{% endblock %}

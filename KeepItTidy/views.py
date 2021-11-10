@@ -12,8 +12,9 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.core.files.storage import FileSystemStorage
+from django.core.exceptions import ObjectDoesNotExist
 
-from .models import User, Collection, TextField, BooleanField, DateField, NumberField, DecimalField, ImageField, FieldDict, FieldNameTypePair, Item
+from .models import User, Collection, TextField, BooleanField, DateField, NumberField, DecimalField, ImageField, FieldDict, FieldNameTypePair, Item, TempCollection
 
 # Create your views here.
 
@@ -124,15 +125,8 @@ def create_collection(request):
 		return render(request, "keepittidy/create_collection.html")
 
 
-'''def search(request):
-	if request.method == "POST":
-		search = request.POST["search_text"]
-
-		return render(request, "keepittidy/search.html")'''
-
-
 @login_required
-def excel_import(request):
+def excel_import_1(request):
 	if request.method == "POST":
 		collection_name = request.POST["collectionName"]
 		collection_description = request.POST["description"]
@@ -141,16 +135,15 @@ def excel_import(request):
 
 		if len(request.FILES) > 0:
 
-			print(request.FILES)
+			table = []
 
 			print("There be files!")
 			for i in request.FILES:
 				for file in request.FILES.getlist(i):
 					if file.name.split(".")[1] != "xls":
-						return render(request, "keepittidy/excel_import.html", {
+						return render(request, "keepittidy/excel_import_1.html", {
 							"error" : "Invalid file format, please upload an 'xls' file."
 							})
-					print(file.name)
 
 					# Handling XLS file contents
 
@@ -163,17 +156,43 @@ def excel_import(request):
 
 					for h_index in range(sheet.ncols):
 						headers.append(sheet.cell_value(0, h_index))
-					print(headers)
 
 					for row in range(1, sheet.nrows):
+						item = {}
 						for col in range(sheet.ncols):
 							print(f"{headers[col]}: {sheet.cell_value(row, col)}")
+
+							item[headers[col]] = sheet.cell_value(row, col)
+						table.append(item)
 						print("\n")
+				
+				temp_collection = TempCollection(user=request.user, name=collection_name, description=collection_description,\
+				 headers=json.dumps(headers), table=json.dumps(table))
+				temp_collection.save()
 
-
-		return render(request, "keepittidy/excel_import.html")
+		return HttpResponseRedirect(reverse("excel_import_2"))
 	else:
-		return render(request, "keepittidy/excel_import.html")
+		return render(request, "keepittidy/excel_import_1.html")
+
+
+@login_required
+def excel_import_2(request):
+	if request.method == "POST":
+		return "stuff"
+	else:
+		jsonDec = json.decoder.JSONDecoder()
+		try:
+			temp_collection = TempCollection.objects.get(user=request.user)
+			context = {
+				"collection_name": temp_collection.name,
+				"collection_description": temp_collection.description,
+				"headers": jsonDec.decode(temp_collection.headers),
+				"table": jsonDec.decode(temp_collection.table)
+				}
+			temp_collection.delete()
+		except TempCollection.DoesNotExist:
+			return HttpResponseRedirect(reverse("excel_import_1"))
+		return render(request, "keepittidy/excel_import_2.html", context)
 
 
 @login_required

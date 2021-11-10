@@ -188,3 +188,13 @@ class FieldNameTypePair(models.Model):
 	dictionary = models.ForeignKey(FieldDict, on_delete=models.CASCADE, related_name="name_type_pair")
 	field_name = models.CharField(max_length=200)
 	field_type = models.CharField(max_length=200)
+
+
+# Set up a temporary Model to store uploaded xls table info when importing a collection from excel
+
+class TempCollection(models.Model):
+	user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="temp_collection")
+	name = models.CharField(max_length=100)
+	description = models.CharField(max_length=200)
+	headers = models.TextField(null=True)
+	table = models.TextField(null=True)
