@@ -704,7 +704,7 @@ function determineNrOfRows(source) {
 	}
 
 	else {
-		return Math.floor(items.length / 4);
+		return Math.floor(source.length / 4);
 	}
 }
 

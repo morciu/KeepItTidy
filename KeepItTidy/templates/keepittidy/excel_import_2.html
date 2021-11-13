@@ -12,7 +12,7 @@
 				    <div class="card-header text-center">Step 2</div>
 					<div class="card-body">
 					    <h2 class="card-title text-center">Collection Name</h2>
-			            <form class="form-signin" action="{% url 'excel_import_1' %}" method='post' enctype="multipart/form-data">
+			            <form class="form-signin" action="{% url 'excel_import_2' %}" method='post'>
 			              {% csrf_token %}
 			              <div class="form-label-group">
 			                <h3 class="text-center">{{ collection_name }}</h3>
@@ -29,8 +29,8 @@
 
 			              <div class="form-inline">
 			              	<p>Name</p>
-		                		<select class="form-control" name={{field}}>
-		                			<option selected="true" disabled="disabled">Information Type</option>
+		                		<select class="form-control" name="itemName">
+		                			<option selected="true" disabled="disabled">Select field</option>
 		                			{% for field in headers %}
 			                			<option value="{{field}}">{{field}}</option>
 		                			{% endfor %}
@@ -39,7 +39,23 @@
 
 		                	<div class="form-inline">
 		                	<p>Description</p>
-		                		<select class="form-control" name={{field}}>
+		                		<select class="form-control" name="itemDescription">
+		                			<option selected="true" disabled="disabled">Select field</option>
+		                			{% for field in headers %}
+			                			<option value="{{field}}">{{field}}</option>
+		                			{% endfor %}
+		                		</select>
+		                	</div>
+			              
+			              <hr class="my-4">
+
+			              <h3 class="card-title text-center">Please choose what kind of data each field represents</h3>
+
+			              <div class="form-group">
+			              	{% for field in headers %}
+			              	<div class="form-inline">
+			              	<input type="text" id="fieldName{{forloop.counter}}" name="fieldName{{forloop.counter}}" class="form-control" value="{{field}}" required>
+		                		<select class="form-control" name="fieldType{{forloop.counter}}">
 		                			<option selected="true" disabled="disabled">Information Type</option>
 		                			<option value="text">Text</option>
 		                			<option value="boolean">Yes / No</option>
@@ -48,9 +64,12 @@
 		                			<option value="decimal">Decimal</option>
 		                			<option value="image">Image</option>
 		                		</select>
+
+		                	<hr class="my-4">
 		                	</div>
-			              
-			              <hr class="my-4">
+		                	{% endfor %}
+		                	
+			              </div>
 
 			              <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Submit</button>
 			            </form>

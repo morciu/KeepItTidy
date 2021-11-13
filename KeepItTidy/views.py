@@ -128,8 +128,8 @@ def create_collection(request):
 @login_required
 def excel_import_1(request):
 	if request.method == "POST":
-		collection_name = request.POST["collectionName"]
-		collection_description = request.POST["description"]
+		collection_name = request.POST.get("collectionName")
+		collection_description = request.POST.get("description")
 
 		print(request.FILES)
 
@@ -160,11 +160,11 @@ def excel_import_1(request):
 					for row in range(1, sheet.nrows):
 						item = {}
 						for col in range(sheet.ncols):
-							print(f"{headers[col]}: {sheet.cell_value(row, col)}")
+							#print(f"{headers[col]}: {sheet.cell_value(row, col)}")
 
 							item[headers[col]] = sheet.cell_value(row, col)
 						table.append(item)
-						print("\n")
+						#print("\n")
 				
 				temp_collection = TempCollection(user=request.user, name=collection_name, description=collection_description,\
 				 headers=json.dumps(headers), table=json.dumps(table))
@@ -177,21 +177,68 @@ def excel_import_1(request):
 
 @login_required
 def excel_import_2(request):
+	jsonDec = json.decoder.JSONDecoder()
+	try:
+		temp_collection = TempCollection.objects.get(user=request.user)
+		context = {
+			"collection_name": temp_collection.name,
+			"collection_description": temp_collection.description,
+			"headers": jsonDec.decode(temp_collection.headers),
+			"table": jsonDec.decode(temp_collection.table)
+			}
+		
+	except TempCollection.DoesNotExist:
+		print("DOES NOT EXist")
+		return HttpResponseRedirect(reverse("excel_import_1"))
+
 	if request.method == "POST":
-		return "stuff"
+		# Ask which are the main "Name" and "Description" fields
+		name_field = request.POST["itemName"]
+		description_field = request.POST.get("itemDescription")
+
+		# Create instance of new collection object
+		new_collection = Collection(user=request.user, name=context["collection_name"], description=context["collection_description"])
+
+		fields_dict = {}
+
+		print(name_field)
+
+		# Loop through headers found in the imported table
+		# Each fieldName and fieldType added will be numbered
+		for i in range(1, len(context["headers"])+1):
+			if request.POST.get(f"fieldName{i}", False):
+				# Create single pair dictionary for fieldName and fieldType
+				field_dict = {}
+				if request.POST[f'fieldName{i}'] != name_field:
+					field_dict[request.POST[f"fieldName{i}"]] = request.POST.get(f'fieldType{i}')
+
+				# Add the single pair dict to the main fields dictionary
+				fields_dict[f'field{i}'] = field_dict
+
+		print(fields_dict)
+
+		# Save new collection object
+		new_collection.save()
+
+		# Create an object for the dictionary model (used to store fieldName and fieldType pairs)
+		field_dict_model = FieldDict(name=f"{context['collection_name']} fields", collection=new_collection)
+		field_dict_model.save()
+
+		# Loop through fields_dict and create objects for key/value pair models to be connected to the dictionary model used above
+		for field in fields_dict:
+			for key, value in fields_dict[field].items():
+				print(f"{key}: {value}")
+				name_type_pair = FieldNameTypePair(dictionary=field_dict_model, field_name=key, field_type=value)
+				name_type_pair.save()
+
+		#new_collection.delete()
+
+
+		# Delete the temporary model
+		temp_collection.delete()
+
+		return render(request, "keepittidy/excel_import_2.html", context)
 	else:
-		jsonDec = json.decoder.JSONDecoder()
-		try:
-			temp_collection = TempCollection.objects.get(user=request.user)
-			context = {
-				"collection_name": temp_collection.name,
-				"collection_description": temp_collection.description,
-				"headers": jsonDec.decode(temp_collection.headers),
-				"table": jsonDec.decode(temp_collection.table)
-				}
-			temp_collection.delete()
-		except TempCollection.DoesNotExist:
-			return HttpResponseRedirect(reverse("excel_import_1"))
 		return render(request, "keepittidy/excel_import_2.html", context)
 
 
@@ -213,9 +260,6 @@ def delete_collection(request):
 def get_collections(request):
 	current_user = request.user
 	collections = Collection.objects.filter(user=current_user)
-
-	'''for i in collections:
-		print(i.find_fields())'''
 	
 	return JsonResponse([collection.serialize() for collection in collections], safe=False)
 
@@ -252,34 +296,8 @@ def add_item(request, collection_id):
 			# Get field type
 			field_type = key.split(" / ")[-1]
 
-			#print(request.FILES)
-			#print(key)
-
 			# Check field type and create item accordingly
-			if field_type == "text":
-				field_obj = TextField(name=field_name, collection=collection, item=item, text=value)
-				field_obj.save()
-			elif field_type == "boolean":
-				if value == "true":
-					field_obj = BooleanField(name=field_name, collection=collection, item=item, boolean=True)
-				elif value == "false":
-					field_obj = BooleanField(name=field_name, collection=collection, item=item, boolean=False)
-				field_obj.save()
-			elif field_type == "date":
-				field_obj = DateField(name=field_name, collection=collection, item=item, date=datetime.strptime(value, "%Y-%m-%d"))
-				print(value)
-				field_obj.save()
-			elif field_type == "number":
-				field_obj = NumberField(name=field_name, collection=collection, item=item, number=int(value))
-				field_obj.save()
-			elif field_type == "decimal":
-				field_obj = DecimalField(name=field_name, collection=collection, item=item, decimal=float(value))
-				field_obj.save()
-			'''elif request.FILES[key]:
-				print("This is an image fool!")
-				print(request.FILES)
-				#field_obj = ImageField(name=field_name, collection=collection, item=item, image=request.FILES[field_name])
-				#field_obj.save()'''
+			create_field_obj(item, value, field_type, field_name, collection)
 
 		# Check if any files were uploaded
 		if len(request.FILES) > 0:
@@ -358,33 +376,8 @@ def edit_item(request, item_id):
 				# Get field type
 				field_type = key.split(" / ")[-1]
 
-				if field_type == "text":
-					field_obj = TextField.objects.get(name=field_name, item=item)
-					field_obj.text = request.POST[key]
-					field_obj.save()
-				elif field_type == "boolean":
-					field_obj = BooleanField.objects.get(name=field_name, item=item)
-					if value == "true":
-						field_obj.boolean = True
-					elif value == "false":
-						field_obj.boolean = False
-					field_obj.save()
-				elif field_type == "date":
-					field_obj = DateField.objects.get(name=field_name, item=item)
-					field_obj.date = datetime.strptime(value, "%Y-%m-%d")
-					field_obj.save()
-				elif field_type == "number":
-					field_obj = NumberField.objects.get(name=field_name, item=item)
-					field_obj.number = int(value)
-					field_obj.save()
-				elif field_type == "decimal":
-					field_obj = DecimalField.objects.get(name=field_name, item=item)
-					field_obj.decimal = float(value)
-					field_obj.save()
-				elif field_type == "image":
-					field_obj = ImageField.objects.get(name=field_name, item=item)
-					field_obj.image = float(value)
-					field_obj.save()
+				# Check field type and create object
+				create_field_obj(item, value, field_type, field_name, collection)
 
 		# Check for uploaded files
 		
@@ -448,14 +441,24 @@ def delete_item(request):
 
 # General purpose functions
 
-def create_field_obj(type, name, collection):
-	if type == "text":
-		return TextField(name=name, collection=collection)
-	elif type == "description":
-		return DescriptionField(name=name, collection=collection)
-	elif type == "date":
-		return DateField(name=name, collection=collection)
-	elif type == "number":
-		return NumberField(name=name, collection=collection)
-	elif type == "decimal":
-		return DecimalField(name=name, collection=collection)
+def create_field_obj(item, value, field_type, field_name, collection):
+	# Check field type and create field object accordingly
+	if field_type == "text":
+		field_obj = TextField(name=field_name, collection=collection, item=item, text=value)
+		field_obj.save()
+	elif field_type == "boolean":
+		if value == "true":
+			field_obj = BooleanField(name=field_name, collection=collection, item=item, boolean=True)
+		elif value == "false":
+			field_obj = BooleanField(name=field_name, collection=collection, item=item, boolean=False)
+		field_obj.save()
+	elif field_type == "date":
+		field_obj = DateField(name=field_name, collection=collection, item=item, date=datetime.strptime(value, "%Y-%m-%d"))
+		print(value)
+		field_obj.save()
+	elif field_type == "number":
+		field_obj = NumberField(name=field_name, collection=collection, item=item, number=int(value))
+		field_obj.save()
+	elif field_type == "decimal":
+		field_obj = DecimalField(name=field_name, collection=collection, item=item, decimal=float(value))
+		field_obj.save()
