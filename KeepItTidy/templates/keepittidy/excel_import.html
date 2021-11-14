@@ -1,0 +1,81 @@
+{% extends 'keepittidy/layout.html' %}
+{% load static %}
+
+{% block body %}
+<div class="container-fluid">
+	<div class="row h-100">
+		<div class="d-flex col-sm h-100 align-items-center">
+			<div class="mx-auto h-75 w-75 card">
+				<div class="card-header text-center">Collection Options</div>
+				<div class="card-body">
+				    <h2 class="card-title text-center">Import Collection</h2>
+		            <form class="form-signin" action="{% url 'excel_import' %}" method='post' enctype="multipart/form-data">
+		              {% csrf_token %}
+		              <div class="form-label-group">
+		                <input type="text" id="collectionName" name="collectionName" class="form-control" placeholder="Collection Name" required autofocus>
+		              </div>
+
+		              {% if error_msg %}
+		              <div class="form-label-group mt-1">
+		                <p>{{error_msg}}</p>
+		              </div>
+		              {% endif %}
+
+		              <hr class="my-4">
+
+		              <h5 class="card-title text-center">Description</h5>
+		              	<textarea id="description" name="description" rows="3" style="min-width: 100%;"></textarea>
+
+		              <hr class="my-4">
+
+		              <h3 class="card-title text-center">Set Up Item Fields</h3>
+
+		              <hr class="my-4">
+
+		              <h5 class="card-title text-center">Main Item Fields</h5>
+
+		              <p>Name Field -- Which of the headers in the table represent the name of the item</p>
+		              <input type="text" id="itemName" name="itemName" class="form-control" placeholder="Item Name" required>
+
+		              <p>Description Field -- Which of the headers in the table represent the description of the item (optional)</p>
+		              <input type="text" id="itemDescription" name="itemDescription" class="form-control" placeholder="Item Description">
+
+		              <hr class="my-4">
+
+		              <h5 class="card-title text-center">Additional Fields -- Type in all the fields you wish to import from the table and select their information type</h5>
+
+		              <div class="form-label-group" id="fieldForms">
+		                <div class="form-inline" id="fieldForm1">
+		                	<div class="form-group">
+		                		<input type="text" id="fieldName1" name="fieldName1" class="form-control" placeholder="Field Name" required>
+		                		<select class="form-control" name="fieldType1">
+		                			<option selected="true" disabled="disabled">Information Type</option>
+		                			<option value="text">Text</option>
+		                			<option value="boolean">Yes / No</option>
+		                			<option value="date">Date</option>
+		                			<option value="number">Number</option>
+		                			<option value="decimal">Decimal</option>
+		                			<option value="image">Image</option>
+		                		</select>
+		                	</div>
+		                </div>
+		              </div>
+
+		              <button type="button" class="btn btn-link" id="newField" name="newField">+ new field</button>
+
+		              <hr class="my-4">
+
+		              <input type="file", class="form-control-file" name="uploadedFile">
+
+		              <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">Submit</button>
+		            </form>
+			    </div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'keepItTidy/keepItTidy.js' %}"></script>
+{% endblock %}
