@@ -355,6 +355,8 @@ function displayItems(itemSource, collection) {
 	document.body.appendChild(itemsContainer);
 
 	if (Object.keys(clickedFilters).length > 0) {
+		console.log(Object.keys(clickedFilters).length > 0);
+		console.log(clickedFilters);
 		console.log("Items have been filtered!!! Need new filter options!!!");
 
 		// TO DO --> Update filter options to new item list
@@ -380,6 +382,9 @@ function filterItemList(array) {
 			for (let field in clickedFilters) {
 				// Check if the item matches current filter value in clickedFilters, if it does then count += 1
 				if (clickedFilters[field] == array[item][field]) {
+					console.log(clickedFilters[field]);
+					console.log(array[item][field]);
+					console.log(clickedFilters[field] == array[item][field]);
 					count += 1;
 					// check if this is the last field in clickedFilters, if the match count maches the clicked filter length, the item is added to the new list
 					if (count == Object.keys(clickedFilters).length) {

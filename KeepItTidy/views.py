@@ -14,7 +14,7 @@ from django.http import JsonResponse
 from django.core.files.storage import FileSystemStorage
 from django.core.exceptions import ObjectDoesNotExist
 
-from .models import User, Collection, TextField, BooleanField, DateField, NumberField, DecimalField, ImageField, FieldDict, FieldNameTypePair, Item, TempCollection
+from .models import User, Collection, TextField, BooleanField, DateField, NumberField, DecimalField, ImageField, FieldDict, FieldNameTypePair, Item
 
 # Create your views here.
 
@@ -145,7 +145,9 @@ def excel_import(request):
 			# Loop through fields_dict and create objects for key/value pair models to be connected to the dictionary model used above
 			for field in fields_dict:
 				for key, value in fields_dict[field].items():
-					name_type_pair = FieldNameTypePair(dictionary=field_dict_model, field_name=key, field_type=value)
+					if isinstance(value, str):
+						value = value.strip().title()
+					name_type_pair = FieldNameTypePair(dictionary=field_dict_model, field_name=key.strip().title(), field_type=value)
 					name_type_pair.save()
 
 			# Loop through each item in the table, check if its field is valid and if so register it
@@ -155,10 +157,10 @@ def excel_import(request):
 
 				# Get item name and item description
 				for header, entry in item.items():
-					if header.strip() == item_name.strip():
-						name = entry
-					if header.strip() == item_description.strip():
-						description = entry
+					if header.strip().lower() == item_name.strip().lower():
+						name = entry.strip().title()
+					if header.strip().lower() == item_description.strip().lower():
+						description = entry.strip().title()
 						new_item = Item(name=name, description=description, user=request.user, collection=new_collection)
 						break
 
@@ -175,8 +177,8 @@ def excel_import(request):
 				for field in fields_dict:
 					for key, value in fields_dict[field].items():
 						for header, entry in item.items():
-							if key.strip() == header.strip():
-								field_name = key
+							if key.strip().lower() == header.strip().lower():
+								field_name = key.strip().title()
 								field_type = value
 
 								# Check field type and create item accordingly
@@ -460,9 +462,11 @@ def read_xls(request):
 			for row in range(1, sheet.nrows):
 				item = {}
 				for col in range(sheet.ncols):
-					#print(f"{headers[col]}: {sheet.cell_value(row, col)}")
-
-					item[headers[col]] = sheet.cell_value(row, col)
+					# Check if the entry is a string, if so apply strip() and title()
+					if isinstance(sheet.cell_value(row, col), str):
+						item[headers[col].strip().title()] = sheet.cell_value(row, col).strip().title()
+					else:
+						item[headers[col].strip().title()] = sheet.cell_value(row, col)
 				table.append(item)
 
 	return table
