@@ -71,9 +71,9 @@ function searchFilter(searchBar) {
 	.then(collections => {
 		collections.forEach(function(collection) {
 			collection['items'].forEach(function(item) {
-				if (item['name'].toLowerCase().startsWith(searchBar.value)) {
+				if (item['name'].toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").startsWith(searchBar.value)) {
 					searchResult.push(item);
-					
+					return;
 				}
 			})
 		})
