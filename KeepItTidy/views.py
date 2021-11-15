@@ -145,9 +145,9 @@ def excel_import(request):
 			# Loop through fields_dict and create objects for key/value pair models to be connected to the dictionary model used above
 			for field in fields_dict:
 				for key, value in fields_dict[field].items():
-					if isinstance(value, str):
-						value = value.strip().title()
-					name_type_pair = FieldNameTypePair(dictionary=field_dict_model, field_name=key.strip().title(), field_type=value)
+					if isinstance(key, str):
+						key = key.strip().title()
+					name_type_pair = FieldNameTypePair(dictionary=field_dict_model, field_name=key, field_type=value)
 					name_type_pair.save()
 
 			# Loop through each item in the table, check if its field is valid and if so register it

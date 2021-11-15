@@ -18,74 +18,74 @@
 
 			<!--Aditional fields set up by the user-->
 			{% for field in fields %}
-	        <label for="{{field.field_name}}">{{field.field_name}}</label>
-	        {% if field.field_type == "text" %}
-	        	{% for key, value in item.items%}
-		        	{% if key == field.field_name %}
-		        		<input type="text" class="form-control {{field.field_type}}" name="{{field.field_name}} / {{field.field_type}}" placeholder={{field.field_type}} value="{{ value }}">
-		        	{% endif %}
-	        	{% endfor %}
+		        <label for="{{field.field_name}}">{{field.field_name}}</label>
+		        {% if field.field_type == "text" %}
+		        	{% for key, value in item.items%}
+			        	{% if key == field.field_name %}
+			        		<input type="text" class="form-control {{field.field_type}}" name="{{field.field_name}} / {{field.field_type}}" placeholder={{field.field_type}} value="{{ value }}">
+			        	{% endif %}
+		        	{% endfor %}
 
-	        {% elif field.field_type == "boolean" %}
-	        	{% for key, value in item.items%}
-		        	{% if key == field.field_name and value == False %}
-		        		<div>
-		        			<input type="radio" class="form-control {{field.field_type}}" id="{{field.field_name}} yes" value="true" name="{{field.field_name}} / {{field.field_type}}">
-	        				<label for="{{field.field_name}} yes">Yes</label>
-		        		</div>
-	        			<div>
-	        				<input type="radio" class="form-control {{field.field_type}}" id="{{field.field_name}} no" value="false" name="{{field.field_name}} / {{field.field_type}}" checked>
-	        				<label for="{{field.field_name}} yes">No</label>
-	        			</div>
-	        		{% elif key == field.field_name and value == True %}
-	        			<div>
-	        				<input type="radio" class="form-control {{field.field_type}}" id="{{field.field_name}} yes" value="true" name="{{field.field_name}} / {{field.field_type}}" checked>
-	        				<label for="{{field.field_name}} yes">Yes</label>
-	        			</div>
-	        			<div>
-	        				<input type="radio" class="form-control {{field.field_type}}" id="{{field.field_name}} no" value="false" name="{{field.field_name}} / {{field.field_type}}">
-	        			<label for="{{field.field_name}} yes">No</label>
-	        			</div>
-	        		{% endif %}
-	        	{% endfor %}
+		        {% elif field.field_type == "boolean" %}
+		        	{% for key, value in item.items%}
+			        	{% if key == field.field_name and value == False %}
+			        		<div>
+			        			<input type="radio" class="form-control {{field.field_type}}" id="{{field.field_name}} yes" value="true" name="{{field.field_name}} / {{field.field_type}}">
+		        				<label for="{{field.field_name}} yes">Yes</label>
+			        		</div>
+		        			<div>
+		        				<input type="radio" class="form-control {{field.field_type}}" id="{{field.field_name}} no" value="false" name="{{field.field_name}} / {{field.field_type}}" checked>
+		        				<label for="{{field.field_name}} yes">No</label>
+		        			</div>
+		        		{% elif key == field.field_name and value == True %}
+		        			<div>
+		        				<input type="radio" class="form-control {{field.field_type}}" id="{{field.field_name}} yes" value="true" name="{{field.field_name}} / {{field.field_type}}" checked>
+		        				<label for="{{field.field_name}} yes">Yes</label>
+		        			</div>
+		        			<div>
+		        				<input type="radio" class="form-control {{field.field_type}}" id="{{field.field_name}} no" value="false" name="{{field.field_name}} / {{field.field_type}}">
+		        			<label for="{{field.field_name}} yes">No</label>
+		        			</div>
+		        		{% endif %}
+		        	{% endfor %}
 
-	        {% elif field.field_type == "date" %}
-	        	{% for key, value in item.items%}
-		        	{% if key == field.field_name %}
-		        		<div>
-		        			<input type="date" class="form-control {{field.field_type}}" name="{{field.field_name}} / {{field.field_type}}" placeholder={{field.field_type}} required value="{{ value }}">
-		        		</div>
-		        	{% endif %}
-	        	{% endfor %}
+		        {% elif field.field_type == "date" %}
+		        	{% for key, value in item.items%}
+			        	{% if key == field.field_name %}
+			        		<div>
+			        			<input type="date" class="form-control {{field.field_type}}" name="{{field.field_name}} / {{field.field_type}}" placeholder={{field.field_type}} required value="{{ value }}">
+			        		</div>
+			        	{% endif %}
+		        	{% endfor %}
 
-	        {% elif field.field_type == "number" %}
-	        	{% for key, value in item.items%}
-		        	{% if key == field.field_name %}
-		        		<div>
-		        			<input type="number" step="any" class="form-control {{field.field_type}}" name="{{field.field_name}} / {{field.field_type}}" placeholder={{field.field_type}} value="{{ value }}">
-		        		</div>
-		        	{% endif %}
-	        	{% endfor %}
+		        {% elif field.field_type == "number" %}
+		        	{% for key, value in item.items%}
+			        	{% if key == field.field_name %}
+			        		<div>
+			        			<input type="number" step="any" class="form-control {{field.field_type}}" name="{{field.field_name}} / {{field.field_type}}" placeholder={{field.field_type}} value="{{ value }}">
+			        		</div>
+			        	{% endif %}
+		        	{% endfor %}
 
-	        {% elif field.field_type == "decimal" %}
-	        	{% for key, value in item.items%}
-		        	{% if key == field.field_name %}
-		        		<div>
-		        			<input type="number" step=".01" class="form-control {{field.field_type}}" name="{{field.field_name}} / {{field.field_type}}" placeholder={{field.field_type}} value="{{ value }}">
-		        		</div>
-		        	{% endif %}
-	        	{% endfor %}
+		        {% elif field.field_type == "decimal" %}
+		        	{% for key, value in item.items%}
+			        	{% if key == field.field_name %}
+			        		<div>
+			        			<input type="number" step=".01" class="form-control {{field.field_type}}" name="{{field.field_name}} / {{field.field_type}}" placeholder={{field.field_type}} value="{{ value }}">
+			        		</div>
+			        	{% endif %}
+		        	{% endfor %}
 
-	        {% elif field.field_type == "image" %}
-	        	{% for key, value in item.items%}
-		        	{% if key == field.field_name %}
-		        		<div>
-		        			<input type="file" class="form-control image" name="Fotografii / image" multiple>
-		        		</div>
-		        	{% endif %}
-	        	{% endfor %}
+		        {% elif field.field_type == "image" %}
+		        	{% for key, value in item.items%}
+			        	{% if key == field.field_name %}
+			        		<div>
+			        			<input type="file" class="form-control image" name="Fotografii / image" multiple>
+			        		</div>
+			        	{% endif %}
+		        	{% endfor %}
 
-	        {% endif %}
+		        {% endif %}
 		    {% endfor %}
 		    <button type="submit" class="btn btn-primary">Submit</button>
 		</form>
