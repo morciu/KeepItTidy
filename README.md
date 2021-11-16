@@ -43,6 +43,6 @@ Use the link in the terminal to access the site
 
 ## Acknowledgments
 
+  - CS50’s Web Programming with Python and JavaScript course - https://www.edx.org/course/cs50s-web-programming-with-python-and-javascript
+  - Helpful strangers on stackoverflow.com
   - Hat tip to anyone whose code is used
-  - Inspiration
-  - etc
