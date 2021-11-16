@@ -1,7 +1,8 @@
 # Keep It Tidy
 
 Web app that lets you create customized collections of various items.
-Each collection can be set up multiple fields of different types deppending on the the items you intend to keep track of.
+
+Each collection can be set up with multiple fields of different types deppending on the the items you intend to keep track of.
 
 ## Getting Started
 
