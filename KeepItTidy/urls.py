@@ -22,6 +22,7 @@ urlpatterns = [
 	path("excel_import", views.excel_import, name="excel_import"),
 	path("view_collection", views.view_collection, name="view_collection"),
 	path("view_collection/<int:collection_id>", views.view_collection, name="view_collection"),
+	path("upload_images/<int:collection_id>", views.upload_images, name="upload_images"),
 	path("delete_collection", views.delete_collection, name="delete_collection"),
 
 	# Item

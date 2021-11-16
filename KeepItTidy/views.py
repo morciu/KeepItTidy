@@ -191,6 +191,68 @@ def excel_import(request):
 
 
 @login_required
+def upload_images(request, collection_id):
+	current_user = request.user
+	collection = Collection.objects.get(id=collection_id)
+	
+	# Get collection fields
+	field_dict = FieldDict.objects.get(collection=collection)
+	fields = FieldNameTypePair.objects.filter(dictionary=field_dict)
+
+	if request.method == "POST":
+		associated_field = request.POST['selectedField']
+		image_field_name = request.POST['imageFieldName']
+
+		print(associated_field)
+		print(image_field_name)
+
+		associated_field_obj = FieldNameTypePair.objects.get(field_name=associated_field)
+		associated_field_type = associated_field_obj.field_type
+
+		print(associated_field_type)
+
+		if len(request.FILES) > 0:
+			for i in request.FILES:
+				for img_file in request.FILES.getlist(i):
+					print(img_file)
+
+					# Loop through items checking associated_field
+
+					items = Item.objects.filter(collection=collection)
+
+					for item in items:
+						if associated_field_type == "number":
+							entry = str(NumberField.objects.get(item=item, name=associated_field).number)
+
+							# Find a field entry that has the file name in it or vice versa
+							if img_file.name.split('.')[0] in entry or entry in img_file.name.split('.')[0]:
+								print("FOUND")
+
+								# Create ImageField for that object
+								new_img = ImageField(name=image_field_name, collection=collection, item=item, image=img_file)
+								new_img.save()
+
+					
+
+					# Get the item object
+
+					
+
+
+		return render(request, "keepittidy/upload_images.html", {
+				"user": current_user,
+				"collection": collection,
+				"fields": fields
+				})
+	else:
+		return render(request, "keepittidy/upload_images.html", {
+				"user": current_user,
+				"collection": collection,
+				"fields": fields
+				})
+
+
+@login_required
 def delete_collection(request):
 	if request.method == "PUT":
 		# Get JSON data from delete button

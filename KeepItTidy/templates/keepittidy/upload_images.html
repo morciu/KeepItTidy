@@ -1,0 +1,32 @@
+{% extends "keepittidy/layout.html" %}
+{% load static %}
+
+{% block body %}
+<div id="collection" class="jumbotron jumbotron-fluid">
+	<div class="container">
+		<h1 class="display-5">{{ collection.name }}</h1>
+		<p class="lead">{{ collection.description }}</p>
+	</div>
+	<div class="container">
+		<form action="{% url 'upload_images' collection.id %}" method="post" enctype="multipart/form-data">
+			{% csrf_token %}
+			<div>
+				<p>Which field will the image files be associated with?</p>
+				<select class="form-control" name="selectedField" required>
+        			<option selected="true" disabled="disabled" value="">Select Field</option>
+        				{% for field in fields %}
+		        			<option value="{{field.field_name}}">{{field.field_name}}</option>
+		        		{% endfor %}
+		        </select>
+		    </div>
+		    <div>
+		    	<p>What will the image field be called?</p>
+        		<input type="text" name="imageFieldName" required>
+		    </div>
+			
+			<input type="file" class="form-control-image {{field.field_type}}" name="{{field.field_name}} / {{field.field_type}}" multiple required>
+		    <button type="submit" class="btn btn-primary">Submit</button>
+		</form>
+	</div>
+</div>
+{% endblock %}

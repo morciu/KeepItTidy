@@ -284,8 +284,8 @@ function displayCollection(collection, parrent) {
 	collectionDescription.innerHTML = collection['description'];
 
 	// Paragraph for add button
-	let addButtonParagraph = document.createElement("p");
-	addButtonParagraph.className = "lead";
+	let buttonParagraph = document.createElement("div");
+	buttonParagraph.className = "lead d-flex";
 
 	// Add item button
 	let addButton = document.createElement("a");
@@ -294,14 +294,20 @@ function displayCollection(collection, parrent) {
 	addButton.setAttribute("role", "button");
 	addButton.innerHTML = "Add item";
 
-
+	// Upload Images button
+	let uploadImages = document.createElement("a");
+	uploadImages.className = "btn btn-primary btn-sm ml-auto";
+	uploadImages.setAttribute("href", "../upload_images/" + collection['id']);
+	uploadImages.setAttribute("role", "button");
+	uploadImages.innerHTML = "Upload Images";
 
 	// Set element hierarchy
-	addButtonParagraph.appendChild(addButton);
+	buttonParagraph.appendChild(addButton);
+	buttonParagraph.appendChild(uploadImages);
 
 	containerDiv.appendChild(collectionName);
 	containerDiv.appendChild(collectionDescription);
-	containerDiv.appendChild(addButtonParagraph);
+	containerDiv.appendChild(buttonParagraph);
 
 	clickedCollection.appendChild(containerDiv);
 
