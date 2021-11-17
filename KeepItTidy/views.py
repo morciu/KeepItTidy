@@ -76,7 +76,6 @@ def register(request):
 
 @login_required
 def view_collection(request, collection_id=None):
-	
 	return render(request, "keepittidy/view_collection.html")
 
 @login_required
@@ -214,23 +213,40 @@ def upload_images(request, collection_id):
 		if len(request.FILES) > 0:
 			for i in request.FILES:
 				for img_file in request.FILES.getlist(i):
-					print(img_file)
 
 					# Loop through items checking associated_field
 
 					items = Item.objects.filter(collection=collection)
 
+					# Check if the collection has Image fields, if not they need to be created
+
+					collection_fields = FieldDict.objects.get(collection=collection)
+					image_field = FieldNameTypePair.objects.filter(dictionary=collection_fields, field_type='image')
+					print(image_field)
+
+					if image_field.count() <= 0:
+						print("FOUND IMAGE FIELD")
+						name_type_pair = FieldNameTypePair(dictionary=collection_fields, field_name=image_field_name, field_type='image')
+						name_type_pair.save()
+
 					for item in items:
-						if associated_field_type == "number":
-							entry = str(NumberField.objects.get(item=item, name=associated_field).number)
+						# Check if the image already exists for this item
+						old_imgs = ImageField.objects.filter(item=item)
+						file_names = []
+						for img in old_imgs:
+							file_names.append(img.file_name())
 
-							# Find a field entry that has the file name in it or vice versa
-							if img_file.name.split('.')[0] in entry or entry in img_file.name.split('.')[0]:
-								print("FOUND")
+						if old_imgs.count() <= 0 or img_file.name not in file_names:
+							if associated_field_type == "number":
+								entry = str(NumberField.objects.get(item=item, name=associated_field).number)
 
-								# Create ImageField for that object
-								new_img = ImageField(name=image_field_name, collection=collection, item=item, image=img_file)
-								new_img.save()
+								# Find a field entry that has the file name in it or vice versa
+								if img_file.name.split('.')[0] in entry or entry in img_file.name.split('.')[0]:
+									# Create ImageField for that object
+									new_img = ImageField(name=image_field_name, collection=collection, item=item, image=img_file)
+									new_img.save()
+						else:
+							pass
 
 					
 

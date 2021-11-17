@@ -168,6 +168,10 @@ class ImageField(models.Model):
 	item = models.ForeignKey(Item, on_delete=models.CASCADE, related_name="image_field")
 	image = models.ImageField(upload_to='images/')
 
+	def file_name(self):
+		# Return the name of the file
+		return os.path.basename(self.image.name)
+
 	def delete(self, *args, **kwargs):
 		# Delete local files image model before deleting model
 		os.remove(self.image.path)
