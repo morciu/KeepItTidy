@@ -237,14 +237,18 @@ def upload_images(request, collection_id):
 							file_names.append(img.file_name())
 
 						if old_imgs.count() <= 0 or img_file.name not in file_names:
-							if associated_field_type == "number":
+							if associated_field == "name":
+								entry = item.name
+							elif associated_field_type == "number":
 								entry = str(NumberField.objects.get(item=item, name=associated_field).number)
+							elif associated_field == 'text':
+								entry = TextField.objects.get(item=item, name=associated_field).text
 
-								# Find a field entry that has the file name in it or vice versa
-								if img_file.name.split('.')[0] in entry or entry in img_file.name.split('.')[0]:
-									# Create ImageField for that object
-									new_img = ImageField(name=image_field_name, collection=collection, item=item, image=img_file)
-									new_img.save()
+							# Find a field entry that has the file name in it or vice versa
+							if img_file.name.split('.')[0] in entry or entry in img_file.name.split('.')[0]:
+								# Create ImageField for that object
+								new_img = ImageField(name=image_field_name, collection=collection, item=item, image=img_file)
+								new_img.save()
 						else:
 							pass
 

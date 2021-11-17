@@ -14,6 +14,7 @@
 				<p>Which field will the image files be associated with?</p>
 				<select class="form-control" name="selectedField" required>
         			<option selected="true" disabled="disabled" value="">Select Field</option>
+        			<option value="name">Name</option>
         				{% for field in fields %}
 		        			<option value="{{field.field_name}}">{{field.field_name}}</option>
 		        		{% endfor %}
