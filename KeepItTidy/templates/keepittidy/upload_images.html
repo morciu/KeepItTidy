@@ -16,7 +16,9 @@
         			<option selected="true" disabled="disabled" value="">Select Field</option>
         			<option value="name">Name</option>
         				{% for field in fields %}
+        				{% if field.field_type == "text" or field.field_type == "number" %}
 		        			<option value="{{field.field_name}}">{{field.field_name}}</option>
+        				{% endif %}
 		        		{% endfor %}
 		        </select>
 		    </div>
