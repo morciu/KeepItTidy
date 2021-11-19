@@ -196,7 +196,7 @@ function createCollectionCard(collection, row) {
 
 	let cardDiv = document.createElement("div");
 	cardDiv.className = "card";
-	cardDiv.className = "card h-100"; // h-100 creates a fixed card height for the entire 100% height of the column
+	cardDiv.className = "card h-100 w-100"; // h-100 creates a fixed card height for the entire 100% height of the column
 
 	let cardBodyDiv = document.createElement("div");
 	cardBodyDiv.className = "card-body";
@@ -543,7 +543,7 @@ function createModalPopup(item, parent) {
 
 	// Loop through fields and list them in the modal window
 	for (var key in item) {
-		if (!["name", "description", "id", "col_id"].includes(key)) {
+		if (!["name", "description", "id", "col_id", "img_missing"].includes(key)) {
 			let modalContent = document.createElement("p");
 
 			if (item[key] == true) {
@@ -678,10 +678,18 @@ function createItemCard(item, row) {
 			*/
 			// Fill in image
 			if (Array.isArray(item[key])) {
-				let image = document.createElement("img");
-				image.className = "img-fluid";
-				image.src = item[key][0];
-				itemCardBody.appendChild(image)
+				if (item[key].length > 0) {
+					let image = document.createElement("img");
+					image.className = "img-fluid";
+					image.src = item[key][0];
+					itemCardBody.appendChild(image)
+				}
+				else {
+					let image = document.createElement("img");
+					image.className = "img-fluid";
+					image.src = "/media/images/missing_image.jpg";
+					itemCardBody.appendChild(image)
+				}
 			}
 			/*
 			// Fill in regula fields

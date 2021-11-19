@@ -123,6 +123,9 @@ class Item(models.Model):
 				image_urls.append(i.image.url)
 
 			fields[i.name] = image_urls # This dictionary object will return an array of urls
+		else:
+			# Return an empty ulr list, will catch this in javascript and load a placeholder image
+			fields["img_missing"] = []
 
 		return fields
 
