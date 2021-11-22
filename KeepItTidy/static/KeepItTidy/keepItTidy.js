@@ -194,7 +194,8 @@ function createCollectionCard(collection, row) {
 	colDiv.className = "col-sm col-md-3";
 	colDiv.style.padding = "1em";
 
-	let cardDiv = document.createElement("div");
+	let cardDiv = document.createElement("a");
+	cardDiv.setAttribute("href", "../view_collection/" + collection['id'])
 	cardDiv.className = "card";
 	cardDiv.className = "card h-100 w-100"; // h-100 creates a fixed card height for the entire 100% height of the column
 
@@ -202,22 +203,16 @@ function createCollectionCard(collection, row) {
 	cardBodyDiv.className = "card-body";
 
 	let cardTitle = document.createElement("h5");
-	cardTitle.className = "card-title";
+	cardTitle.className = "card-title text-center";
 	cardTitle.innerHTML = collection['name'];
 	cardBodyDiv.appendChild(cardTitle);
 
 	let cardText = document.createElement("p");
-	cardText.className = "card-text";
+	cardText.className = "card-text text-center";
 	cardText.innerHTML = collection['description'];
 	cardBodyDiv.appendChild(cardText);
 
-	let cardButton = document.createElement("a");
-	cardButton.className = "btn btn-primary";
-	let urlLink = "../view_collection/" + collection['id'];
-	cardButton.setAttribute("href", urlLink);
 	
-	cardButton.innerHTML = "Go to this thing";
-	cardBodyDiv.appendChild(cardButton);
 
 	// Append everything to the upper nodes
 	cardDiv.appendChild(cardBodyDiv);
