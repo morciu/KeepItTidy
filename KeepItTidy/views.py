@@ -21,7 +21,11 @@ from .models import User, Collection, TextField, BooleanField, DateField, Number
 
 def index(request):
 	if request.user.is_authenticated:
-		return render(request, "keepittidy/index.html")
+		collections = Collection.objects.filter(user=request.user)
+		if collections.count() > 0:
+			return HttpResponseRedirect(reverse("view_collection"))
+		else:
+			return render(request, "keepittidy/index.html")
 	else:
 		return HttpResponseRedirect(reverse("login"))
 
