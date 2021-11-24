@@ -608,13 +608,17 @@ function createModalPopup(item, parent) {
 		if (!["name", "description", "id", "col_id", "img_missing"].includes(key)) {
 			let modalContent = document.createElement("p");
 
-			if (item[key] == true) {
-				modalContent.innerHTML = key + ": " + 'Yes';
-			}
+			// Check if value is of type Boolean
+			if (typeof item[key] == 'boolean') {
+				if (item[key] == true) {
+					modalContent.innerHTML = key + ": " + 'Yes';
+				}
 
-			else if (item[key] == false) {
-				modalContent.innerHTML = key + ": " + 'No';
+				else if (item[key] == false) {
+					modalContent.innerHTML = key + ": " + 'No';
+				}
 			}
+			
 
 			// Check if we are dealing an array (All image urls are store in an array under the image field)
 			else if (Array.isArray(item[key])) {
