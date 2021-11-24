@@ -329,40 +329,61 @@ function displayCollection(collection, parrent) {
 	itemFilter(collection['items'], collection, clickedCollection);
 
 	// Display items
-	console.log("NEXT STARTING POINT: " + startingPoint);
-	endPoint = startingPoint + nrOfItemsToLoad;
-	displayItems(collection['items'].slice(startingPoint, endPoint), collection);
-	startingPoint = startingPoint + nrOfItemsToLoad
+
+	// If user is not using filters or search, display items 20 at a time and use infinite scroll
+	if ((clickedFilters.length == 0) && (document.querySelector('#search').value.length == 0)) {
+		endPoint = startingPoint + nrOfItemsToLoad;
+		displayItems(collection['items'].slice(startingPoint, endPoint), collection);
+		startingPoint = startingPoint + nrOfItemsToLoad
+	}
+	// If user is using filters or search, display everything at once
+	else {
+		displayItems(collection['items'], collection);
+	}
 }
 
 
 function displayItems(itemSource, collection) {
+	
 	// Clone the items array to preserve the original
 	let itemSourceClone = Array.from(itemSource);
+	let itemsContainer;
 
 	// Clear screen of previous items
 	if (document.querySelector("#itemList")) {
 		// Check if user reached bottom of the page, if so load the next batch of items
-		if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-
+		if ((window.innerHeight + window.scrollY >= document.body.offsetHeight) && (document.body.offsetHeight > window.innerHeight)) {
+			
+			itemsContainer = document.querySelector("#itemList");
 		}
 		else {
 			document.body.removeChild(document.querySelector("#itemList"));
+			itemsContainer = document.createElement("div");
+			itemsContainer.className = "container-fluid";
+			itemsContainer.id = "itemList";
 		}
+	}
+	else {
+		itemsContainer = document.createElement("div");
+		itemsContainer.className = "container-fluid";
+		itemsContainer.id = "itemList";
 	}
 
 	// Items
 
 	// Manage filter options
 	let items = filterItemList(itemSourceClone);
+
+	console.log("NR OF ITEMS: " + itemSourceClone.length);
+	console.log("NR OF FILTERED ITEMS: " + items.length);
 	
 	// Determine how many rows are needed
 	let nrOfRows = determineNrOfRows(items);
 
 	// Create html elements needed to display items
-	let itemsContainer = document.createElement("div");
-	itemsContainer.className = "container-fluid";
-	itemsContainer.id = "itemList";
+	//let itemsContainer = document.createElement("div");
+	//itemsContainer.className = "container-fluid";
+	//itemsContainer.id = "itemList";
 
 	for (let i = 0; i < nrOfRows; i++) {
 		// For each 4 items create a new row and modify the array for the next 4 items
@@ -380,10 +401,12 @@ function displayItems(itemSource, collection) {
 	}
 
 	// Check if all items have been loaded on screen
-	console.log(itemsLoaded);
-	console.log(collection['items'].length);
-	if (itemsLoaded >= collection['items'].length) {
-		everythingLoaded = true;
+	if (collection) {
+		console.log(itemsLoaded);
+		console.log(collection['items'].length);
+		if (itemsLoaded >= collection['items'].length) {
+			everythingLoaded = true;
+		}
 	}
 
 	document.body.appendChild(itemsContainer);
@@ -430,9 +453,6 @@ function filterItemList(array) {
 			for (let field in clickedFilters) {
 				// Check if the item matches current filter value in clickedFilters, if it does then count += 1
 				if (clickedFilters[field] == array[item][field]) {
-					console.log(clickedFilters[field]);
-					console.log(array[item][field]);
-					console.log(clickedFilters[field] == array[item][field]);
 					count += 1;
 					// check if this is the last field in clickedFilters, if the match count maches the clicked filter length, the item is added to the new list
 					if (count == Object.keys(clickedFilters).length) {
@@ -674,7 +694,6 @@ function createItemCard(item, row) {
 		if (document.querySelector('#confirmDelete'+ item['id'])) {
 			// create delete button
 			document.querySelector('#delete' + item['id']).style.display = "block";
-			console.log(document.querySelector('#confirmDelete' + item['id']));
 			// remove confirm button
 			document.querySelector('#confirmDelete' + item['id']).remove();
 		}
