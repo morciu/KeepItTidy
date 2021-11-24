@@ -1,5 +1,5 @@
 body {
-	background-color: #243340;
+	background-color: #334E58;
 	padding-top: 70px;
 }
 
@@ -10,4 +10,8 @@ body {
 a.card {
 	text-decoration: none;
 	color: inherit;
+}
+
+
+.card-img-bottom {
 }

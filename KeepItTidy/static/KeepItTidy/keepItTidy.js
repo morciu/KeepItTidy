@@ -1,4 +1,12 @@
 // GLOBAL VARIABLES
+const nrOfItemsToLoad = 20;
+var startingPoint = 0;
+var endPoint = nrOfItemsToLoad;
+
+var itemsLoaded = 0;
+var everythingLoaded = false;
+
+
 var numberOfFields = 1;
 var clickedFilters = {}; // Store all filter selections to be used by displayItems()
 
@@ -24,14 +32,13 @@ function getCookie(name) {
 
 document.addEventListener('DOMContentLoaded', function() {
 	
+	let url = window.location.href;
+	let urlArray = url.split('/');
+	let lastUrlElement = urlArray[urlArray.length - 1];
 
 	// BY DEFAULT - List all collections if we are in the right section
 	if (document.querySelector("#collections")) {
 		// Check if this was accessed through quick access bar
-		let url = window.location.href;
-		let urlArray = url.split('/');
-		let lastUrlElement = urlArray[urlArray.length - 1];
-
 		if (lastUrlElement == 'view_collection') {
 			listCollections();
 		}
@@ -43,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	//Browse Collections from the Nav Bar
 	navbarCollectionList();
 	
-	// Add Field Button
+	// Create Collection -- Add Field Button
 	if (document.querySelector("#newField")) {
 		document.querySelector("#newField").addEventListener('click', addNewField);	
 	}
@@ -60,6 +67,17 @@ document.addEventListener('DOMContentLoaded', function() {
 	document.querySelector("#search").addEventListener('input', function() {
 		searchFilter(document.querySelector("#search"));
 	})
+
+	// Infinite scroll
+	window.onscroll = () => {
+		// Check if user has reached the bottom of the page
+		if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+			console.log("BOTTOM");
+			if (everythingLoaded == false) {
+				loadNextItems(parseInt(lastUrlElement))
+			}
+		}
+	}
 });
 
 
@@ -254,12 +272,10 @@ function addNewField() {
 function displayCollection(collection, parrent) {
 	// Clear screen
 	parrent.innerHTML = "";
-	console.log("Parent ID is " + parrent.id);
 	// Create main div
 	let clickedCollection = document.createElement("div");
 	clickedCollection.id = "collection";
 	clickedCollection.className = "jumbotron jumbotron-fluid";
-	console.log(clickedCollection);
 
 	// Add "Delete" button to remove collection
 	deleteCollection(collection, clickedCollection, "collection");
@@ -312,8 +328,11 @@ function displayCollection(collection, parrent) {
 	console.log(collection);
 	itemFilter(collection['items'], collection, clickedCollection);
 
-	// Display all items from the collection
-	displayItems(collection['items'], collection);
+	// Display items
+	console.log("NEXT STARTING POINT: " + startingPoint);
+	endPoint = startingPoint + nrOfItemsToLoad;
+	displayItems(collection['items'].slice(startingPoint, endPoint), collection);
+	startingPoint = startingPoint + nrOfItemsToLoad
 }
 
 
@@ -323,11 +342,16 @@ function displayItems(itemSource, collection) {
 
 	// Clear screen of previous items
 	if (document.querySelector("#itemList")) {
-		document.body.removeChild(document.querySelector("#itemList"));
+		// Check if user reached bottom of the page, if so load the next batch of items
+		if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+
+		}
+		else {
+			document.body.removeChild(document.querySelector("#itemList"));
+		}
 	}
 
 	// Items
-	
 
 	// Manage filter options
 	let items = filterItemList(itemSourceClone);
@@ -345,12 +369,21 @@ function displayItems(itemSource, collection) {
 		let row = items.slice(0, 4);
 		createRow(row, itemsContainer, "item");
 		items.splice(0, 4);
+		itemsLoaded += 4
 	}
 
 
 	// Create last row for the remaining items
 	if (items.length > 0) {
 		createRow(items, itemsContainer, "item");
+		itemsLoaded += items.length
+	}
+
+	// Check if all items have been loaded on screen
+	console.log(itemsLoaded);
+	console.log(collection['items'].length);
+	if (itemsLoaded >= collection['items'].length) {
+		everythingLoaded = true;
 	}
 
 	document.body.appendChild(itemsContainer);
@@ -368,6 +401,20 @@ function displayItems(itemSource, collection) {
 		filterParentElement.removeChild(document.querySelector('#filterContainer'));
 		itemFilter(filteredItems, collection, filterParentElement);
 	}
+}
+
+function loadNextItems(collection_id) {
+	// Fetch API
+	fetch('/get_collections')
+	.then(response => response.json())
+	.then(collections => {
+		collections.forEach(function(collection) {
+			if (collection['id'] == collection_id) {
+				displayCollection(collection, document.querySelector("#collections"));
+				return
+			}
+		})
+	})
 }
 
 
@@ -551,11 +598,7 @@ function createModalPopup(item, parent) {
 
 			// Check if we are dealing an array (All image urls are store in an array under the image field)
 			else if (Array.isArray(item[key])) {
-				console.log(item);
-				console.log(item[key].length);
-
 				item[key].forEach(imgUrl => {
-					console.log(imgUrl);
 					// Create carousel item
 					let carouselItem = document.createElement("div");
 
@@ -620,7 +663,7 @@ function createItemCard(item, row) {
 
 	// Create card elements starting with an "a" tag to trigger a modal pop-up
 	let itemCardDiv = document.createElement("a");
-	itemCardDiv.className = "card h-100"; // h-100 creates a fixed card height for the entire 100% height of the column
+	itemCardDiv.className = "card border-dark h-100"; // h-100 creates a fixed card height for the entire 100% height of the column
 	itemCardDiv.setAttribute("type", "button");
 	itemCardDiv.setAttribute("data-toggle", "modal");
 	itemCardDiv.setAttribute("data-target", "#itemModal" + item['id']);
@@ -649,6 +692,7 @@ function createItemCard(item, row) {
 	itemCardBody.appendChild(itemCardDescription);
 
 	// Insert content
+	let image = document.createElement("img");
 
 	// Name and Description
 	itemCardTitle.innerHTML = item['name'];
@@ -672,18 +716,15 @@ function createItemCard(item, row) {
 			}
 			*/
 			// Fill in image
+			
 			if (Array.isArray(item[key])) {
 				if (item[key].length > 0) {
-					let image = document.createElement("img");
-					image.className = "img-fluid";
+					image.className = "card-img-bottom";
 					image.src = item[key][0];
-					itemCardBody.appendChild(image)
 				}
 				else {
-					let image = document.createElement("img");
-					image.className = "img-fluid";
+					image.className = "card-img-bottom";
 					image.src = "/media/images/missing_image.jpg";
-					itemCardBody.appendChild(image)
 				}
 			}
 			/*
@@ -706,6 +747,7 @@ function createItemCard(item, row) {
 	// Set up element hierarchy 
 	
 	itemCardDiv.appendChild(itemCardBody);
+	itemCardDiv.appendChild(image);
 	itemCollumn.appendChild(itemCardDiv);
 	row.appendChild(itemCollumn);
 }
