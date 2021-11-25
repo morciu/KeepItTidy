@@ -325,13 +325,13 @@ function displayCollection(collection, parrent) {
 	parrent.appendChild(clickedCollection);
 
 	// Filters
-	console.log(collection);
 	itemFilter(collection['items'], collection, clickedCollection);
 
 	// Display items
 
 	// If user is not using filters or search, display items 20 at a time and use infinite scroll
-	if ((clickedFilters.length == 0) && (document.querySelector('#search').value.length == 0)) {
+	if ((Object.keys(clickedFilters).length == 0) && (document.querySelector('#search').value.length == 0)) {
+
 		endPoint = startingPoint + nrOfItemsToLoad;
 		displayItems(collection['items'].slice(startingPoint, endPoint), collection);
 		startingPoint = startingPoint + nrOfItemsToLoad
@@ -412,10 +412,6 @@ function displayItems(itemSource, collection) {
 	document.body.appendChild(itemsContainer);
 
 	if (Object.keys(clickedFilters).length > 0) {
-		console.log(Object.keys(clickedFilters).length > 0);
-		console.log(clickedFilters);
-		console.log("Items have been filtered!!! Need new filter options!!!");
-
 		// TO DO --> Update filter options to new item list
 		let filterParentElement = document.querySelector('#filterContainer').parentElement;
 		let filteredItems = filterItemList(itemSource);
@@ -985,10 +981,10 @@ function itemFilter(sourceItems, sourceCollection, parent) {
 
 		// TEST --> Add event and read filter selection
 		selector.addEventListener("change", function() {
-			console.log(selector.value);
 
 			if (selector.value.slice(-3) == "All"){
-				// If user selected 'All' in a field filter, remove that field from clickedFilter, stop filtering by that field and reset dropdown options for it
+				// If user selected 'All' in a field filter, remove that field from clickedFilter,
+				// stop filtering by that field and reset dropdown options for it
 				delete clickedFilters[selector.id];
 				
 				// Remove old filter options 
@@ -999,7 +995,14 @@ function itemFilter(sourceItems, sourceCollection, parent) {
 				itemFilter(sourceCollection['items'], sourceCollection, parent);
 
 				// Update displayed items
-				displayItems(sourceCollection['items'], sourceCollection);
+				if (Object.keys(clickedFilters).length == 0){
+					// If filters are not used anymore return to displaying items 20 at a time with infinite scroll
+					startingPoint = 0;
+					displayCollection(sourceCollection, document.querySelector("#collections"))
+				}
+				else {
+					displayItems(sourceCollection['items'], sourceCollection);
+				}
 			}
 			else {
 				// Add selected filter to the global ckickedFilters array
