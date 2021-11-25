@@ -305,12 +305,24 @@ function displayCollection(collection, parrent) {
 	addButton.setAttribute("role", "button");
 	addButton.innerHTML = "Add item";
 
+	// Icon
+	let addIcon = document.createElement("i");
+	addIcon.className = "material-icons";
+	addIcon.innerHTML = "add";
+	addButton.appendChild(addIcon);
+
 	// Upload Images button
 	let uploadImages = document.createElement("a");
 	uploadImages.className = "btn btn-primary btn-sm ml-auto";
 	uploadImages.setAttribute("href", "../upload_images/" + collection['id']);
 	uploadImages.setAttribute("role", "button");
 	uploadImages.innerHTML = "Upload Images";
+
+	// Icon
+	let uploadImagesIcon = document.createElement("i");
+	uploadImagesIcon.className = "material-icons";
+	uploadImagesIcon.innerHTML = "drive_folder_upload";
+	uploadImages.appendChild(uploadImagesIcon);
 
 	// Set element hierarchy
 	buttonParagraph.appendChild(addButton);
@@ -906,7 +918,11 @@ function deleteCollection(source, parent) {
 
 	let button = document.createElement("button");
 	button.className = "btn btn-outline-danger btn-sm";
-	button.innerHTML = "Delete";
+
+	let deleteIcon = document.createElement('i');
+	deleteIcon.className = "material-icons";
+	deleteIcon.innerHTML = "delete";
+	button.appendChild(deleteIcon);
 
 	button.addEventListener("click", function () {
 		confirmDelete(source, parent, "collection", button);
