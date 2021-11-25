@@ -116,7 +116,7 @@ function searchHeader(parent) {
 	headerJumbotron.className = "jumbotron";
 
 	let searchTitle = document.createElement("h1");
-	searchTitle.className = "display-5";
+	searchTitle.className = "display-5 title";
 	searchTitle.innerHTML = "Search Results";
 
 	headerJumbotron.appendChild(searchTitle);
@@ -221,7 +221,7 @@ function createCollectionCard(collection, row) {
 	cardBodyDiv.className = "card-body";
 
 	let cardTitle = document.createElement("h5");
-	cardTitle.className = "card-title text-center";
+	cardTitle.className = "title card-title text-center";
 	cardTitle.innerHTML = collection['name'];
 	cardBodyDiv.appendChild(cardTitle);
 
@@ -286,7 +286,7 @@ function displayCollection(collection, parrent) {
 
 	// Header
 	let collectionName = document.createElement("h1");
-	collectionName.className = "display-5";
+	collectionName.className = "display-5 title";
 	collectionName.innerHTML = collection['name'];
 
 	// Description
@@ -715,7 +715,7 @@ function createItemCard(item, row) {
 	itemCardBody.className = "card-body";
 
 	let itemCardTitle = document.createElement("h5");
-	itemCardTitle.className = "card-title";
+	itemCardTitle.className = "title card-title";
 	itemCardBody.appendChild(itemCardTitle);
 
 	let itemCardDescription = document.createElement("p");
@@ -754,8 +754,8 @@ function createItemCard(item, row) {
 					image.src = item[key][0];
 				}
 				else {
-					image.className = "card-img-bottom";
-					image.src = "/media/images/missing_image.jpg";
+					image.className = "card-img-bottom missing_image";
+					image.src = "/media/images/missing_image.png";
 				}
 			}
 			/*

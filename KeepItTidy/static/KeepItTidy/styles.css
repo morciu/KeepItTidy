@@ -1,6 +1,10 @@
 body {
-	background-color: #334E58;
+	background-color: #386641;
 	padding-top: 70px;
+}
+
+.navbar {
+	background-color: #6A994E;
 }
 
 .btn{
@@ -14,4 +18,21 @@ a.card {
 
 #titleLogo {
 	font-family: 'Permanent Marker', cursive;
+}
+
+.title {
+	font-family: 'Montserrat', sans-serif;
+}
+
+.jumbotron {
+	background-color: #FBF7EF;
+}
+
+.card {
+	background-color: #FBF7EF;
+}
+
+img.missing_image {
+	max-height: 200px;
+	object-fit: none;
 }
