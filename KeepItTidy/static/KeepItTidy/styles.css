@@ -12,6 +12,6 @@ a.card {
 	color: inherit;
 }
 
-
-.card-img-bottom {
+#titleLogo {
+	font-family: 'Permanent Marker', cursive;
 }
