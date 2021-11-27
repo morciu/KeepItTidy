@@ -300,20 +300,20 @@ function displayCollection(collection, parrent) {
 
 	// Add item button
 	let addButton = document.createElement("a");
-	addButton.className = "btn btn-primary btn-lg";
+	addButton.className = "btn btn-sm addButton";
 	addButton.setAttribute("href", "../add_item/" + collection['id']);
 	addButton.setAttribute("role", "button");
 	addButton.innerHTML = "Add item";
 
 	// Icon
-	let addIcon = document.createElement("i");
+	let addIcon = document.createElement("span");
 	addIcon.className = "material-icons";
 	addIcon.innerHTML = "add";
 	addButton.appendChild(addIcon);
 
 	// Upload Images button
 	let uploadImages = document.createElement("a");
-	uploadImages.className = "btn btn-primary btn-sm ml-auto";
+	uploadImages.className = "btn btn-sm ml-auto addButton";
 	uploadImages.setAttribute("href", "../upload_images/" + collection['id']);
 	uploadImages.setAttribute("role", "button");
 	uploadImages.innerHTML = "Upload Images";
