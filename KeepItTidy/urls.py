@@ -20,6 +20,7 @@ urlpatterns = [
 	# Collection
 	path("create_collection", views.create_collection, name="create_collection"),
 	path("excel_import", views.excel_import, name="excel_import"),
+	path("<int:collection_id>/excel_export", views.excel_export, name="excel_export"),
 	path("view_collection", views.view_collection, name="view_collection"),
 	path("view_collection/<int:collection_id>", views.view_collection, name="view_collection"),
 	path("upload_images/<int:collection_id>", views.upload_images, name="upload_images"),

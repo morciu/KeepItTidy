@@ -311,6 +311,13 @@ function displayCollection(collection, parrent) {
 	addIcon.innerHTML = "add";
 	addButton.appendChild(addIcon);
 
+	// Export to Excel - Button
+	let exportExcel = document.createElement("a");
+	exportExcel.className = "btn btn-sm ml-auto addButton";
+	exportExcel.setAttribute("href", "../" + collection['id'] + "/excel_export");
+	exportExcel.setAttribute("role", "button");
+	exportExcel.innerHTML = "Export to Excel";
+
 	// Upload Images button
 	let uploadImages = document.createElement("a");
 	uploadImages.className = "btn btn-sm ml-auto addButton";
@@ -319,13 +326,14 @@ function displayCollection(collection, parrent) {
 	uploadImages.innerHTML = "Upload Images";
 
 	// Icon
-	let uploadImagesIcon = document.createElement("i");
+	let uploadImagesIcon = document.createElement("span");
 	uploadImagesIcon.className = "material-icons";
 	uploadImagesIcon.innerHTML = "drive_folder_upload";
 	uploadImages.appendChild(uploadImagesIcon);
 
 	// Set element hierarchy
 	buttonParagraph.appendChild(addButton);
+	buttonParagraph.appendChild(exportExcel);
 	buttonParagraph.appendChild(uploadImages);
 
 	containerDiv.appendChild(collectionName);

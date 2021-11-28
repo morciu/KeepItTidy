@@ -1,8 +1,10 @@
 import json
 from datetime import datetime
 import os
+from io import BytesIO
 
 import xlrd
+import xlwt
 
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
@@ -132,8 +134,6 @@ def excel_import(request):
 
 		if len(request.FILES) > 0:
 			table = read_xls(request)
-
-			
 			
 			# Loop through "Additional Fields" entered by the user and extract them from the imported table
 			fields_dict = get_fields_dict(request)
@@ -191,6 +191,87 @@ def excel_import(request):
 		return HttpResponseRedirect(reverse("index"))
 	else:
 		return render(request, "keepittidy/excel_import.html")
+
+
+@login_required
+def excel_export(request, collection_id):
+	# Get user and collection objects
+	current_user = request.user
+	collection = Collection.objects.get(id=collection_id, user=current_user)
+	fields = collection.find_fields()
+
+	# Get items
+	items = Item.objects.filter(collection=collection)
+
+	# Set up a response response
+	response = HttpResponse(content_type='application/vnd.ms-excel')
+	response['Content-Disposition'] = f'attachment;filename={collection.name}.xls'
+
+	# Create a workbook file
+	wb = xlwt.Workbook(encoding='utf-8')
+
+	# Create worksheet in the workbook
+	ws = wb.add_sheet(f"{collection.name}")
+
+	# Set up Headers
+	position = 0
+
+	ws.write(0, position, collection.name)
+	position += 1
+
+	ws.write(0, position, f"{collection.description}")
+	position += 1
+
+	for field in fields:
+		ws.write(0, position, field)
+		position += 1
+
+	# Set up Rows
+	row_pos = 1
+
+	for item in items:
+		col_pos = 0
+		ws.write(row_pos, col_pos, f"{item.name}")
+		col_pos += 1
+		ws.write(row_pos, col_pos, f"{item.description}")
+		col_pos += 1
+
+		for field in fields:
+			if fields[field] == "text":
+				print(item.name)
+				field_obj = TextField.objects.get(item=item, name=field)
+				ws.write(row_pos, col_pos, f"{field_obj.text}")
+				col_pos += 1
+			elif fields[field] == "boolean":
+				field_obj = BooleanField.objects.get(item=item, name=field)
+				ws.write(row_pos, col_pos, f"{field_obj.boolean}")
+				col_pos += 1
+			elif fields[field] == "date":
+				field_obj = DateField.objects.get(item=item, name=field)
+				ws.write(row_pos, col_pos, f"{field_obj.date}")
+				col_pos += 1
+			elif fields[field] == "number":
+				field_obj = NumberField.objects.get(item=item, name=field)
+				ws.write(row_pos, col_pos, f"{field_obj.number}")
+				col_pos += 1
+			elif fields[field] == "decimal":
+				field_obj = DecimalField.objects.get(item=item, name=field)
+				ws.write(row_pos, col_pos, f"{field_obj.decimal}")
+				col_pos += 1
+		row_pos += 1
+
+	# Set up Output - BytesIO object
+	output = BytesIO()
+
+	# Save to stringIO obj
+	wb.save(output)
+
+	# Set position at the begining of StringIO obj
+	output.seek(0)
+
+	response.write(output.getvalue())
+
+	return response
 
 
 @login_required
