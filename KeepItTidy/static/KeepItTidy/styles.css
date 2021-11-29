@@ -41,3 +41,9 @@ img.missing_image {
 	max-height: 200px;
 	object-fit: none;
 }
+
+/* The checkbos was being blocked by a modal or something and it was not clickable,
+this fixes it. */
+#rememberMe {
+	z-index: 101;
+}

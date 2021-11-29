@@ -42,6 +42,12 @@ def login_view(request):
 		# Check if authenticated
 		if user is not None:
 			login(request, user)
+
+			# Check if 'Remember me' was checked - if so remember password for next time
+			remember_me = request.POST.get('rememberMe', False)
+			if not remember_me:
+				request.session.set_expiry(0)
+
 			return HttpResponseRedirect(reverse("index"))
 		else:
 			return render(request, "keepittidy/login.html", {
