@@ -38,10 +38,10 @@
 	        {% elif field.field_type == "decimal" %}
 	        	<input type="number" step=".01" class="form-control {{field.field_type}}" name="{{field.field_name}} / {{field.field_type}}" placeholder={{field.field_type}}>
 	        {% elif field.field_type == "image" %}
-	        	<input type="file", class="form-control {{field.field_type}}" name="{{field.field_name}} / {{field.field_type}}" multiple>
+	        	<input type="file", class="form-control-image {{field.field_type}}" name="{{field.field_name}} / {{field.field_type}}" multiple>
 	        {% endif %}
 		    {% endfor %}
-		    <button type="submit" class="btn btn-primary">Submit</button>
+		    <button type="submit" class="btn addButton">Submit</button>
 		</form>
 	</div>
 </div>
