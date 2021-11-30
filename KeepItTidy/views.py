@@ -291,10 +291,6 @@ def upload_images(request, collection_id):
 
 	if request.method == "POST":
 		associated_field = request.POST['selectedField']
-		image_field_name = request.POST['imageFieldName']
-
-		print(associated_field)
-		print(image_field_name)
 
 		associated_field_obj = FieldNameTypePair.objects.get(field_name=associated_field)
 		associated_field_type = associated_field_obj.field_type
@@ -317,7 +313,7 @@ def upload_images(request, collection_id):
 
 					if image_field.count() <= 0:
 						print("FOUND IMAGE FIELD")
-						name_type_pair = FieldNameTypePair(dictionary=collection_fields, field_name=image_field_name, field_type='image')
+						name_type_pair = FieldNameTypePair(dictionary=collection_fields, field_name="Image", field_type='image')
 						name_type_pair.save()
 
 					for item in items:
@@ -338,7 +334,7 @@ def upload_images(request, collection_id):
 							# Find a field entry that has the file name in it or vice versa
 							if img_file.name.split('.')[0] in entry or entry in img_file.name.split('.')[0]:
 								# Create ImageField for that object
-								new_img = ImageField(name=image_field_name, collection=collection, item=item, image=img_file)
+								new_img = ImageField(name="Image", collection=collection, item=item, image=img_file)
 								new_img.save()
 						else:
 							pass
@@ -594,6 +590,7 @@ def get_fields_dict(request):
 
 		# Loop through custom fields created by user (current limit is 20)
 		# Each fieldName and fieldType added will be numbered
+		last_field_nr = 0
 		for i in range(1,20):
 			if request.POST.get(f"fieldName{i}", False):
 				# Create single pair dictionary for fieldName and fieldType
@@ -602,9 +599,15 @@ def get_fields_dict(request):
 
 				# Add the single pair dict to the main fields dictionary
 				fields_dict[f'field{i}'] = field_dict
+				last_field_nr = i
 			else:
 				# End loop when no more fields are detected
 				break
+
+		# Add an image field to all collections with the standard name "Image" (This was optional before but I think it was a mistake)
+		field_dict = {"Image": "image"}
+		fields_dict[f'field{last_field_nr+1}'] = field_dict
+
 		return fields_dict
 
 
