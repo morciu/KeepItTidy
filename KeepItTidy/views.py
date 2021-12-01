@@ -461,9 +461,7 @@ def edit_item(request, item_id):
 	fields = FieldNameTypePair.objects.filter(dictionary=field_dict)
 
 	if request.method == "POST":
-		#TO DO
-
-		# Check for modifications anc update the item
+		# Check for modifications and update the item
 
 		# Check if name has been changed
 		if item.get_fields()['name'] == request.POST['itemName']:

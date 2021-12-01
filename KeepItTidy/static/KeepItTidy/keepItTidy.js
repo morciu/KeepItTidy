@@ -72,10 +72,12 @@ document.addEventListener('DOMContentLoaded', function() {
 	window.onscroll = () => {
 		// Check if user has reached the bottom of the page
 		if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-			console.log("BOTTOM");
-			if (everythingLoaded == false) {
-				loadNextItems(parseInt(lastUrlElement))
+			if (document.querySelector('#itemList')) {
+				if (everythingLoaded == false) {
+					loadNextItems(parseInt(lastUrlElement))
+				}	
 			}
+			
 		}
 	}
 });
