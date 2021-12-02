@@ -514,6 +514,7 @@ def edit_item(request, item_id):
 					
 
 		return render(request, 'keepittidy/edit_item.html', {
+			"images": ImageField.objects.filter(item=item),
 			"item": item.get_fields(),
 			"user": current_user,
 			"collection": collection,
