@@ -78,9 +78,17 @@
 
 		        {% endif %}
 		    {% endfor %}
+
 		    <div>
     			<input type="file" class="form-control-image" name="Fotografii / image" multiple>
     		</div>
+    		{% if images %}
+			    <div>
+				    <input type="checkbox" class="custom-control-input" id="removeCurrentImgs" name="removeCurrentImgs">
+				    <label class="custom-control-label" for="removeCurrentImgs">Remove old images
+				    </label>
+			    </div>
+		    {% endif %}
 		    <button type="submit" class="btn btn-primary">Submit</button>
 		</form>
 	</div>

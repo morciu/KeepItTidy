@@ -451,10 +451,8 @@ def add_item(request, collection_id):
 def edit_item(request, item_id):
 	current_user = request.user
 	item = Item.objects.get(id=item_id)
-
-	print(item.get_fields())
-
 	collection = Collection.objects.get(id=item.collection.id)
+	remove_imgs = request.POST.get('removeCurrentImgs', False)
 	
 	# Get collection fields
 	field_dict = FieldDict.objects.get(collection=collection)
@@ -494,19 +492,17 @@ def edit_item(request, item_id):
 				# Check field type and create object
 				create_field_obj(item, value, field_type, field_name, collection)
 
+		# Verify if user wants to remove old images associated to item
+		if remove_imgs:
+			for i in ImageField.objects.filter(item=item):
+				i.delete()
+
 		# Check for uploaded files
 		
 		if len(request.FILES) > 0:
 			for i in request.FILES:
 				file_name = i.split(" / ")[0]
 				file_type = i.split(" / ")[-1]
-
-				# Instantiate old image field objects
-				old_img_objs = ImageField.objects.filter(item=item)
-
-				# Remove each of the old img models associated with this item
-				for img_model in old_img_objs:
-					img_model.delete()
 
 				# Loop through all newly uploaded files and create new ImageField objects associated with this item
 				for file in request.FILES.getlist(i):
@@ -526,6 +522,7 @@ def edit_item(request, item_id):
 
 	else:
 		return render(request, 'keepittidy/edit_item.html', {
+			"images": ImageField.objects.filter(item=item),
 			"item": item.get_fields(),
 			"user": current_user,
 			"collection": collection,
