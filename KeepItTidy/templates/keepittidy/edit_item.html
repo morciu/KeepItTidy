@@ -29,23 +29,23 @@
 		        {% elif field.field_type == "boolean" %}
 		        	{% for key, value in item.items%}
 			        	{% if key == field.field_name and value == False %}
-			        		<div>
-			        			<input type="radio" class="form-control {{field.field_type}}" id="{{field.field_name}} yes" value="true" name="{{field.field_name}} / {{field.field_type}}">
-		        				<label for="{{field.field_name}} yes">Yes</label>
+			        		<div class="form-check">
+			        			<input type="radio" class="form-check-input {{field.field_type}}" id="booleanYes" value="true" name="{{field.field_name}} / {{field.field_type}}">
+			    				<label for="booleanYes">Yes</label>
 			        		</div>
-		        			<div>
-		        				<input type="radio" class="form-control {{field.field_type}}" id="{{field.field_name}} no" value="false" name="{{field.field_name}} / {{field.field_type}}" checked>
-		        				<label for="{{field.field_name}} yes">No</label>
-		        			</div>
+			    			<div class="form-check">
+			    				<input type="radio" class="form-check-input {{field.field_type}}" id="booleanNo" value="false" name="{{field.field_name}} / {{field.field_type}}" checked>
+			    				<label for="booleanNo">No</label>
+			    			</div>
 		        		{% elif key == field.field_name and value == True %}
-		        			<div>
-		        				<input type="radio" class="form-control {{field.field_type}}" id="{{field.field_name}} yes" value="true" name="{{field.field_name}} / {{field.field_type}}" checked>
-		        				<label for="{{field.field_name}} yes">Yes</label>
-		        			</div>
-		        			<div>
-		        				<input type="radio" class="form-control {{field.field_type}}" id="{{field.field_name}} no" value="false" name="{{field.field_name}} / {{field.field_type}}">
-		        			<label for="{{field.field_name}} yes">No</label>
-		        			</div>
+		        			<div class="form-check">
+			        			<input type="radio" class="form-check-input {{field.field_type}}" id="booleanYes" value="true" name="{{field.field_name}} / {{field.field_type}}"checked>
+			    				<label for="booleanYes">Yes</label>
+			        		</div>
+			    			<div class="form-check">
+			    				<input type="radio" class="form-check-input {{field.field_type}}" id="booleanNo" value="false" name="{{field.field_name}} / {{field.field_type}}">
+			    				<label for="booleanNo">No</label>
+			    			</div>
 		        		{% endif %}
 		        	{% endfor %}
 
@@ -83,7 +83,7 @@
     			<input type="file" class="form-control-image" name="Fotografii / image" multiple>
     		</div>
     		{% if images %}
-			    <div>
+			    <div class="form-check">
 				    <input type="checkbox" class="custom-control-input" id="removeCurrentImgs" name="removeCurrentImgs">
 				    <label class="custom-control-label" for="removeCurrentImgs">Remove old images
 				    </label>
