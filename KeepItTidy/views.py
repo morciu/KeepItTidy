@@ -186,6 +186,8 @@ def excel_import(request):
 				for field in fields_dict:
 					for key, value in fields_dict[field].items():
 						for header, entry in item.items():
+							print(header)
+							print(entry)
 							if key.strip().lower() == header.strip().lower():
 								field_name = key.strip().title()
 								field_type = value
@@ -562,11 +564,12 @@ def create_field_obj(item, value, field_type, field_name, collection, filter=Non
 	elif field_type == "boolean":
 		if value == "true":
 			field_obj = BooleanField(name=field_name, collection=collection, item=item, boolean=True)
+			field_obj.save()
 		elif value == "false":
 			field_obj = BooleanField(name=field_name, collection=collection, item=item, boolean=False)
-		field_obj.save()
+			field_obj.save()
 	elif field_type == "date":
-		field_obj = DateField(name=field_name, collection=collection, item=item, date=datetime.strptime(value, "%Y-%m-%d"))
+		field_obj = DateField(name=field_name, collection=collection, item=item, date=create_date_obj(value))
 		field_obj.save()
 	elif field_type == "number":
 		field_obj = NumberField(name=field_name, collection=collection, item=item, number=int(value))
@@ -578,6 +581,14 @@ def create_field_obj(item, value, field_type, field_name, collection, filter=Non
 		else:
 			field_obj = DecimalField(name=field_name, collection=collection, item=item, decimal=float(0))
 			field_obj.save()
+
+
+def create_date_obj(date_str):
+	for time_format in ["%Y-%m-%d", "%d-%m-%Y", "%Y/%m-%d", "%d/%m/%Y", "%Y.%m.%d", "%d.%m.%Y"]:
+		try:
+			return datetime.strptime(date_str, time_format)
+		except ValueError:
+			pass
 
 
 def get_fields_dict(request):
