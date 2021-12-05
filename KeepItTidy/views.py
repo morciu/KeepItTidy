@@ -562,10 +562,10 @@ def create_field_obj(item, value, field_type, field_name, collection, filter=Non
 		field_obj = TextField(name=field_name, collection=collection, item=item, text=value)
 		field_obj.save()
 	elif field_type == "boolean":
-		if value == "true":
+		if value in ["true", "True", "yes", "Yes"]:
 			field_obj = BooleanField(name=field_name, collection=collection, item=item, boolean=True)
 			field_obj.save()
-		elif value == "false":
+		elif value in ["false", "False", "no", "No"]:
 			field_obj = BooleanField(name=field_name, collection=collection, item=item, boolean=False)
 			field_obj.save()
 	elif field_type == "date":
