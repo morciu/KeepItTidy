@@ -810,8 +810,8 @@ function addDeleteButton(source, parent) {
 	let button = document.createElement("button");
 	button.style.display = "block";
 	button.setAttribute("type", "button");
-	button.className = "btn btn-warning btn-sm";
-	button.innerHTML = "Delete";
+	button.className = "btn btn-danger btn-sm material-icons";
+	button.innerHTML = "delete";
 	button.id = "delete" + source["id"];
 	parent.appendChild(button);
 
@@ -912,8 +912,8 @@ function addEditButton(source, parent) {
 
 	let button = document.createElement("a");
 	button.setAttribute("href", "../edit_item/" + source['id']);
-	button.className = "btn btn-link btn-sm d-inline";
-	button.innerHTML = "Edit";
+	button.className = "btn btn-link btn-sm d-inline material-icons";
+	button.innerHTML = "edit";
 	button.id = "edit" + source['id'];
 
 	parent.appendChild(button);
