@@ -1,10 +1,10 @@
 # Keep It Tidy
 
-Web app that lets you create customized collections of various items.
+Web app that serves the purpose of a customizable online inventory ..
 
-Each collection can be set up with multiple fields of different types deppending on the the items you intend to keep track of.
+Users can create collections and assign custom fields to them with various data types, later they can add items to those collections and fill in the information according to the fields they created.
 
-## Getting Started
+## Distinctiveness and Complexity
 
 This webapp is built with the Django framework so it requires Python to be installed in your computer.
 
