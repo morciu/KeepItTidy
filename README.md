@@ -7,7 +7,9 @@ Users can create collections and assign custom fields to them with various data 
 ## Distinctiveness and Complexity
 
 The main goal of for this web application was to create an inventory that is unrestrictive to the user and to what the user wants to store iin it.
-When a collection is being created the user can see it has 3 main fields added to it: Name, Description, Image. Below the user can add additional fields acording to the collection's needs, the number of fields and types of fields are up to the user. Later when an item is being registered to that collections, the forms that need to be filled in for that item represent the fields the user chose when creating that collection. This way each collection is able to store different kinds of items.
+When a collection is being created the user can see it has 3 main fields added to it: Name, Description, Image. The user can add additional fields acording to the collection's needs, the number of fields and types of fields are up to the user. Later when an item is being registered to that collections, the forms that need to be filled in for that item represent the fields the user chose when creating that collection. This way each collection is able to store different kinds of items.
+
+Considering the features detailed below, this project is sufficiently distinct from an e-commerce site or a social media site. It is also sufficiently complex because of all its database is being adapted to the user and not the other way arownd, its is being dynamically built deppending on user created collections, and finally it provides options to automatically create large collections from existing xls files and options to export collections to xls files.
 
 ### Backend
 Because I wanted these collections to be customizable, each additional field besides Name, Description will have it's own class inside models.py.
@@ -50,15 +52,22 @@ In the "Name" area of each collection there is a button called "Upload images". 
 
 By clicking "Export to Excel" the server will create an xls table of the current collection and the broser will download an XLS file on the user's computer.
 
-## Prerequisites
+## Created files
 
-- Python 3
-- Django
-- Pillow (used by Django for processing image files)
-- SQLite3
-- XLRD (used to read user uploaded XLS files in order to import data from them)
+#### Static folder
+keepItTidy.js - A javascript file containing various functions for DOM manipulation. This allows the application to be more dynamic and to build distinct font end froms and menus deppending on user created collections
 
-### Installing
+styles.css - Various CSS settings to customize some prebuilt Bootstrap stylings
+
+#### Templates folder
+Several html files: a layout file from withc the others will inherit the overall layout of the site, some static html files that use Django templates, a mostly empty html file called view_collection.html that will act as a canvas for the javascript functions to work on.
+
+#### Media follder
+This folder contains a folder called "images" where the web application will store image files uploaded by the user and one icon PNG file for items that do not have images.
+In models.py the delete method has been modified to not just delete the the objects in the data base but also to remove the image files associated to the item being deleted. Uploading multiple files at once also makes sure that image files will not be duplicated.
+
+
+## How to run
 
 Install Python
 
@@ -84,8 +93,18 @@ Start Server - Go inside the directory containing manage.py and run the followin
 Use the link in the terminal to access the site
 
 
+## Prerequisites
+
+- Python 3
+- Django
+- Pillow (used by Django for processing image files)
+- SQLite3
+- XLRD (used to read user uploaded XLS files in order to import data from them)
+- XLWT (used to write xls files and allow the user to download an excel report in the browser for a specific collection)
+
+
 ## Acknowledgments
 
-  - CS50’s Web Programming with Python and JavaScript course - https://www.edx.org/course/cs50s-web-programming-with-python-and-javascript
-  - Helpful strangers on stackoverflow.com
-  - Hat tip to anyone whose code is used
+  - CS50’s Web Programming with Python and JavaScript course - https://www.edx.org/course/cs50s-web-programming-with-python-and-javascript.
+  - Strangers on stackoverflow.com that asked the right questions and those other ones that gave helpful answers.
+  - Thank you anyone whose code is used by importing packages.
