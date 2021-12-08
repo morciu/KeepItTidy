@@ -353,7 +353,6 @@ function displayCollection(collection, parrent) {
 
 	// If user is not using filters or search, display items 20 at a time and use infinite scroll
 	if ((Object.keys(clickedFilters).length == 0) && (document.querySelector('#search').value.length == 0)) {
-
 		endPoint = startingPoint + nrOfItemsToLoad;
 		displayItems(collection['items'].slice(startingPoint, endPoint), collection);
 		startingPoint = startingPoint + nrOfItemsToLoad
@@ -421,9 +420,15 @@ function displayItems(itemSource, collection) {
 
 	// Check if all items have been loaded on screen
 	if (collection) {
+		console.log("Items Loaded: " + itemsLoaded);
+		console.log("Total Items: " + collection['items'].length);
+		
 		if (itemsLoaded >= collection['items'].length) {
-			everythingLoaded = true;
+			if (Object.keys(clickedFilters).length <= 0){
+				everythingLoaded = true;
+			}
 		}
+		console.log("Everything Loaded: " + everythingLoaded);
 	}
 
 	document.body.appendChild(itemsContainer);
@@ -1028,6 +1033,7 @@ function itemFilter(sourceItems, sourceCollection, parent) {
 				// If user selected 'All' in a field filter, remove that field from clickedFilter,
 				// stop filtering by that field and reset dropdown options for it
 				delete clickedFilters[selector.id];
+
 				
 				// Remove old filter options 
 				let filterParentElement = document.querySelector('#filterContainer').parentElement;
@@ -1038,13 +1044,16 @@ function itemFilter(sourceItems, sourceCollection, parent) {
 
 				// Update displayed items
 				if (Object.keys(clickedFilters).length == 0){
+					itemsLoaded = 0;
 					// If filters are not used anymore return to displaying items 20 at a time with infinite scroll
 					startingPoint = 0;
 					displayCollection(sourceCollection, document.querySelector("#collections"))
 				}
 				else {
+					itemsLoaded = 0;
 					displayItems(sourceCollection['items'], sourceCollection);
 				}
+				everythingLoaded = false;
 			}
 			else {
 				// Add selected filter to the global ckickedFilters array
