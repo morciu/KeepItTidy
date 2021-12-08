@@ -320,6 +320,8 @@ def upload_images(request, collection_id):
 						name_type_pair.save()
 
 					for item in items:
+						# Store added images to avoid repetition
+						added_images = []
 						# Check if the image already exists for this item
 						old_imgs = ImageField.objects.filter(item=item)
 						file_names = []
@@ -334,11 +336,33 @@ def upload_images(request, collection_id):
 							elif associated_field == 'text':
 								entry = TextField.objects.get(item=item, name=associated_field).text
 
-							# Find a field entry that has the file name in it or vice versa
-							if img_file.name.split('.')[0] in entry or entry in img_file.name.split('.')[0]:
-								# Create ImageField for that object
-								new_img = ImageField(name="Image", collection=collection, item=item, image=img_file)
-								new_img.save()
+							# Check if field entry and file name can be used as integers, else use them as strings
+							try:
+								file_name_to_int = int(img_file.name.split('.')[0])
+								try:
+									entry_name_to_int = int(entry)
+									if file_name_to_int == entry_name_to_int:
+										# Create ImageField for that object
+										new_img = ImageField(name="Image", collection=collection, item=item, image=img_file)
+										new_img.save()
+										added_images.append(img_file.name.split('.')[0])
+								except:
+									# Find a field entry that has the file name in it or vice versa
+									if img_file.name.split('.')[0] in entry or entry in img_file.name.split('.')[0]:
+										if img_file.name.split('.')[0] not in added_images:
+											# Create ImageField for that object
+											new_img = ImageField(name="Image", collection=collection, item=item, image=img_file)
+											new_img.save()
+											added_images.append(img_file.name.split('.')[0])
+							except:
+								# Find a field entry that has the file name in it or vice versa
+								if img_file.name.split('.')[0] in entry or entry in img_file.name.split('.')[0]:
+									if img_file.name.split('.')[0] not in added_images:
+										# Create ImageField for that object
+										new_img = ImageField(name="Image", collection=collection, item=item, image=img_file)
+										new_img.save()
+										added_images.append(img_file.name.split('.')[0])
+							
 						else:
 							pass
 
