@@ -91,7 +91,7 @@ function searchFilter(searchBar) {
 	.then(collections => {
 		collections.forEach(function(collection) {
 			collection['items'].forEach(function(item) {
-				if (item['name'].toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").startsWith(searchBar.value)) {
+				if (item['name'].toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(searchBar.value)) {
 					searchResult.push(item);
 					return;
 				}
@@ -1002,11 +1002,14 @@ function itemFilter(sourceItems, sourceCollection, parent) {
 					let option = document.createElement("option");
 					// Check if the entry is a boolean value and replace true/false with Yes/No
 					// Else option will just be the entry
-					if (items[i][key] == true) {
-						option.innerHTML = "Yes";
-					}
-					else if (items[i][key] == false) {
-						option.innerHTML = "No";
+
+					if (typeof items[i][key] == 'boolean') {
+						if (items[i][key] == true) {
+							option.innerHTML = "Yes";
+						}
+						else if (items[i][key] == false) {
+							option.innerHTML = "No";
+						}
 					}
 					else {
 						option.innerHTML = items[i][key];	

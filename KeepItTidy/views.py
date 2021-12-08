@@ -474,7 +474,10 @@ def edit_item(request, item_id):
 
 		# Check if description has been changed
 		if item.get_fields()['description'] == request.POST['itemDescription']:
-			print("\nDescription hasn't changed\n")
+			pass
+		elif item.get_fields()['description'] == "None":
+			item.description == ''
+			item.save()	
 		else:
 			print("\nDescription hasn't changed\n")
 			item.description = request.POST['itemDescription']
@@ -585,7 +588,7 @@ def create_field_obj(item, value, field_type, field_name, collection, filter=Non
 
 
 def create_date_obj(date_str):
-	for time_format in ["%Y-%m-%d", "%d-%m-%Y", "%Y/%m-%d", "%d/%m/%Y", "%Y.%m.%d", "%d.%m.%Y"]:
+	for time_format in ["%Y-%m-%d", "%d-%m-%Y", "%m-%d-%Y", "%Y/%m/%d", "%d/%m/%Y", "%m/%d/%Y", "%Y.%m.%d", "%d.%m.%Y", "%m.%d.%Y"]:
 		try:
 			return datetime.strptime(date_str, time_format)
 		except ValueError:

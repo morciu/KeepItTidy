@@ -101,7 +101,10 @@ class Item(models.Model):
 		date_fields = DateField.objects.filter(item=self)
 		if len(date_fields) > 0:
 			for i in date_fields:
-				fields[i.name] = i.date.strftime("%Y-%m-%d")
+				try:
+					fields[i.name] = i.date.strftime("%Y-%m-%d")
+				except AttributeError:
+					fields[i.name] = ""
 
 		number_fields = NumberField.objects.filter(item=self)
 		if len(number_fields) > 0:
