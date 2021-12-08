@@ -231,8 +231,9 @@ def excel_export(request, collection_id):
 	position += 1
 
 	for field in fields:
-		ws.write(0, position, field)
-		position += 1
+		if field != "Image":
+			ws.write(0, position, field)
+			position += 1
 
 	# Set up Rows
 	row_pos = 1

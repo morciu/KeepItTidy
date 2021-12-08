@@ -395,9 +395,6 @@ function displayItems(itemSource, collection) {
 
 	// Manage filter options
 	let items = filterItemList(itemSourceClone);
-
-	console.log("NR OF ITEMS: " + itemSourceClone.length);
-	console.log("NR OF FILTERED ITEMS: " + items.length);
 	
 	// Determine how many rows are needed
 	let nrOfRows = determineNrOfRows(items);
@@ -424,8 +421,6 @@ function displayItems(itemSource, collection) {
 
 	// Check if all items have been loaded on screen
 	if (collection) {
-		console.log(itemsLoaded);
-		console.log(collection['items'].length);
 		if (itemsLoaded >= collection['items'].length) {
 			everythingLoaded = true;
 		}
@@ -469,8 +464,16 @@ function filterItemList(array) {
 			let count = 0;
 
 			for (let field in clickedFilters) {
+				let booleanMatch = false;
+				// Check if boolean filters match
+				if (clickedFilters[field] == "Yes" && array[item][field] == true) {
+					booleanMatch = true;
+				}
+				if (clickedFilters[field] == 'No' && array[item][field] == false) {
+					booleanMatch = true
+				}
 				// Check if the item matches current filter value in clickedFilters, if it does then count += 1
-				if (clickedFilters[field] == array[item][field]) {
+				if ((clickedFilters[field] == array[item][field]) || booleanMatch == true) {
 					count += 1;
 					// check if this is the last field in clickedFilters, if the match count maches the clicked filter length, the item is added to the new list
 					if (count == Object.keys(clickedFilters).length) {
@@ -970,7 +973,7 @@ function itemFilter(sourceItems, sourceCollection, parent) {
 		selector.className = "form-control";
 		selector.id = key;
 
-		// Create options -- TEST -- Need to loop through all the variations of each field
+		// Create options -- to loop through all the variations of each field
 		let option = document.createElement("option");
 		option.setAttribute("selected", "selected");
 
@@ -997,7 +1000,17 @@ function itemFilter(sourceItems, sourceCollection, parent) {
 				if (! mentionedValues.includes(items[i][key])) {
 					// Create options element and add this value to mentionedValues after to avoid repetition
 					let option = document.createElement("option");
-					option.innerHTML = items[i][key];
+					// Check if the entry is a boolean value and replace true/false with Yes/No
+					// Else option will just be the entry
+					if (items[i][key] == true) {
+						option.innerHTML = "Yes";
+					}
+					else if (items[i][key] == false) {
+						option.innerHTML = "No";
+					}
+					else {
+						option.innerHTML = items[i][key];	
+					}
 					selector.appendChild(option);
 					mentionedValues.push(items[i][key]);
 				}
@@ -1005,7 +1018,7 @@ function itemFilter(sourceItems, sourceCollection, parent) {
 		}
 
 
-		// TEST --> Add event and read filter selection
+		// Add event and read filter selection
 		selector.addEventListener("change", function() {
 
 			if (selector.value.slice(-3) == "All"){
