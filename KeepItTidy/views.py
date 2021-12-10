@@ -519,8 +519,12 @@ def edit_item(request, item_id):
 				# Get field type
 				field_type = key.split(" / ")[-1]
 
-				# Check field type and create object
-				create_field_obj(item, value, field_type, field_name, collection)
+				# Check if there are any changes to the field
+				if request.POST[key] == value:
+					print("No changes")
+				else:
+					# Check field type and create object
+					modify_field_obj(item, value, field_type, field_name, collection)
 
 		# Verify if user wants to remove old images associated to item
 		if remove_imgs:
@@ -584,7 +588,36 @@ def delete_item(request):
 
 # General purpose functions
 
-def create_field_obj(item, value, field_type, field_name, collection, filter=None):
+def modify_field_obj(item, value, field_type, field_name, collection):
+	# Check field_type and modify the field object accordingly
+	if field_type == "text":
+		field_obj = TextField.objects.get(name=field_name, collection=collection, item=item)
+		field_obj.text = value
+		field_obj.save()
+	elif field_type == "boolean":
+		field_obj = BooleanField.objects.get(name=field_name, collection=collection, item=item)
+		if value in ["true", "True", "yes", "Yes"]:
+			field_obj.boolean = True
+		elif value in ["false", "False", "no", "No"]:
+			field_obj.boolean = False
+		field_obj.save()
+	elif field_type == "date":
+		field_obj = DateField.objects.get(name=field_name, collection=collection, item=item)
+		field_obj.date = create_date_obj(value)
+		field_obj.save()
+	elif field_type == "number":
+		field_obj = NumberField.objects.get(name=field_name, collection=collection, item=item)
+		field_obj.number = int(value)
+		field_obj.save()
+	elif field_type == "decimal":
+		field_obj = DecimalField.objects.get(name=field_name, collection=collection, item=item)
+		if value != '':
+			field_obj.decimal = float(value)
+		else:
+			field_obj.decimal = float(0)
+		field_obj.save()
+
+def create_field_obj(item, value, field_type, field_name, collection):
 	# Check field type and create field object accordingly
 	if field_type == "text":
 		field_obj = TextField(name=field_name, collection=collection, item=item, text=value)
