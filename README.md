@@ -6,7 +6,7 @@ Users can create collections and assign custom fields to them with various data 
 
 ## Distinctiveness and Complexity
 
-The main goal of for this web application was to create an inventory that is unrestrictive to the user and to what the user wants to store iin it.
+The main goal of for this web application was to create an inventory that is unrestrictive to the user and to what the user wants to store in it.
 When a collection is being created the user can see it has 3 main fields added to it: Name, Description, Image. The user can add additional fields acording to the collection's needs, the number of fields and types of fields are up to the user. Later when an item is being registered to that collections, the forms that need to be filled in for that item represent the fields the user chose when creating that collection. This way each collection is able to store different kinds of items.
 
 Considering the features detailed below, this project is sufficiently distinct from an e-commerce site or a social media site. It is also sufficiently complex because of all its database is being adapted to the user and not the other way arownd, its is being dynamically built deppending on user created collections, and finally it provides options to automatically create large collections from existing xls files and options to export collections to xls files.
