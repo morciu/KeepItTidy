@@ -224,10 +224,10 @@ def excel_export(request, collection_id):
 	# Set up Headers
 	position = 0
 
-	ws.write(0, position, collection.name)
+	ws.write(0, position, 'Name')
 	position += 1
 
-	ws.write(0, position, f"{collection.description}")
+	ws.write(0, position, 'Description')
 	position += 1
 
 	for field in fields:
@@ -520,11 +520,8 @@ def edit_item(request, item_id):
 				field_type = key.split(" / ")[-1]
 
 				# Check if there are any changes to the field
-				if request.POST[key] == value:
-					print("No changes")
-				else:
-					# Check field type and create object
-					modify_field_obj(item, value, field_type, field_name, collection)
+				# Check field type and create object
+				modify_field_obj(item, value, field_type, field_name, collection)
 
 		# Verify if user wants to remove old images associated to item
 		if remove_imgs:

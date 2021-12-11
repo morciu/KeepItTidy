@@ -91,7 +91,7 @@ function searchFilter(searchBar) {
 	.then(collections => {
 		collections.forEach(function(collection) {
 			collection['items'].forEach(function(item) {
-				if (item['name'].toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(searchBar.value)) {
+				if (item['name'].toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(searchBar.value.toLowerCase())) {
 					searchResult.push(item);
 					return;
 				}
