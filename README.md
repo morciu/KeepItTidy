@@ -4,6 +4,32 @@ Web app that serves the purpose of a customizable online inventory.
 
 Users can create collections and assign custom fields to them with various data types, later they can add items to those collections and fill in the information according to the fields they created.
 
+## Screenshots
+
+### Main page after logging in with all the collections created by the user
+![VirtualBox_Xubuntu_18_03_2022_08_51_33](https://user-images.githubusercontent.com/67121125/158951627-4f2d19ef-416c-4fc7-b46a-9be82ad15caa.png)
+
+### Viewing a created collection (dropdown filter options are dynamically created for each collection)
+![VirtualBox_Xubuntu_18_03_2022_08_53_48](https://user-images.githubusercontent.com/67121125/158951859-95912f6f-2e6a-4496-819c-9b5fb5a3f31d.png)
+![VirtualBox_Xubuntu_18_03_2022_08_53_26](https://user-images.githubusercontent.com/67121125/158951864-536d7e3f-1742-43d8-8f27-8bc0f8d5b8c7.png)
+
+### Viewing an item
+![VirtualBox_Xubuntu_18_03_2022_08_56_08](https://user-images.githubusercontent.com/67121125/158952148-693030c1-8df2-4e86-8a42-27dbb72cb9d8.png)
+
+### Creating a new collection page
+![VirtualBox_Xubuntu_18_03_2022_08_56_47](https://user-images.githubusercontent.com/67121125/158952280-13a82889-a570-4ba6-bc03-dc1822d71e8d.png)
+
+### Adding a new item (number and types of form fields deppend on how the collection is set up)
+![VirtualBox_Xubuntu_18_03_2022_09_02_00](https://user-images.githubusercontent.com/67121125/158952747-510be783-d1ab-4886-9679-7ba8f1c0cd23.png)
+
+### Importing a collection from an existing xlsx spreadsheet file (must manually input which headers the app should look up and import under "additional fields")
+![VirtualBox_Xubuntu_18_03_2022_09_08_13](https://user-images.githubusercontent.com/67121125/158953748-85ddbae6-9c9c-4e9c-a4b5-5a7514e9c3c3.png)
+
+### Uploading multiple image files and automatically linking them up with the correct item (user must choose which of the item's fields the images will refference and their file names must the same the contents of that respective field)
+![VirtualBox_Xubuntu_18_03_2022_09_11_34](https://user-images.githubusercontent.com/67121125/158954262-85b7f194-629a-4e70-becb-ebcf62480863.png)
+
+
+
 ## Distinctiveness and Complexity
 
 The main goal of for this web application was to create an inventory that is unrestrictive to the user and to what the user wants to store in it.
